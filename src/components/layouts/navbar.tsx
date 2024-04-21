@@ -16,8 +16,8 @@ export default function Navbar() {
   const isDesktop = useMediaQuery("(min-width: 975px)");
 
   return (
-    <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky z-50 top-0 inset-x-0 h-16">
-      <header className="relative">
+    <div className="sticky z-50 top-0 inset-x-0 h-16">
+      <header className="relative border-b bg-background">
         <MaxWidthWrapper>
           <div className="flex h-16 items-center">
             <Link href="/" className="items-center space-x-2 flex">
