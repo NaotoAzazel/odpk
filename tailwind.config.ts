@@ -59,9 +59,7 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      ontFamily: {
-        manrope: ["Manrope", "sans-serif"],
-        inter: ["Inter", "sans-serif"],
+      fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
         heading: ["var(--font-heading)", ...fontFamily.sans]
       },
