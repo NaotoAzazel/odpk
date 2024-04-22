@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { fontSans, fontHeading } from "@/lib/fonts";
 
 import Navbar from "@/components/layouts/navbar";
+import Footer from "@/components/layouts/footer";
+
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -29,6 +31,7 @@ export default function RootLayout({
           <div className="flex-grow flex-1">
             {children}
           </div>
+          <Footer />
         </main>
       </body>
     </html>
