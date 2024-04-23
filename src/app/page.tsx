@@ -1,15 +1,17 @@
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
+import { LobbySkeleton } from "./_components/lobby-skeleton";
 import { buttonVariants } from "@/components/ui/button";
-
-import { helpCards, informationCards } from "@/config/cards";
 
 import { CardsHolder } from "@/components/cards/cards-holder";
 import { InfromationCard } from "@/components/cards/information-card";
 import { HelpCard } from "@/components/cards/help-card";
 import { NewsCard } from "@/components/cards/news-card";
 
+import { helpCards, informationCards } from "@/config/cards";
+
 import Link from "next/link";
+import { Suspense } from "react";
 
 import newsJson from "@/assets/data/news.json";
 
@@ -102,11 +104,13 @@ export default function Home() {
               </EmptyPlaceholder.Description>
             </EmptyPlaceholder>
           ): (
-            <CardsHolder className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
-              {newsJson.slice(0, 6).map((item, i) => (
-                <NewsCard post={item} key={i} />
-              ))}
-            </CardsHolder>
+            <Suspense fallback={<LobbySkeleton />}>
+              <CardsHolder className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+                {newsJson.slice(0, 6).map((item, i) => (
+                  <NewsCard post={item} key={i} />
+                ))}
+              </CardsHolder>
+            </Suspense>
           )}
         </section>
       </MaxWidthWrapper>
