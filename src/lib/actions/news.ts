@@ -9,10 +9,5 @@ export async function getFutureNews(): Promise<Post[]> {
     }
   });
 
-  const typedNews = news.map((item) => ({ 
-    ...item, 
-    images: item.images as { id: string }[] 
-  }));
-  
-  return typedNews;
+  return news;
 }

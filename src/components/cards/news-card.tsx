@@ -16,7 +16,7 @@ export function NewsCard({ post }: NewsCardProps) {
     <div className="border overflow-hidden rounded">
       <Picture.Container>
         <Picture 
-          src={post.images[0]?.id}
+          src={post.images[0]}
           className="absolute h-full w-full border-b rounded-none"
         />
       </Picture.Container>
