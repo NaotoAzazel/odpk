@@ -13,9 +13,11 @@ import { helpCards, informationCards } from "@/config/cards";
 import Link from "next/link";
 import { Suspense } from "react";
 
-import newsJson from "@/assets/data/news.json";
+import { getFutureNews } from "@/lib/actions/news";
 
-export default function Home() {
+export default async function Home() {
+  const news = await getFutureNews();
+
   return (
     <div>
       <section 
@@ -95,7 +97,7 @@ export default function Home() {
             </p>
           </div>
           
-          {!newsJson.length ? (
+          {!news.length ? (
             <EmptyPlaceholder>
               <EmptyPlaceholder.Icon name="notebook" />
               <EmptyPlaceholder.Title>Не вдалось знайти новини</EmptyPlaceholder.Title>
@@ -106,7 +108,7 @@ export default function Home() {
           ): (
             <Suspense fallback={<LobbySkeleton />}>
               <CardsHolder className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
-                {newsJson.slice(0, 6).map((item, i) => (
+                {news.slice(0, 6).map((item, i) => (
                   <NewsCard post={item} key={i} />
                 ))}
               </CardsHolder>
