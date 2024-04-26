@@ -7,6 +7,7 @@ import { fontSans, fontHeading } from "@/lib/fonts";
 
 import Navbar from "@/components/layouts/navbar";
 import Footer from "@/components/layouts/footer";
+import { Toaster } from "@/components/ui/toaster"
 
 import { siteConfig } from "@/config/site";
 
@@ -31,6 +32,7 @@ export default function RootLayout({
           <div className="flex-grow flex-1">
             {children}
           </div>
+          <Toaster />
           <Footer />
         </main>
       </body>

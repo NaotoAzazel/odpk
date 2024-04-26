@@ -5,7 +5,9 @@ import {
   BookOpenText,
   BriefcaseBusiness,
   Notebook,
-  BarChart3
+  BarChart3,
+  FileWarning,
+  Loader2
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -16,5 +18,7 @@ export const Icons = {
   openBook: BookOpenText,
   suitCase: BriefcaseBusiness,
   notebook: Notebook,
-  chart: BarChart3
+  chart: BarChart3,
+  warning: FileWarning,
+  spinner: Loader2
 };
