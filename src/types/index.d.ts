@@ -1,4 +1,5 @@
 import { Icons } from "@/components/icons";
+import { Prisma } from "@prisma/client";
 
 export type NavSubItem = {
   title: string;
@@ -32,6 +33,6 @@ export type HelpCard = {
 export type Post = {
   id: number;
   title: string;
-  text: string;
+  content: Prisma.JsonValue;
   images: string[];
 };
