@@ -1,18 +1,18 @@
 import { cn } from "@/lib/utils";
 
-import { ReactNode } from "react";
-
-interface MaxWidthWrapperProps {
-  className?: string;
-  children: ReactNode;
-};
+interface MaxWidthWrapperProps 
+  extends React.HTMLAttributes<HTMLDivElement> {};
 
 export default function MaxWidthWrapper({ 
   className,
-  children
+  children,
+  ...props
 }: MaxWidthWrapperProps) {
   return (
-    <div className={cn("mx-auto w-full max-w-screen-xl px-5 md:px-10", className)}>
+    <div 
+      className={cn("mx-auto w-full max-w-screen-xl px-5 md:px-10", className)}
+      {...props}
+    >
       {children}
     </div>
   )
