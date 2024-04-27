@@ -48,13 +48,6 @@ export default function MainNav({ items }: MainNavProps) {
             </NavigationMenuContent>
           </NavigationMenuItem>
         ))}
-        <NavigationMenuItem>
-          <Link href="/contact" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Контакти
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
   )
