@@ -1,20 +1,21 @@
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
  
 const f = createUploadthing();
  
-const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
- 
-// TODO: added real auth check
-
 export const ourFileRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB" } })
     .middleware(async ({ req }) => {
-      const user = await auth(req);
+      const user = await getServerSession(authOptions)
  
-      if (!user) throw new UploadThingError("Unauthorized");
+      if (!user) {
+        throw new UploadThingError("Unauthorized");
+      }
  
-      return { userId: user.id };
+      return { userId: user.user?.email };
     })
     .onUploadComplete(async ({ metadata, file }) => {
       return { uploadedBy: metadata.userId };

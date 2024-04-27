@@ -1,6 +1,10 @@
 import { z } from "zod"; 
-import { PostValidator } from "@/lib/validation/post"
+import { PostValidator } from "@/lib/validation/post";
+
 import { db } from "@/lib/db";
+
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -18,7 +22,10 @@ export async function PATCH(
     const json = await req.json();
     const body = PostValidator.parse(json);
 
-    // TODO: add verifycation that user have login 
+    const isAuth = await getServerSession(authOptions); 
+    if(!isAuth) {
+      return Response.json({ message: "Not authorized" }, { status: 403 });
+    }
 
     await db.post.update({
       where: {
@@ -31,7 +38,7 @@ export async function PATCH(
       }
     });
 
-    return new Response(null, { status: 200 })
+    return new Response(null, { status: 200 });
   } catch(error) {
     if(error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
