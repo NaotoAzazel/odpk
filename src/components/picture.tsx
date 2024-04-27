@@ -26,8 +26,7 @@ export function Picture({
   return (
     <Image
       fill
-      // src={"src-image"}
-      src={`https://ucarecdn.com/${src}/-/preview/1600x1200/`}
+      src={src}
       alt="News-card-image"
       loading="lazy"
       sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
