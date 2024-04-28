@@ -23,6 +23,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import * as React from "react";
 
+import { siteConfig } from "@/config/site";
+
 interface MobileNavProps {
   items: NavItem[];
 };
@@ -35,15 +37,23 @@ export default function MobileNav({ items }: MobileNavProps) {
       <SheetTrigger asChild>
         <Button 
           variant="ghost"
-          className="ml-auto"
+          className="xl:hidden px-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
         >
-          <Icons.alignRight className="h-5 w-5" />
+          <Icons.alignLeft className="h-5 w-5" />
         </Button>
       </SheetTrigger>
       <SheetContent 
-        side="right"
+        side="left"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
+        <MobileLink
+          href="/"
+          className="flex items-center"
+          setOpen={setIsOpen}
+        >
+          <Icons.graduationCap className="mr-2 h-5 w-5" />
+          <span className="font-bold font-heading">{siteConfig.name}</span>
+        </MobileLink>
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10">
           <Accordion type="multiple" className="w-full">
             <MobileNavItems items={items} setOpen={setIsOpen} />
