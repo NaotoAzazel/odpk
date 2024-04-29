@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
-import Image from "next/image";
+import { Picture } from "@/components/picture"
 
 const Output = dynamic(
   async () => (await import("editorjs-react-renderer")).default, 
@@ -49,14 +49,14 @@ function CustomImageRenderer({ data }: any) {
   const src = data.file.url;
 
   return (
-    <div className="mt-1 w-full h-full flex  items-center justify-center min-h-[15rem]">
-      <Image 
-        width={1000}
-        height={1000}
-        alt="News-image"
-        className="object-contain my-auto"
-        src={src}
-      />
+    <div className="flex flex-col">
+      <div className="mt-1 h-full w-full relative justify-center flex inset-0 min-h-[15rem]">
+        <Picture 
+          src={src}
+          alt="News-image"
+          className="object-contain my-auto relative"
+        />
+      </div>
     </div>
   );
 }

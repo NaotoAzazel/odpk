@@ -14,12 +14,16 @@ interface NewsCardProps {
 export function NewsCard({ post }: NewsCardProps) {
   return (
     <div className="border overflow-hidden rounded">
-      <Picture.Container>
-        <Picture 
-          src={post.images[0]}
-          className="absolute h-full w-full border-b rounded-none"
-        />
-      </Picture.Container>
+      <div className="flex flex-col">
+        <div className="relative pb-72 flex inset-0">
+          <div className="flex w-full h-full absolute">
+            <Picture
+              src={post.images[0]}
+              className="border-b rounded-none object-cover inset-0"
+            />
+          </div>
+        </div>
+      </div>
 
       <div className="p-4 overflow-hidden">
         <h1 className="overflow-hidden whitespace-nowrap text-ellipsis">{post.title}</h1>

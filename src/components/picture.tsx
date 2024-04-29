@@ -1,5 +1,8 @@
-import { cn } from "@/lib/utils";
+"use client"
+
 import Image from "next/image";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface PictureProps 
   extends React.ImgHTMLAttributes<HTMLImageElement> {};
@@ -8,51 +11,43 @@ export function Picture({
   className,
   src
 }: PictureProps) {
+  const [error, setError] = useState<boolean>(false);
+
   if(!src) {
-    return (
-      <div 
-        className={cn(
-          "rounded py-32 w-full flex flex-col items-center", 
-          className
-        )}
-      >
-        <p className="text-muted-foreground text-sm">
-          Картинку не знайдено
-        </p>
-      </div>
-    );
+    return <ImageNotFound />;
   }
 
   return (
-    <Image
-      fill
-      src={src}
-      alt="News-card-image"
-      loading="lazy"
-      sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
-      className={cn(
-        "inset-0 object-cover rounded",
-        className
+    <>
+      {error ? <ImageNotFound /> : (
+        <Image
+          width={1000}
+          height={1000}
+          src={src}
+          alt="Image"
+          loading="lazy"
+          className={cn(
+            "rounded transition blur-sm duration-500",
+            className
+          )}
+          onError={() => setError(true)}
+          onLoad={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.classList.remove("blur-sm");
+          }}
+          unoptimized
+        />
       )}
-    />
+    </>
   );
 }
 
-interface PictureContainerProps 
-  extends React.ImgHTMLAttributes<HTMLImageElement> {};
-
-Picture.Container = function PictureContainer({
-  children
-}: PictureContainerProps) {
+function ImageNotFound() {
   return (
-    <div className="flex flex-col p-0">
-      <div className="relative flex pb-72 inset-0">
-        <div className="absolute inset-0">
-          <div className="flex w-full h-full items-center justify-center absolute">
-            {children}
-          </div>
-        </div>
-      </div>
+    <div className="flex w-full text-center items-center">
+      <p className="text-muted-foreground text-sm w-full">
+        Картинку не знайдено
+      </p>
     </div>
   );
 }

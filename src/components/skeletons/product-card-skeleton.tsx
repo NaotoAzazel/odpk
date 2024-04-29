@@ -1,12 +1,11 @@
-import { Picture } from "@/components/picture";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function ProductCardSkeleton() {
   return (
     <div className="border overflow-hidden rounded">
-      <Picture.Container>
+      <div className="flex">
         <Skeleton className="rounded-none w-full py-36"/>
-      </Picture.Container>
+      </div>
 
       <div className="p-4">
         <Skeleton className="h-6 w-1/2" />
