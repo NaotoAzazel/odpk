@@ -10,7 +10,9 @@ import {
   Loader2,
   File,
   Search,
-  UserRound
+  UserRound,
+  LayoutGrid,
+  LogOut
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -26,5 +28,7 @@ export const Icons = {
   spinner: Loader2,
   file: File,
   search: Search,
-  user: UserRound
+  user: UserRound,
+  layoutGrid: LayoutGrid,
+  logOut: LogOut 
 };

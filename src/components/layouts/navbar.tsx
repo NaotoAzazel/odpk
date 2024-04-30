@@ -2,9 +2,8 @@ import MainNav from "@/components/layouts/main-nav";
 import MobileNav from "@/components/layouts/mobile-nav";
 
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import { Button } from "@/components/ui/button";
 import { CommandMenu } from "@/components/command-menu";
-import { Icons } from "@/components/icons";
+import { AuthDropdown } from "@/components/layouts/auth-dropdown";
 
 import { navConfig } from "@/config/nav";
 
@@ -27,12 +26,9 @@ export default async function Navbar() {
                 <CommandMenu />
               </div>
               
-              {/** TODO: Add user-dropdown-menu */}
               <nav className="flex items-center">
                 {user?.user && (
-                  <Button variant="ghost">
-                    <Icons.user className="h-4 w-4" />
-                  </Button>
+                  <AuthDropdown user={user} />
                 )}
               </nav>
             </div>
