@@ -1,4 +1,4 @@
-import { Editor } from "../_components/editor";
+import { Editor } from "../../_components/editor";
 import { getNewsById } from "@/lib/actions/news";
 
 import { notFound } from "next/navigation";
