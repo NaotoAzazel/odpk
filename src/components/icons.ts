@@ -12,7 +12,10 @@ import {
   Search,
   UserRound,
   LayoutGrid,
-  LogOut
+  LogOut,
+  AlignJustify,
+  ArrowUpDown,
+  Plus
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -30,5 +33,8 @@ export const Icons = {
   search: Search,
   user: UserRound,
   layoutGrid: LayoutGrid,
-  logOut: LogOut 
+  logOut: LogOut,
+  alignJustify: AlignJustify,
+  arrowUpDown: ArrowUpDown,
+  plus: Plus
 };

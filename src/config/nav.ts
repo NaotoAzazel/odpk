@@ -208,5 +208,12 @@ export const navConfig: NavBarConfig = {
         },
       ]
     },
+  ],
+  dashboardNav: [
+    {
+      title: "Новини",
+      href: "/dashboard/news",
+      icon: "file"
+    }
   ]
 };

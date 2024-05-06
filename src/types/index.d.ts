@@ -12,8 +12,16 @@ export type NavItem = {
   items: NavSubItem[];
 };
 
+export type DashboardNavItem = {
+  title: string;
+  href: string;
+  icon: keyof typeof Icons;
+  disabled?: boolean;
+};
+
 export type NavBarConfig = {
   mainNav: NavItem[];
+  dashboardNav: DashboardNavItem[];
 };
 
 export type InformatioCard = {
