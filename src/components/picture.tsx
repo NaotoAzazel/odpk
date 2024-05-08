@@ -35,7 +35,6 @@ export function Picture({
             const target = e.target as HTMLImageElement;
             target.classList.remove("blur-sm");
           }}
-          unoptimized
         />
       )}
     </>
