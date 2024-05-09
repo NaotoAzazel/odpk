@@ -17,7 +17,7 @@ export default async function EditorPage({ params }: EditorPageProps) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-6 my-10">
+    <div className="flex flex-col gap-6 my-10">
       <Editor post={post} />
     </div>
   )

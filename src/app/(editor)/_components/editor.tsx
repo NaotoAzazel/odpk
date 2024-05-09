@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { useToast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
 import TextareaAutosize from "react-textarea-autosize";
@@ -174,6 +175,15 @@ export function Editor({ post }: { post: Post }) {
 
   return (
     <>
+      <div className="flex">
+        <Link
+          href="/dashboard/news"
+          className={buttonVariants({ variant: "ghost" })}
+        >
+          <Icons.back className="mr-2 h-4 w-4" />
+          Назад
+        </Link>
+      </div>
       <div className="w-full p-4 bg-zinc-50 rounded border border-zinc-200">
         <form
           id="post-form"

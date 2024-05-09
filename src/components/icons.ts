@@ -15,7 +15,8 @@ import {
   LogOut,
   AlignJustify,
   ArrowUpDown,
-  Plus
+  Plus,
+  ChevronLeft
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -36,5 +37,6 @@ export const Icons = {
   logOut: LogOut,
   alignJustify: AlignJustify,
   arrowUpDown: ArrowUpDown,
-  plus: Plus
+  plus: Plus,
+  back: ChevronLeft
 };
