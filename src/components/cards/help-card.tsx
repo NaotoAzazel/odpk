@@ -9,7 +9,7 @@ interface HelpCardProps {
 
 export function HelpCard({ card }: HelpCardProps) {
   return (
-    <div className="border rounded">
+    <div className="border rounded shadow">
       <div className="px-4 pt-4">
         <h2 className="font-bold font-heading text-xl">
           {card.title}
