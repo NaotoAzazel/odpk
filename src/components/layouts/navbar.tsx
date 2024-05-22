@@ -15,7 +15,7 @@ export default async function Navbar() {
 
   return (
     <div className="sticky z-50 top-0 inset-x-0 h-16">
-      <header className="relative border-b bg-background">
+      <header className="relative border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <MaxWidthWrapper>
           <div className="flex h-16 items-center">
             <MainNav items={navConfig.mainNav} />
