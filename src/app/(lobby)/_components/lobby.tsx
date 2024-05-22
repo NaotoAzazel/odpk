@@ -70,11 +70,13 @@ export default async function Lobby({
 
             <div className="col-span-1"></div>
             <div 
-              className="animate-fade-up w-full h-full col-span-4 min-h-96"
+              className="animate-fade-up w-full h-full col-span-4"
               style={{ animationDelay: "0.40s", animationFillMode: "both" }}
             >
               <Picture
                 src={LayoutPicture}
+                widht={300}
+                height={300}
                 className="rounded-xl h-full w-full shadow-md hidden lg:block"
               />
             </div>

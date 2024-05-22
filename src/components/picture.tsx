@@ -7,11 +7,15 @@ import { useState } from "react";
 interface PictureProps 
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src">  {
     src: string | StaticImageData;
+    widht?: number;
+    height?: number;
   };
 
 export function Picture({
   className,
   src,
+  widht = 1000,
+  height = 1000
 }: PictureProps) {
   const [error, setError] = useState<boolean>(false);
 
@@ -23,9 +27,9 @@ export function Picture({
     <>
       {error ? <ImageNotFound /> : (
         <Image
-          fill
           src={src}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          width={widht}
+          height={height}
           alt="Image"
           loading="lazy"
           className={cn(
