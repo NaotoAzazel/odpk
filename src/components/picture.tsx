@@ -1,15 +1,17 @@
 "use client"
 
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 interface PictureProps 
-  extends React.ImgHTMLAttributes<HTMLImageElement> {};
+  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src">  {
+    src: string | StaticImageData;
+  };
 
 export function Picture({
   className,
-  src
+  src,
 }: PictureProps) {
   const [error, setError] = useState<boolean>(false);
 
@@ -21,13 +23,13 @@ export function Picture({
     <>
       {error ? <ImageNotFound /> : (
         <Image
-          width={1000}
-          height={1000}
+          fill
           src={src}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           alt="Image"
           loading="lazy"
           className={cn(
-            "rounded transition blur-sm duration-500",
+            "rounded",
             className
           )}
           onError={() => setError(true)}

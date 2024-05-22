@@ -1,60 +1,68 @@
-import MaxWidthWrapper from "@/components/max-width-wrapper";
-import { EmptyPlaceholder } from "@/components/empty-placeholder";
-import { LobbySkeleton } from "./_components/lobby-skeleton";
-import { buttonVariants } from "@/components/ui/button";
-
 import { CardsHolder } from "@/components/cards/cards-holder";
-import { InfromationCard } from "@/components/cards/information-card";
 import { HelpCard } from "@/components/cards/help-card";
-import { NewsCard } from "@/components/cards/news-card";
+import { InfromationCard } from "@/components/cards/information-card";
+
+import MaxWidthWrapper from "@/components/max-width-wrapper";
+
+import { ProductCardSkeleton } from "@/components/skeletons/product-card-skeleton";
+
+import { Skeleton } from "@/components/ui/skeleton";
+import { buttonVariants } from "@/components/ui/button";
 
 import { helpCards, informationCards } from "@/config/cards";
 
 import Link from "next/link";
-import { Suspense } from "react";
 
-import { getFutureNews } from "@/lib/actions/news";
-
-export default async function Home() {
-  const news = await getFutureNews();
-
+export function LobbySkeleton() {
   return (
     <div>
       <section 
-        className="container animate-fade-up py-20 lg:py-44 mx-auto text-center flex flex-col items-center max-w-4xl space-y-4"
-        style={{ animationDelay: "0.10s", animationFillMode: "both" }}
+        className="py-20 lg:py-44 mx-auto flex flex-col items-center space-y-4 bg-gradient-to-b from-blue-50 to-white"
       >
-        <h1 
-          className="animate-fade-up font-heading font-bold text-3xl sm:text-5xl md:text-6xl lg:text-7xl"
-          style={{ animationDelay: "0.20s", animationFillMode: "both" }}
-        >
-          Олександрiйський полiтехнiчний фаховий коледж
-        </h1>
+        <MaxWidthWrapper>
+          <div className="grid max-w-screen-xl lg:grid-cols-12 text-center lg:text-left">
+            <div className="mr-auto col-span-7 space-y-6 lg:mx-auto">
+              <h1 
+                className="animate-fade-up font-heading font-bold text-3xl leading-[1.1] sm:text-3xl md:text-6xl"
+                style={{ animationDelay: "0.20s", animationFillMode: "both" }}
+              >
+                Олександрiйський полiтехнiчний фаховий коледж
+              </h1>
 
-        <p 
-          className="animate-fade-up max-w-[700px] text-lg text-muted-foreground font-sans"
-          style={{ animationDelay: "0.30s", animationFillMode: "both" }}
-        >
-          Наш коледж готує фахівців високої кваліфікації у рiзний сучасних галузях.
-        </p>
+              <p 
+                className="animate-fade-up text-lg text-muted-foreground font-sans lg:mx-auto"
+                style={{ animationDelay: "0.30s", animationFillMode: "both" }}
+              >
+                Наш коледж готує фахівців високої кваліфікації у рiзний сучасних галузях.
+              </p>
 
-        <div 
-          className="animate-fade-upnpm flex gap-4 flex-col sm:flex-row sm:justify-between"
-          style={{ animationDelay: "0.40s", animationFillMode: "both" }}
-        >
-          <Link 
-            href="/*" 
-            className={buttonVariants({ variant: "outline" })}
-          >
-            Розклад занять
-          </Link>
-          <Link 
-            href="/*"
-            className={buttonVariants()}
-          >
-            Роздклад дзвiнкiв
-          </Link>
-        </div>
+              <div 
+                className="animate-fade-up flex gap-4 flex-col sm:flex-row justify-center lg:justify-start"
+                style={{ animationDelay: "0.40s", animationFillMode: "both" }}
+              >
+                <Link 
+                  href="/*" 
+                  className={buttonVariants({ variant: "outline" })}
+                >
+                  Розклад занять
+                </Link>
+                <Link 
+                  href="/*"
+                  className={buttonVariants()}
+                >
+                  Роздклад дзвiнкiв
+                </Link>
+              </div>
+            </div>
+
+            <div className="col-span-1"></div>
+            <div className="w-full col-span-4">
+              <Skeleton 
+                className="w-96 h-96 rounded-xl bg-white shadow-md hidden lg:block"
+              />
+            </div>
+          </div>
+        </MaxWidthWrapper>
       </section>
 
       <section 
@@ -96,24 +104,11 @@ export default async function Home() {
               Цікаві новини нашого колежда
             </p>
           </div>
-          
-          {!news.length ? (
-            <EmptyPlaceholder>
-              <EmptyPlaceholder.Icon name="notebook" />
-              <EmptyPlaceholder.Title>Не вдалось знайти новини</EmptyPlaceholder.Title>
-              <EmptyPlaceholder.Description>
-                На даний момент не додано жодної новини
-              </EmptyPlaceholder.Description>
-            </EmptyPlaceholder>
-          ): (
-            <Suspense fallback={<LobbySkeleton />}>
-              <CardsHolder className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
-                {news.slice(0, 6).map((item, i) => (
-                  <NewsCard post={item} key={i} />
-                ))}
-              </CardsHolder>
-            </Suspense>
-          )}
+          <CardsHolder className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </CardsHolder>
         </section>
       </MaxWidthWrapper>
 
@@ -122,6 +117,7 @@ export default async function Home() {
         className="animate-fade-up py-8 md:py-12 bg-slate-50 dark:bg-transparent lg:py-24 space-y-6"
         style={{ animationDelay: "0.70s", animationFillMode: "both" }}
       >
+        
         <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
           <h2 className="font-heading font-bold text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
             Студентський центр

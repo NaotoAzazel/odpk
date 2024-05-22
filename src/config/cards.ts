@@ -12,7 +12,7 @@ export const informationCards: InformatioCard[] = [
     href: "*"
   },
   {
-    title: "МАТЕРІАЛИ ДО АКРЕДИТАЦІЇ",
+    title: "Акредитація",
     icon: "notebook",
     href: "*"
   },
