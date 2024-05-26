@@ -1,25 +1,105 @@
-import { InformatioCard, HelpCard } from "@/types";
+import {
+  InformatioCard,
+  HelpCard,
+  NewInformationCard,
+  AboutUsCard,
+  HeroCard,
+} from "@/types";
 
 export const informationCards: InformatioCard[] = [
   {
     title: "Абітурієнту",
     icon: "openBook",
-    href: "*"
+    href: "*",
   },
   {
     title: "Атестація викладачів",
     icon: "suitCase",
-    href: "*"
+    href: "*",
   },
   {
     title: "Акредитація",
     icon: "notebook",
-    href: "*"
+    href: "*",
   },
   {
     title: "Анкетування",
     icon: "chart",
-    href: "*"
+    href: "*",
+  },
+];
+
+export const heroCards: HeroCard[] = [
+  {
+    title: "1000+",
+    description: "Випустившихся студентів",
+  },
+  {
+    title: "10+",
+    description: "Років роботи",
+  },
+  {
+    title: "1000+",
+    description: "Задоволених студентів",
+  },
+];
+
+export const newInformationCard: NewInformationCard[] = [
+  {
+    title: "Абітурієнту",
+    icon: "openBook",
+    href: "*",
+    color: "blue",
+  },
+  {
+    title: "Атестація викладачів",
+    icon: "suitCase",
+    href: "*",
+    color: "green",
+  },
+  {
+    title: "Акредитація",
+    icon: "notebook",
+    href: "*",
+    color: "cyan",
+  },
+  {
+    title: "Анкетування",
+    icon: "chart",
+    href: "*",
+    color: "violet",
+  },
+];
+
+export const aboutUs: AboutUsCard[] = [
+  {
+    title: "Хто ми є",
+    description:
+      "ОДПК буде і залишатиметься осередком, який відмінно проявить себе",
+  },
+  {
+    title: "Що ми робимо",
+    description:
+      "Місія ОДПК виробляти компетентних кар'єрних випускників у своїй галузі",
+  },
+  {
+    title: "Як ми можемо допомогти",
+    description:
+      "Пропонуємо академічне навчання на всіх програмах, що складаються із загальної освіти.",
+  },
+  {
+    title: "Можливостi",
+    description:
+      "ОДПК буде і залишатиметься центром передового досвіду у сфері вищої освіти.",
+  },
+  {
+    title: "Інші пропозицiї",
+    description: "Буде і залишатиметься осередком її досконалості у вищому.",
+  },
+  {
+    title: "Створити історію успіху",
+    description:
+      "Забезпечення матеріально-технічної бази, включаючи навчальні аудиторії, бібліотеку, що відповідають сучасному рівню.",
   },
 ];
 
@@ -29,87 +109,87 @@ export const helpCards: HelpCard[] = [
     items: [
       {
         title: "Керівники навчальних груп",
-        href: "*"
+        href: "*",
       },
       {
         title: "Розклад занять",
-        href: "*"
+        href: "*",
       },
       {
         title: "Розклад дзвінків",
-        href: "*"
+        href: "*",
       },
       {
         title: "Розклад консультацій",
-        href: "*"
+        href: "*",
       },
       {
         title: "Кращі студенти",
-        href: "*"
+        href: "*",
       },
       {
         title: "Студентська рада",
-        href: "*"
+        href: "*",
       },
       {
         title: " Освітній процес ",
-        href: "*"
-      }
-    ]
+        href: "*",
+      },
+    ],
   },
   {
     title: "БАТЬКАМ",
     items: [
       {
         title: "Питання та відповіді",
-        href: "*"
+        href: "*",
       },
       {
         title: "Групи",
-        href: "*"
+        href: "*",
       },
       {
         title: "Рейтинг успішності груп ",
-        href: "*"
+        href: "*",
       },
-    ]
+    ],
   },
   {
     title: "ВИКЛАДАЧАМ",
     items: [
       {
         title: "План роботи на місяць",
-        href: "*"
+        href: "*",
       },
       {
         title: "Графік чергувань",
-        href: "*"
+        href: "*",
       },
       {
         title: "Графік освітнього процесу",
-        href: "*"
+        href: "*",
       },
       {
         title: "План виховної роботи",
-        href: "*"
+        href: "*",
       },
-    ]
+    ],
   },
   {
     title: "ВИПУСКНИКАМ",
     items: [
       {
         title: "Звернення до випускників",
-        href: "*"
+        href: "*",
       },
       {
         title: "Почесні випускники",
-        href: "*"
+        href: "*",
       },
       {
         title: "Зустрічі випускників",
-        href: "*"
+        href: "*",
       },
-    ]
-  }
+    ],
+  },
 ];

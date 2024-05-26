@@ -30,6 +30,21 @@ export type InformatioCard = {
   href: string;
 };
 
+type TailwindColor = "violet" | "blue" | "cyan" | "green";
+export type NewInformationCard = {
+  title: string;
+  icon: keyof typeof Icons;
+  href: string;
+  color: TailwindColor;
+};
+
+export type AboutUsCard = {
+  title: string;
+  description: string;
+}
+
+export type HeroCard = AboutUsCard;
+
 export type HelpCard = {
   title: string;
   items: { 
