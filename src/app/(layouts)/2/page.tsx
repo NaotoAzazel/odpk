@@ -108,8 +108,8 @@ export default async function Page() {
           />
 
           <div className="relative items-center justify-between flex flex-col lg:flex-row gap-8">
-            <div className="flex flex-col w-full md:w-auto">
-              <CardsHolder className="grid-cols-1 md:grid-cols-2 w-full">
+            <div className="flex flex-col w-full lg:w-auto">
+              <CardsHolder className="grid-cols-1 w-full">
                 {aboutUs.map((card, index) => (
                   <AboutUsCard card={card} key={index} />
                 ))}
