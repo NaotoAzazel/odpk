@@ -1,25 +1,25 @@
-import { InformatioCard, HelpCard } from "@/types";
+import { InformatioCard, HelpCard, SpecialtieCard, Card } from "@/types";
 
 export const informationCards: InformatioCard[] = [
   {
     title: "Абітурієнту",
     icon: "openBook",
-    href: "*"
+    href: "*",
   },
   {
     title: "Атестація викладачів",
     icon: "suitCase",
-    href: "*"
+    href: "*",
   },
   {
     title: "Акредитація",
     icon: "notebook",
-    href: "*"
+    href: "*",
   },
   {
     title: "Анкетування",
     icon: "chart",
-    href: "*"
+    href: "*",
   },
 ];
 
@@ -29,87 +29,158 @@ export const helpCards: HelpCard[] = [
     items: [
       {
         title: "Керівники навчальних груп",
-        href: "*"
+        href: "*",
       },
       {
         title: "Розклад занять",
-        href: "*"
+        href: "*",
       },
       {
         title: "Розклад дзвінків",
-        href: "*"
+        href: "*",
       },
       {
         title: "Розклад консультацій",
-        href: "*"
+        href: "*",
       },
       {
         title: "Кращі студенти",
-        href: "*"
+        href: "*",
       },
       {
         title: "Студентська рада",
-        href: "*"
+        href: "*",
       },
       {
         title: " Освітній процес ",
-        href: "*"
-      }
-    ]
+        href: "*",
+      },
+    ],
   },
   {
     title: "БАТЬКАМ",
     items: [
       {
         title: "Питання та відповіді",
-        href: "*"
+        href: "*",
       },
       {
         title: "Групи",
-        href: "*"
+        href: "*",
       },
       {
         title: "Рейтинг успішності груп ",
-        href: "*"
+        href: "*",
       },
-    ]
+    ],
   },
   {
     title: "ВИКЛАДАЧАМ",
     items: [
       {
         title: "План роботи на місяць",
-        href: "*"
+        href: "*",
       },
       {
         title: "Графік чергувань",
-        href: "*"
+        href: "*",
       },
       {
         title: "Графік освітнього процесу",
-        href: "*"
+        href: "*",
       },
       {
         title: "План виховної роботи",
-        href: "*"
+        href: "*",
       },
-    ]
+    ],
   },
   {
     title: "ВИПУСКНИКАМ",
     items: [
       {
         title: "Звернення до випускників",
-        href: "*"
+        href: "*",
       },
       {
         title: "Почесні випускники",
-        href: "*"
+        href: "*",
       },
       {
         title: "Зустрічі випускників",
-        href: "*"
+        href: "*",
       },
-    ]
-  }
+    ],
+  },
+];
+
+export const aboutCollege: string[] = [
+  "6 факультетів різних напрямів",
+  "Наявність бюджетних місць",
+  "Працевлаштування студентів і випускників",
+  "Упор на практику і занурення в професію",
+  "Старт навчання на будь-якому етапі",
+];
+
+export const specialties: SpecialtieCard[] = [
+  {
+    name: "Інженерія програмного забезпечення",
+    href: "*",
+    label: "Коледж / інформаційні технології",
+  },
+  {
+    name: "Комп’ютерна інженерія",
+    href: "*",
+    label: "Коледж / інформаційні технології",
+  },
+  {
+    name: "Право",
+    href: "*",
+    label: "Коледж / інформаційні технології",
+  },
+  {
+    name: "Галузеве машинобудування",
+    href: "*",
+    label: "Коледж / інформаційні технології",
+  },
+  {
+    name: "Електроніка",
+    href: "*",
+    label: "Коледж / інформаційні технології",
+  },
+  {
+    name: "Автомобільний транспорт",
+    href: "*",
+    label: "Коледж / інформаційні технології",
+  },
+  {
+    name: "Транспортні технології",
+    href: "*",
+    label: "Коледж / інформаційні технології",
+  },
+];
+
+export const priorityCards: Card[] = [
+  {
+    title: "Пріоритет",
+    description: "Вимоги найбільших компаній-роботодавців",
+  },
+  {
+    title: "Актуальні знання",
+    description: "Вимоги найбільших компаній-роботодавців",
+  },
+  {
+    title: "Високий результат",
+    description: "Випускники - нова професійна еліта",
+  },
+];
+
+export const collegeInfoCards: Card[] = [
+  {
+    title: "1995",
+    description: "рік заснування коледжу",
+  },
+  { title: "> 1000", description: "які навчаються в коледжі" },
+  { title: "> 1000", description: "Задоволених студентів" },
+  { title: "> 10000", description: "випускників" },
 ];

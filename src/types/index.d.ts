@@ -32,10 +32,22 @@ export type InformatioCard = {
 
 export type HelpCard = {
   title: string;
-  items: { 
-    title: string; 
+  items: {
+    title: string;
     href: string;
   }[];
+};
+
+export type SpecialtieCard = {
+  name: string;
+  href: string;
+  label: string;
+};
+
+// TODO: change this shitt
+export type Card = {
+  title: string;
+  description: string;
 };
 
 export type Post = {
@@ -43,4 +55,6 @@ export type Post = {
   title: string;
   content: Prisma.JsonValue;
   images: string[];
+  createdAt: Date;
+  updatedAt: Date;
 };

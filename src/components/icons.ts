@@ -16,7 +16,8 @@ import {
   AlignJustify,
   ArrowUpDown,
   Plus,
-  ChevronLeft
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -38,5 +39,6 @@ export const Icons = {
   alignJustify: AlignJustify,
   arrowUpDown: ArrowUpDown,
   plus: Plus,
-  back: ChevronLeft
+  back: ChevronLeft,
+  chevronRight: ChevronRight,
 };
