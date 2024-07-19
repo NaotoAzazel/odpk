@@ -1,27 +1,4 @@
-import { InformatioCard, HelpCard, SpecialtieCard, Card } from "@/types";
-
-export const informationCards: InformatioCard[] = [
-  {
-    title: "Абітурієнту",
-    icon: "openBook",
-    href: "*",
-  },
-  {
-    title: "Атестація викладачів",
-    icon: "suitCase",
-    href: "*",
-  },
-  {
-    title: "Акредитація",
-    icon: "notebook",
-    href: "*",
-  },
-  {
-    title: "Анкетування",
-    icon: "chart",
-    href: "*",
-  },
-];
+import { HelpCard, SpecialtieCard, Card } from "@/types";
 
 export const helpCards: HelpCard[] = [
   {

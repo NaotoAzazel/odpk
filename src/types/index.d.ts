@@ -24,12 +24,6 @@ export type NavBarConfig = {
   dashboardNav: DashboardNavItem[];
 };
 
-export type InformatioCard = {
-  title: string;
-  icon: keyof typeof Icons;
-  href: string;
-};
-
 export type HelpCard = {
   title: string;
   items: {
