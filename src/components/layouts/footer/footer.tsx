@@ -1,8 +1,9 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { CardsHolder } from "@/components/layouts/cards-holder";
 import { Icons } from "@/components/icons";
+import { FeedbackDialog } from "@/components/feedback-dialog";
 
 import { FooterMainSection } from "./footer-main-section";
 
@@ -61,10 +62,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <Button size="lg" className="bg-transparent border w-full">
-              {/* TODO: open dialog to send feedback */}
-              Зворотній зв&apos;язок
-            </Button>
+            <FeedbackDialog />
             <div className="mt-4 flex flex-row space-x-4">
               <Link
                 href={siteConfig.youtube}
