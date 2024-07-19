@@ -18,6 +18,10 @@ import {
   Plus,
   ChevronLeft,
   ChevronRight,
+  Phone,
+  Youtube,
+  Facebook,
+  Instagram,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -41,4 +45,8 @@ export const Icons = {
   plus: Plus,
   back: ChevronLeft,
   chevronRight: ChevronRight,
+  phone: Phone,
+  yt: Youtube,
+  facebook: Facebook,
+  instagram: Instagram,
 };

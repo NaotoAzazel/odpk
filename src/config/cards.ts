@@ -2,7 +2,7 @@ import { HelpCard, SpecialtieCard, Card } from "@/types";
 
 export const helpCards: HelpCard[] = [
   {
-    title: "СТУДЕНТАМ",
+    title: "Студентам",
     items: [
       {
         title: "Керівники навчальних груп",
@@ -35,7 +35,7 @@ export const helpCards: HelpCard[] = [
     ],
   },
   {
-    title: "БАТЬКАМ",
+    title: "Батькам",
     items: [
       {
         title: "Питання та відповіді",
@@ -52,7 +52,7 @@ export const helpCards: HelpCard[] = [
     ],
   },
   {
-    title: "ВИКЛАДАЧАМ",
+    title: "Викладачам",
     items: [
       {
         title: "План роботи на місяць",
@@ -73,7 +73,7 @@ export const helpCards: HelpCard[] = [
     ],
   },
   {
-    title: "ВИПУСКНИКАМ",
+    title: "Випускникам",
     items: [
       {
         title: "Звернення до випускників",
