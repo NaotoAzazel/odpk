@@ -16,7 +16,12 @@ import {
   AlignJustify,
   ArrowUpDown,
   Plus,
-  ChevronLeft
+  ChevronLeft,
+  ChevronRight,
+  Phone,
+  Youtube,
+  Facebook,
+  Instagram,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -38,5 +43,10 @@ export const Icons = {
   alignJustify: AlignJustify,
   arrowUpDown: ArrowUpDown,
   plus: Plus,
-  back: ChevronLeft
+  back: ChevronLeft,
+  chevronRight: ChevronRight,
+  phone: Phone,
+  yt: Youtube,
+  facebook: Facebook,
+  instagram: Instagram,
 };

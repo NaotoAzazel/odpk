@@ -6,23 +6,26 @@ export async function getNews() {
   return news;
 }
 
-export async function getFutureNews() {
+interface getFutureNewsParams {
+  take?: number;
+}
+
+export async function getFutureNews({ take = 6 }: getFutureNewsParams = {}) {
   const news = await db.post.findMany({
-    take: 6,
+    take,
     orderBy: {
-      "createdAt": "desc"
-    }
+      createdAt: "desc",
+    },
   });
 
   return news;
 }
 
-export async function getNewsById(postId: number): 
-  Promise<Post | null> {
+export async function getNewsById(postId: number): Promise<Post | null> {
   const news = await db.post.findFirst({
     where: {
-      id: postId
-    }
+      id: postId,
+    },
   });
 
   return news;
