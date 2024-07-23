@@ -13,6 +13,9 @@ interface getFutureNewsParams {
 export async function getFutureNews({ take = 6 }: getFutureNewsParams = {}) {
   const news = await db.post.findMany({
     take,
+    where: {
+      published: true,
+    },
     orderBy: {
       createdAt: "desc",
     },
