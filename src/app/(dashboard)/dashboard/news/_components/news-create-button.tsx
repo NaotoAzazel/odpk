@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Icons } from "@/components/icons";
 import { Button, ButtonProps } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 
-interface NewsCreateButtonProps extends ButtonProps {};
+interface NewsCreateButtonProps extends ButtonProps {}
 
 export function NewsCreateButton({
   className,
@@ -16,14 +16,14 @@ export function NewsCreateButton({
   ...props
 }: NewsCreateButtonProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  
+
   const { toast } = useToast();
   const router = useRouter();
 
   async function onClick() {
     try {
       setIsLoading(true);
-  
+
       const response = await fetch("/api/news", {
         method: "POST",
         headers: {
@@ -36,20 +36,20 @@ export function NewsCreateButton({
 
       setIsLoading(false);
 
-      if(!response?.ok) {
-        throw new Error("Новину не вдалося створити. спробуйте пізніше");
+      if (!response?.ok) {
+        throw new Error("Новину не вдалося створити, спробуйте пізніше");
       }
 
       const news = await response.json();
 
       router.refresh();
       router.push(`/editor/${news.id}`);
-    } catch(error ) {
-      if(error instanceof Error) {
+    } catch (error) {
+      if (error instanceof Error) {
         toast({
           title: "Щось пiшло не так",
           description: error.message,
-          variant: "destructive"
+          variant: "destructive",
         });
       }
     }
@@ -59,6 +59,9 @@ export function NewsCreateButton({
     <Button
       disabled={isLoading}
       onClick={onClick}
+      className={className}
+      variant="outline"
+      {...props}
     >
       {isLoading ? (
         <Icons.spinner className="mr-2 w-4 h-4 animate-spin" />
@@ -67,5 +70,5 @@ export function NewsCreateButton({
       )}
       <span>Новина</span>
     </Button>
-  )
+  );
 }

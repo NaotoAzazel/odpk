@@ -22,6 +22,10 @@ import {
   Youtube,
   Facebook,
   Instagram,
+  SquareArrowOutUpRight,
+  Pencil,
+  Trash,
+  Settings2,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -49,4 +53,8 @@ export const Icons = {
   yt: Youtube,
   facebook: Facebook,
   instagram: Instagram,
+  openLink: SquareArrowOutUpRight,
+  pencil: Pencil,
+  trash: Trash,
+  settings: Settings2
 };
