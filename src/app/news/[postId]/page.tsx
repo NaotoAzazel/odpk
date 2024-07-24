@@ -13,6 +13,8 @@ import { Suspense } from "react";
 
 import { NewsHeadingLoading } from "../_components/loading/news-heading-loading";
 
+import { getServerSession } from "next-auth";
+
 interface NewsPageProps {
   params: {
     postId: string;
@@ -23,8 +25,10 @@ export default async function NewsPage({ params }: NewsPageProps) {
   const postPromise = getNewsById(parseInt(params.postId));
   const newsPromise = getFutureNews({ take: 3 });
 
+  const user = await getServerSession();
+
   const currentNews = await postPromise;
-  if (!currentNews || !currentNews.published) {
+  if (!currentNews || (!currentNews.published && !user?.user)) {
     return notFound();
   }
 
