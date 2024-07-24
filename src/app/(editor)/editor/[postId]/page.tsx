@@ -1,24 +1,22 @@
-import { Editor } from "../../_components/editor";
+import { EditorContent } from "./_components/editor-content";
+import { EditorContentSkeleton } from "./_components/editor-content-skeleton";
+
 import { getNewsById } from "@/lib/actions/news";
 
-import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 interface EditorPageProps {
   params: {
     postId: string;
   };
-};
+}
 
-export default async function EditorPage({ params }: EditorPageProps) {
-  const post = await getNewsById(parseInt(params.postId));
-
-  if(!post) {
-    return notFound();
-  }
+export default function EditorPage({ params }: EditorPageProps) {
+  const postPromise = getNewsById(parseInt(params.postId));
 
   return (
-    <div className="flex flex-col gap-6 my-10">
-      <Editor post={post} />
-    </div>
-  )
+    <Suspense fallback={<EditorContentSkeleton />}>
+      <EditorContent postPromise={postPromise} />
+    </Suspense>
+  );
 }
