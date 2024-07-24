@@ -1,8 +1,9 @@
+import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { Picture } from "@/components/picture";
 
-import { CardsHolder } from "@/components/layouts/cards-holder";
 import { SpecialtiesCard } from "@/components/cards/specialties-card";
+import { CardsHolder } from "@/components/layouts/cards-holder";
 
 import { AboutCollegeCardsSwiper } from "./swiper/about-college-cards-swiper";
 import { NewsCardsSwiper } from "./swiper/news-cards-swiper";
@@ -26,22 +27,22 @@ export async function Main({ newsPromise }: LobbyProps) {
 
   return (
     <>
-      <section className="h-screen relative flex items-center justify-center">
+      <section className="relative flex h-screen items-center justify-center">
         <Picture
           src={LandingImage}
-          className="absolute top-0 left-0 h-screen w-full object-cover"
+          className="absolute left-0 top-0 h-screen w-full object-cover"
         />
-        <div className="absolute top-0 left-0 h-screen w-full bg-black opacity-40" />
-        <div className="container text-center flex flex-col items-center max-w-4xl space-y-4 my-44">
+        <div className="absolute left-0 top-0 h-screen w-full bg-black opacity-40" />
+        <div className="container my-44 flex max-w-4xl flex-col items-center space-y-4 text-center">
           <h1
-            className="animate-fade-up font-heading font-bold text-4xl md:text-6xl lg:text-7xl text-white tracking-tighter lg:leading-[1.1]"
+            className="animate-fade-up font-heading text-4xl font-bold tracking-tighter text-white md:text-6xl lg:text-7xl lg:leading-[1.1]"
             style={{ animationDelay: "0.20s", animationFillMode: "both" }}
           >
             Олександрiйський полiтехнiчний фаховий коледж
           </h1>
 
           <p
-            className="animate-fade-up max-w-[700px] text-lg text-primary-foreground font-sans"
+            className="max-w-[700px] animate-fade-up font-sans text-lg text-primary-foreground"
             style={{ animationDelay: "0.30s", animationFillMode: "both" }}
           >
             Наш коледж готує фахівців високої кваліфікації у рiзний сучасних
@@ -49,7 +50,7 @@ export async function Main({ newsPromise }: LobbyProps) {
           </p>
 
           <div
-            className="animate-fade-up flex gap-4 flex-col sm:flex-row sm:justify-between"
+            className="flex animate-fade-up flex-col gap-4 sm:flex-row sm:justify-between"
             style={{ animationDelay: "0.40s", animationFillMode: "both" }}
           >
             <Link href="/*" className={buttonVariants({ variant: "outline" })}>
@@ -62,13 +63,13 @@ export async function Main({ newsPromise }: LobbyProps) {
         </div>
       </section>
 
-      <section className="bg-slate-50 py-20 lg:py-32 overflow-hidden">
+      <section className="overflow-hidden bg-slate-50 py-20 lg:py-32">
         <MaxWidthWrapper>
-          <h2 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight text-gray-800">
+          <h2 className="font-heading text-3xl font-bold tracking-tight text-gray-800 md:text-4xl lg:text-5xl">
             Наш коледж — <strong className="text-primary">місце</strong>, де
             формується нове покоління фахівців
           </h2>
-          <p className="text-gray-800 font-medium mt-4 text-lg lg:text-2xl max-w-[1050px]">
+          <p className="mt-4 max-w-[1050px] text-lg font-medium text-gray-800 lg:text-2xl">
             Ми пропонуємо програми навчання для всіх, забезпечуючи їм
             високоякісну професійну та бізнес-освіту
           </p>
@@ -79,11 +80,11 @@ export async function Main({ newsPromise }: LobbyProps) {
 
       <section className="py-20 lg:py-32">
         <MaxWidthWrapper>
-          <h2 className="text-heading font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight text-gray-800">
+          <h2 className="text-heading text-3xl font-bold tracking-tight text-gray-800 md:text-4xl lg:text-5xl">
             Спеціальності
           </h2>
 
-          <CardsHolder className="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-6">
+          <CardsHolder className="mt-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {specialties.map((specialtie, i) => (
               <SpecialtiesCard specialtie={specialtie} key={i} />
             ))}
@@ -91,19 +92,19 @@ export async function Main({ newsPromise }: LobbyProps) {
         </MaxWidthWrapper>
       </section>
 
-      <section className="bg-slate-50 flex py-4 overflow-hidden">
-        <MaxWidthWrapper className="bg-blue-950 xl:rounded-lg text-white p-8 md:p-16">
+      <section className="flex overflow-hidden bg-slate-50 py-4">
+        <MaxWidthWrapper className="bg-blue-950 p-8 text-white md:p-16 xl:rounded-lg">
           <div>
             <div>
-              <h2 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl tracking-tighter mb-12">
+              <h2 className="mb-12 font-heading text-3xl font-bold tracking-tighter md:text-4xl lg:text-5xl">
                 Про коледж
               </h2>
-              <h3 className="font-heading font-semibold text-xl md:text-2xl lg:text-3xl max-w-xl mb-5">
+              <h3 className="mb-5 max-w-xl font-heading text-xl font-semibold md:text-2xl lg:text-3xl">
                 Наша мета — якісна освіта для вашої успішної кар&apos;єри
               </h3>
             </div>
             <div>
-              <p className="leading-6 text-lg">
+              <p className="text-lg leading-6">
                 В «Олександрійському політехнічному фаховому коледжі» готують
                 висококласних фахівців, затребуваних в Україні та за кордоном.
                 Почніть будувати своє професійне майбутнє разом із нами.
@@ -117,14 +118,25 @@ export async function Main({ newsPromise }: LobbyProps) {
 
       <section className="py-20 lg:py-32">
         <MaxWidthWrapper className="space-y-5">
-          <h2 className="text-heading font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight text-gray-800">
+          <h2 className="text-heading text-3xl font-bold tracking-tight text-gray-800 md:text-4xl lg:text-5xl">
             Новини
           </h2>
 
-          <div>
-            <NewsCardsSwiper news={news} />
-          </div>
-
+          {news.length ? (
+            <div>
+              <NewsCardsSwiper news={news} />
+            </div>
+          ) : (
+            <EmptyPlaceholder>
+              <EmptyPlaceholder.Icon name="file" />
+              <EmptyPlaceholder.Title>
+                Не вдалось знайти новини
+              </EmptyPlaceholder.Title>
+              <EmptyPlaceholder.Description>
+                На даний момент не додано жодної новини
+              </EmptyPlaceholder.Description>
+            </EmptyPlaceholder>
+          )}
           <div className="flex justify-center">
             <Link href="/news" className={buttonVariants({ size: "lg" })}>
               Всі новини
