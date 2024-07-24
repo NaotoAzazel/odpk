@@ -32,11 +32,6 @@ export type Icon = LucideIcon;
 export const Icons = {
   graduationCap: GraduationCap,
   alignLeft: AlignLeft,
-  openBook: BookOpenText,
-  suitCase: BriefcaseBusiness,
-  notebook: Notebook,
-  chart: BarChart3,
-  warning: FileWarning,
   spinner: Loader2,
   file: File,
   search: Search,
