@@ -213,15 +213,17 @@ export function Editor({ post }: { post: Post }) {
       <div className="flex w-full items-center justify-between space-x-2">
         <div className="flex w-full items-center gap-2">
           <div className="flex flex-1 items-center">
-            <Button
-              variant="outline"
-              disabled={isButtonsDisable}
-              onClick={() => {
-                router.refresh();
-              }}
-            >
-              <Link href="/dashboard/news">Назад</Link>
-            </Button>
+            <Link href="/dashboard/news">
+              <Button
+                variant="outline"
+                disabled={isButtonsDisable}
+                onClick={() => {
+                  router.refresh();
+                }}
+              >
+                Назад
+              </Button>
+            </Link>
           </div>
           <div className="flex items-center gap-2">
             <Button
