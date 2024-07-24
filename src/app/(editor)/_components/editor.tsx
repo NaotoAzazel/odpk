@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Post } from "@/types";
 
 import EditorJS from "@editorjs/editorjs";
+import { imageRemove } from "@/lib/actions/image-remove";
 
 export function Editor({ post }: { post: Post }) {
   const router = useRouter();
@@ -134,44 +135,64 @@ export function Editor({ post }: { post: Post }) {
   async function onSubmit(data: PostCreationRequest) {
     setIsSaving(true);
 
-    const blocks = await ref.current?.save();
-    if (!blocks) {
-      return;
-    }
+    try {
+      const blocks = await ref.current?.save();
+      if (!blocks) {
+        return;
+      }
 
-    // TODO: realize image delete from uploadthing
-    // by compare initial post.images with current
-    const imageData = blocks.blocks
-      .filter((block) => block.type === "image")
-      .map((block) => block.data.file.url);
+      const imageData = blocks.blocks
+        .filter((block) => block.type === "image")
+        .map((block) => block.data.file.url);
 
-    const response = await fetch(`/api/news/${post.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: data.title,
-        content: blocks,
-        images: imageData,
-      }),
-    });
-
-    setIsSaving(false);
-
-    if (!response?.ok) {
-      return toast({
-        title: "Щось пiшло не так",
-        description: "Новину не збережно. Спробуйте ще раз",
-        variant: "destructive",
+      const response = await fetch(`/api/news/${post.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: data.title,
+          content: blocks,
+          images: imageData,
+        }),
       });
+
+      if (!response?.ok) {
+        throw new Error("Новину не збережно. Спробуйте ще раз");
+      }
+
+      const initialPostImages: string[] = post.images;
+      const removed: string[] = initialPostImages.filter(
+        (url) => !imageData.includes(url)
+      );
+
+      const modifiedRemoved = removed.map((url) => url.split("/")[4]);
+
+      if (removed) {
+        const removingStatus = await imageRemove(modifiedRemoved);
+        if (!removingStatus.success) {
+          throw new Error("Новину не збережно. Спробуйте ще раз");
+        }
+      }
+
+      setIsSaving(false);
+
+      router.refresh();
+
+      return toast({
+        description: "Новину збережено",
+      });
+    } catch (error) {
+      setIsSaving(false);
+
+      if (error instanceof Error) {
+        return toast({
+          title: "Щось пiшло не так",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     }
-
-    router.refresh();
-
-    return toast({
-      description: "Новину збережено",
-    });
   }
 
   async function publishPost() {
