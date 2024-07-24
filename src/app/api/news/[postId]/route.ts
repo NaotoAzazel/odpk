@@ -1,5 +1,5 @@
-import { z } from "zod"; 
-import { PostValidator } from "@/lib/validation/post";
+import { z } from "zod";
+import { PostUpdateValidator } from "@/lib/validation/post";
 
 import { db } from "@/lib/db";
 
@@ -8,8 +8,8 @@ import { authOptions } from "@/lib/auth";
 
 const routeContextSchema = z.object({
   params: z.object({
-    postId: z.string()
-  })
+    postId: z.string(),
+  }),
 });
 
 export async function DELETE(
@@ -18,21 +18,21 @@ export async function DELETE(
 ) {
   try {
     const { params } = routeContextSchema.parse(context);
-    
-    const isAuth = await getServerSession(authOptions); 
-    if(!isAuth) {
+
+    const isAuth = await getServerSession(authOptions);
+    if (!isAuth) {
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
     await db.post.delete({
       where: {
-        id: parseInt(params.postId)
-      }
+        id: parseInt(params.postId),
+      },
     });
 
     return new Response(null, { status: 200 });
-  } catch(error) {
-    if(error instanceof z.ZodError) {
+  } catch (error) {
+    if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
     }
 
@@ -48,27 +48,23 @@ export async function PATCH(
     const { params } = routeContextSchema.parse(context);
 
     const json = await req.json();
-    const body = PostValidator.parse(json);
+    const data = PostUpdateValidator.parse(json);
 
-    const isAuth = await getServerSession(authOptions); 
-    if(!isAuth) {
+    const isAuth = await getServerSession(authOptions);
+    if (!isAuth) {
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
     await db.post.update({
       where: {
-        id: parseInt(params.postId)
+        id: parseInt(params.postId),
       },
-      data: {
-        title: body.title,
-        content: body.content,
-        images: body.images
-      }
+      data,
     });
 
     return new Response(null, { status: 200 });
-  } catch(error) {
-    if(error instanceof z.ZodError) {
+  } catch (error) {
+    if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
     }
 

@@ -13,6 +13,7 @@ model Post {
   title     String
   content   Json?
   images    String[]
+  published Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

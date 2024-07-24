@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { useToast } from "@/components/ui/use-toast";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
 import TextareaAutosize from "react-textarea-autosize";
@@ -24,25 +24,22 @@ export function Editor({ post }: { post: Post }) {
   const { toast } = useToast();
 
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<PostCreationRequest>({
     resolver: zodResolver(PostValidator),
-    defaultValues: {
-      title: post.title,
-      content: post.content,
-      images: post.images
-    }
+    defaultValues: post,
   });
 
   const ref = useRef<EditorJS>();
   const _titleRef = useRef<HTMLTextAreaElement>(null);
   const [isMounter, setIsMounter] = useState<boolean>(false);
 
-  const initializeEditor = useCallback(async() => {
+  const initializeEditor = useCallback(async () => {
     const EditorJS = (await import("@editorjs/editorjs")).default;
     const Header = (await import("@editorjs/header")).default;
     const Table = (await import("@editorjs/table")).default;
@@ -52,7 +49,7 @@ export function Editor({ post }: { post: Post }) {
 
     const body = PostValidator.parse(post);
 
-    if(!ref.current) {
+    if (!ref.current) {
       const editor = new EditorJS({
         holder: "editor",
         onReady() {
@@ -66,61 +63,65 @@ export function Editor({ post }: { post: Post }) {
           LinkTool: {
             class: LinkTool,
             config: {
-              endpoint: "/api/link"
-            }
+              endpoint: "/api/link",
+            },
           },
           image: {
             class: ImageTool,
             config: {
               uploader: {
                 async uploadByFile(file: File) {
-                  const [res] = await uploadFiles("imageUploader", { files: [file] });
+                  const [res] = await uploadFiles("imageUploader", {
+                    files: [file],
+                  });
 
                   return {
                     success: true,
                     file: {
-                      url: res.url
-                    }
-                  }
-                }
-              }
-            }
+                      url: res.url,
+                    },
+                  };
+                },
+              },
+            },
           },
           list: List,
-          table: Table
+          table: Table,
         },
-      })
+      });
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    if(typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
       setIsMounter(true);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if(Object.keys(errors).length) {
-      for(const [_key, value] of Object.entries(errors)) {
+    if (Object.keys(errors).length) {
+      for (const [_key, value] of Object.entries(errors)) {
         toast({
           title: "Щось пiшло не так",
           description: (value as { message: string }).message,
-          variant: "destructive"
-        })
+          variant: "destructive",
+        });
       }
     }
-  }, [errors])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errors]);
 
   useEffect(() => {
-    const init = async() => {
+    const init = async () => {
       await initializeEditor();
 
       setTimeout(() => {
         _titleRef.current?.focus();
       }, 0);
-    }
+    };
 
-    if(isMounter) {
+    if (isMounter) {
       init();
 
       return () => {
@@ -128,19 +129,21 @@ export function Editor({ post }: { post: Post }) {
         ref.current = undefined;
       };
     }
-  }, [isMounter, initializeEditor])
+  }, [isMounter, initializeEditor]);
 
   async function onSubmit(data: PostCreationRequest) {
     setIsSaving(true);
 
     const blocks = await ref.current?.save();
-    if(!blocks) {
+    if (!blocks) {
       return;
     }
 
+    // TODO: realize image delete from uploadthing
+    // by compare initial post.images with current
     const imageData = blocks.blocks
-      .filter(block => block.type === "image")
-      .map(block => block.data.file.url);
+      .filter((block) => block.type === "image")
+      .map((block) => block.data.file.url);
 
     const response = await fetch(`/api/news/${post.id}`, {
       method: "PATCH",
@@ -150,39 +153,101 @@ export function Editor({ post }: { post: Post }) {
       body: JSON.stringify({
         title: data.title,
         content: blocks,
-        images: imageData
-      })
+        images: imageData,
+      }),
     });
 
     setIsSaving(false);
 
-    if(!response?.ok) {
+    if (!response?.ok) {
       return toast({
         title: "Щось пiшло не так",
         description: "Новину не збережно. Спробуйте ще раз",
-        variant: "destructive"
-      })
+        variant: "destructive",
+      });
     }
 
-    router.refresh()
+    router.refresh();
 
     return toast({
       description: "Новину збережено",
     });
   }
 
-  const { ref: titleRef, ...rest } = register("title"); 
+  async function publishPost() {
+    setIsPublishing(true);
+
+    const response = await fetch(`/api/news/${post.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        published: true,
+      }),
+    });
+
+    setIsPublishing(false);
+
+    if (!response?.ok) {
+      return toast({
+        title: "Щось пiшло не так",
+        description: "Новину не опубліковано. Спробуйте ще раз",
+        variant: "destructive",
+      });
+    }
+
+    router.refresh();
+
+    return toast({
+      description: "Новину опубліковано",
+    });
+  }
+
+  const { ref: titleRef, ...rest } = register("title");
+
+  const isButtonsDisable = isPublishing || isSaving;
 
   return (
     <>
-      <div className="flex">
-        <Link
-          href="/dashboard/news"
-          className={buttonVariants({ variant: "ghost" })}
-        >
-          <Icons.back className="mr-2 h-4 w-4" />
-          Назад
-        </Link>
+      <div className="flex w-full items-center justify-between space-x-2">
+        <div className="flex w-full items-center gap-2">
+          <div className="flex flex-1 items-center">
+            <Button
+              variant="outline"
+              disabled={isButtonsDisable}
+              onClick={() => {
+                router.refresh();
+              }}
+            >
+              <Link href="/dashboard/news">Назад</Link>
+            </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={publishPost}
+              disabled={post.published || isButtonsDisable}
+              variant="outline"
+            >
+              {isPublishing && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              {post.published ? "Опубліковано" : "Опублікувати"}
+            </Button>
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              disabled={isButtonsDisable}
+              type="submit"
+              className="w-full"
+              form="post-form"
+            >
+              {isSaving && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              <span>Зберегти</span>
+            </Button>
+          </div>
+        </div>
       </div>
       <div className="w-full p-4 bg-zinc-50 rounded border border-zinc-200">
         <form
@@ -191,35 +256,21 @@ export function Editor({ post }: { post: Post }) {
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="prose prose-stone dark:prose-invert">
-            <TextareaAutosize 
+            <TextareaAutosize
               ref={(e) => {
-                titleRef(e)
+                titleRef(e);
 
                 // @ts-ignore
                 _titleRef.current = e;
               }}
               {...rest}
               placeholder="Заголовок"
-              className="w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none" 
+              className="w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none"
             />
 
             <div id="editor" className="min-h-[500px]" />
           </div>
         </form>
-      </div>
-      <div className="w-full flex justify-end">
-        <Button
-          onClick={handleSubmit(onSubmit)}
-          disabled={isSaving}
-          type="submit"
-          className="w-full"
-          form="post-form"
-        >
-          {isSaving && (
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-          )}
-          <span>Зберегти</span>
-        </Button>
       </div>
     </>
   );

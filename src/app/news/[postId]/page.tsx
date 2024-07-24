@@ -8,8 +8,12 @@ import { NewsHeading } from "../_components/news-heading";
 
 import { getFutureNews, getNewsById } from "@/lib/actions/news";
 
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
+
 import { NewsHeadingLoading } from "../_components/loading/news-heading-loading";
+
+import { getServerSession } from "next-auth";
 
 interface NewsPageProps {
   params: {
@@ -20,6 +24,13 @@ interface NewsPageProps {
 export default async function NewsPage({ params }: NewsPageProps) {
   const postPromise = getNewsById(parseInt(params.postId));
   const newsPromise = getFutureNews({ take: 3 });
+
+  const user = await getServerSession();
+
+  const currentNews = await postPromise;
+  if (!currentNews || (!currentNews.published && !user?.user)) {
+    return notFound();
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
