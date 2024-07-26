@@ -1,11 +1,11 @@
-import localFont from "next/font/local";
+import { Manrope as FontHeading, Inter as FontSans } from "next/font/google";
 
-export const fontHeading = localFont({
-  src: "../assets/fonts/Manrope.woff2",
-  variable: "--font-heading",
+export const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
 });
 
-export const fontSans = localFont({
-  src: "../assets/fonts/Inter.woff2",
-  variable: "--font-sans",
+export const fontHeading = FontHeading({
+  subsets: ["latin"],
+  variable: "--font-heading",
 });
