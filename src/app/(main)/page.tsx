@@ -1,20 +1,17 @@
 import { buttonVariants } from "@/components/ui/button";
 
-import { SpecialtiesCard } from "@/components/cards/specialties-card";
 import ErrorBoundary from "@/components/error-boundary";
-import { CardsHolder } from "@/components/layouts/cards-holder";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
 import { Picture } from "@/components/picture";
 
-import { NewsCardsSection } from "./_components/news-cards-section";
-import { NewsCardsSectionSkeleton } from "./_components/news-cards-section-skeleton";
-import { AboutCollegeCardsSwiper } from "./_components/swiper/about-college-cards-swiper";
-import { SwiperCards } from "./_components/swiper/swiper-cards";
+import { AboutCollegeCardsCarousel } from "./_components/carousel/about-college-cards-carousel";
+import { CollegeInfoSection } from "./_components/sections/college-info-section";
+import { NewsCardsSection } from "./_components/sections/news-cards-section";
+import { NewsCardsSectionSkeleton } from "./_components/sections/news-cards-section-skeleton";
+import { SpecialtieCardsHolder } from "./_components/specialtie-cards-holder";
 
 import Link from "next/link";
-
-import { specialties } from "@/config/cards";
 
 import { Suspense } from "react";
 
@@ -70,7 +67,7 @@ export default function Home() {
             високоякісну професійну та бізнес-освіту
           </p>
 
-          <AboutCollegeCardsSwiper />
+          <AboutCollegeCardsCarousel />
         </MaxWidthWrapper>
       </section>
 
@@ -80,35 +77,13 @@ export default function Home() {
             Спеціальності
           </h2>
 
-          <CardsHolder className="mt-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {specialties.map((specialtie, i) => (
-              <SpecialtiesCard specialtie={specialtie} key={i} />
-            ))}
-          </CardsHolder>
+          <SpecialtieCardsHolder />
         </MaxWidthWrapper>
       </section>
 
       <section className="flex overflow-hidden bg-slate-50 py-4">
         <MaxWidthWrapper className="bg-blue-950 p-8 text-white md:p-16 xl:rounded-lg">
-          <div>
-            <div>
-              <h2 className="mb-12 font-heading text-3xl font-bold tracking-tighter md:text-4xl lg:text-5xl">
-                Про коледж
-              </h2>
-              <h3 className="mb-5 max-w-xl font-heading text-xl font-semibold md:text-2xl lg:text-3xl">
-                Наша мета — якісна освіта для вашої успішної кар&apos;єри
-              </h3>
-            </div>
-            <div>
-              <p className="text-lg leading-6">
-                В «Олександрійському політехнічному фаховому коледжі» готують
-                висококласних фахівців, затребуваних в Україні та за кордоном.
-                Почніть будувати своє професійне майбутнє разом із нами.
-              </p>
-            </div>
-          </div>
-
-          <SwiperCards />
+          <CollegeInfoSection />
         </MaxWidthWrapper>
       </section>
 

@@ -152,7 +152,7 @@ export const priorityCards: Card[] = [
   },
 ];
 
-export const collegeInfoCards: Card[] = [
+export const statsCards: Card[] = [
   {
     title: "1995",
     description: "рік заснування коледжу",

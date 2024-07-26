@@ -1,16 +1,14 @@
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { getFutureNews } from "@/lib/actions/news";
-import { NewsCardsSwiper } from "./swiper/news-cards-swiper";
+import { NewsCardsCarousel } from "../carousel/news-cards-carousel";
 
 export async function NewsCardsSection() {
-  const news = await getFutureNews({ take: 3 });
+  const news = await getFutureNews({ take: 6 });
 
   return (
     <>
       {news.length ? (
-        <div>
-          <NewsCardsSwiper news={news} />
-        </div>
+        <NewsCardsCarousel news={news} />
       ) : (
         <EmptyPlaceholder>
           <EmptyPlaceholder.Icon name="file" />
