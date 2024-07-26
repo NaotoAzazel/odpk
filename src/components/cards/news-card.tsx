@@ -15,7 +15,7 @@ export function NewsCard({ post }: NewsCardProps) {
 
   return (
     <Link href={`/news/${post.id}`}>
-      <div className="group border overflow-hidden rounded-lg bg-slate-50">
+      <div className="group border overflow-hidden rounded-md bg-slate-50">
         <div className="flex flex-col">
           <div className="relative pb-72 flex inset-0">
             <div className="flex w-full h-full absolute">

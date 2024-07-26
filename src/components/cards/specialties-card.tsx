@@ -13,7 +13,7 @@ export function SpecialtiesCard({
   const { name, href, label } = specialtie;
 
   return (
-    <div className="group flex-col min-h-44 md:min-h-48 relative flex items-start justify-start w-full h-full p-4 border rounded-lg bg-slate-50 hover:bg-primary duration-200 transition-colors cursor-default">
+    <div className="group flex-col min-h-44 md:min-h-48 relative flex items-start justify-start w-full h-full p-4 border rounded-md bg-slate-50 hover:bg-primary duration-200 transition-colors cursor-default">
       <div className="text-muted-foreground text-sm group-hover:text-white">
         {label}
       </div>
