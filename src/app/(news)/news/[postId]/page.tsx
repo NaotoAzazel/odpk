@@ -6,7 +6,11 @@ import { LoadingEditorOutput } from "../_components/loading/editor-output-loadin
 import { NewsContent } from "../_components/news-content";
 import { NewsHeading } from "../_components/news-heading";
 
-import { getFutureNews, getNewsById } from "@/lib/actions/news";
+import {
+  getFutureNews,
+  getNewsById,
+  getNewsExceptOneById,
+} from "@/lib/actions/news";
 
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -25,7 +29,10 @@ interface NewsPageProps {
 
 export default async function NewsPage({ params }: NewsPageProps) {
   const postPromise = getNewsById(parseInt(params.postId));
-  const newsPromise = getFutureNews({ take: 3 });
+  const anotherNewsPromise = getNewsExceptOneById({
+    take: 3,
+    id: parseInt(params.postId),
+  });
 
   const user = await getServerSession();
 
@@ -55,7 +62,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
 
             <ErrorBoundary fallback={<NewsCardsErrorContainer />}>
               <Suspense fallback={<AnotherNewsSectionLoading />}>
-                <AnotherNewsCards newsPromise={newsPromise} />
+                <AnotherNewsCards newsPromise={anotherNewsPromise} />
               </Suspense>
             </ErrorBoundary>
           </div>
