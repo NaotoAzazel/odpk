@@ -19,7 +19,6 @@ export const env = createEnv({
     UPLOADTHING_APP_ID: z.string().min(1),
     UPLOADTHING_SECRET: z.string().min(1),
     NEXTAUTH_SECRET: z.string().min(1),
-    NEXTAUTH_URL: z.string().url(),
   },
 
   /**
