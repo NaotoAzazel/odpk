@@ -7,6 +7,7 @@ import {
   Facebook,
   File,
   GraduationCap,
+  ImageIcon,
   Instagram,
   LayoutGrid,
   Loader2,
@@ -47,4 +48,5 @@ export const Icons = {
   trash: Trash,
   settings: Settings2,
   error: CircleX,
+  placeholder: ImageIcon
 };

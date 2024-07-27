@@ -1,8 +1,9 @@
 "use client";
 
+import { ResponsiveImage } from "@/components/responsive-image";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
-import { Picture } from "@/components/picture";
 import { LoadingEditorOutput } from "./loading/editor-output-loading";
 
 const Output = dynamic(
@@ -10,7 +11,7 @@ const Output = dynamic(
   {
     ssr: false,
     loading: () => <LoadingEditorOutput />,
-  }
+  },
 );
 
 interface EditorOutputProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -35,21 +36,15 @@ type HeaderRenderer = {
 };
 
 function CustomHeaderRenderer({ data }: { data: HeaderRenderer }) {
-  return <h2 className="font-bold font-heading text-3xl">{data.text}</h2>;
+  return <h2 className="font-heading text-3xl font-bold">{data.text}</h2>;
 }
 
 function CustomImageRenderer({ data }: any) {
   const src = data.file.url;
 
   return (
-    <div className="flex flex-col">
-      <div className="mt-1 h-full w-full relative justify-center flex inset-0 min-h-[15rem]">
-        <Picture
-          src={src}
-          alt="News-image"
-          className="object-contain my-auto relative"
-        />
-      </div>
-    </div>
+    <AspectRatio ratio={16 / 9}>
+      <ResponsiveImage src={src} alt="Image" fill className="rounded-md" />
+    </AspectRatio>
   );
 }
