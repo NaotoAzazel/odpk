@@ -1,13 +1,15 @@
 import { Post } from "@/types";
 import Link from "next/link";
-import Image from "next/image";
+
+import { ResponsiveImage } from "@/components/responsive-image";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface NewsCardProps {
   post: Post;
 }
 
 export function NewsCard({ post }: NewsCardProps) {
-  const formattedDate = post.createdAt.toLocaleDateString(undefined, {
+  const formattedDate = post.createdAt.toLocaleDateString("uk-UA", {
     year: "numeric",
     month: "numeric",
     day: "numeric",
@@ -15,25 +17,22 @@ export function NewsCard({ post }: NewsCardProps) {
 
   return (
     <Link href={`/news/${post.id}`}>
-      <div className="group border overflow-hidden rounded-md bg-slate-50">
-        <div className="flex flex-col">
-          <div className="relative pb-72 flex inset-0">
-            <div className="flex w-full h-full absolute">
-              {/* TODO: fix error when no image in 0 index */}
-              <Image
-                src={post.images[0]}
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                alt="News-Image"
-                className="border-b object-cover"
-              />
-            </div>
-          </div>
+      <div className="group size-full overflow-hidden rounded-md border bg-slate-50">
+        <div className="flex flex-col space-y-1.5">
+          <AspectRatio ratio={4 / 3}>
+            <ResponsiveImage
+              src={post.images[0]}
+              alt={post.title}
+              fill
+              className="border-b object-cover"
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
+          </AspectRatio>
         </div>
 
         <div className="p-4">
-          <div className="overflow-hidden mb-4">
-            <h1 className="overflow-hidden whitespace-nowrap text-ellipsis text-lg font-semibold text-gray-800 group-hover:text-primary transition-colors duration-200">
+          <div className="mb-4 overflow-hidden">
+            <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold text-gray-800 transition-colors duration-200 group-hover:text-primary">
               {post.title}
             </h1>
           </div>

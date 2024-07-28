@@ -65,21 +65,21 @@ export default function Footer() {
             <FeedbackDialog />
             <div className="mt-4 flex flex-row space-x-4">
               <Link
-                href={siteConfig.youtube}
+                href={siteConfig.links.youtube}
                 className={cn(buttonVariants(), "bg-transparent border flex-1")}
               >
                 <Icons.yt className="h-6 w-6" strokeWidth={1.5} />
               </Link>
 
               <Link
-                href={siteConfig.instagram}
+                href={siteConfig.links.instagram}
                 className={cn(buttonVariants(), "bg-transparent border flex-1")}
               >
                 <Icons.instagram className="h-6 w-6" strokeWidth={1.5} />
               </Link>
 
               <Link
-                href={siteConfig.facebook}
+                href={siteConfig.links.facebook}
                 className={cn(buttonVariants(), "bg-transparent border flex-1")}
               >
                 <Icons.facebook className="h-6 w-6" strokeWidth={1.5} />

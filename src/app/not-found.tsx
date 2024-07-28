@@ -1,10 +1,12 @@
-import MaxWidthWrapper from "@/components/max-width-wrapper";
-import { buttonVariants } from "@/components/ui/button";
+import MaxWidthWrapper from "@/components/max-width-wrapper"
+import { buttonVariants } from "@/components/ui/button"
 
-import Link from "next/link";
+import { Metadata } from "next"
+import Link from "next/link"
 
-export const metadata = {
-  title: "Сторiнку не знайдено"
+export const metadata: Metadata = {
+  title: "Сторiнку не знайдено",
+  description: "Не вдалося знайти сторінку, яку ви шукаєте",
 };
 
 export default function NotFound() {

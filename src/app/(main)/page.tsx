@@ -3,7 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import ErrorBoundary from "@/components/error-boundary";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
-import { Picture } from "@/components/picture";
+import { ResponsiveImage } from "@/components/responsive-image";
 
 import { AboutCollegeCardsCarousel } from "./_components/carousel/about-college-cards-carousel";
 import { CollegeInfoSection } from "./_components/sections/college-info-section";
@@ -17,13 +17,20 @@ import { Suspense } from "react";
 
 import LandingImage from "@/assets/images/landing.jpg";
 
+export const metadata = {
+  title: "Головна",
+};
+
 export default function Home() {
   return (
     <>
       <section className="relative flex h-screen items-center justify-center">
-        <Picture
+        <ResponsiveImage
           src={LandingImage}
           className="absolute left-0 top-0 h-screen w-full object-cover"
+          alt="Landing-image"
+          width={1000}
+          height={1000}
         />
         <div className="absolute left-0 top-0 h-screen w-full bg-black opacity-40" />
         <div className="container my-44 flex max-w-4xl flex-col items-center space-y-4 text-center">
