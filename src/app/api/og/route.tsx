@@ -28,7 +28,10 @@ export async function GET(request: Request) {
 
     return new ImageResponse(
       (
-        <div tw="flex relative flex-col p-12 w-full h-full items-start bg-white">
+        <div
+          tw="flex relative flex-col p-12 w-full h-full items-start bg-white"
+          style={{ color: "#fff", background: "white" }}
+        >
           <div tw="flex flex-col flex-1 py-10 text-gray-800">
             <div
               tw="flex text-center text-4xl font-bold tracking-tight"
