@@ -26,9 +26,17 @@ export async function GET(request: Request) {
 
     const fontSize = heading.length > 100 ? "70px" : "100px";
 
+    const paint = "#000";
+
     return new ImageResponse(
       (
-        <div tw="flex relative flex-col p-12 w-full h-full items-start">
+        <div
+          tw="flex relative flex-col p-12 w-full h-full items-start"
+          style={{
+            color: paint,
+            background: "white",
+          }}
+        >
           <div tw="flex flex-col flex-1 py-10 text-gray-800">
             <div
               tw="flex text-center text-4xl font-bold tracking-tight"
@@ -55,9 +63,7 @@ export async function GET(request: Request) {
               {heading}
             </div>
           </div>
-          <div tw="flex items-center w-full">
-            {siteConfig.url}
-          </div>
+          <div tw="flex items-center w-full">{siteConfig.url}</div>
         </div>
       ),
       {
