@@ -11,6 +11,10 @@ interface EditorPageProps {
   };
 }
 
+export const metadata = {
+  title: "Редактор",
+};
+
 export default function EditorPage({ params }: EditorPageProps) {
   const postPromise = getNewsById(parseInt(params.postId));
 

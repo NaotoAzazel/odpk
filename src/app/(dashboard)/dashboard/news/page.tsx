@@ -10,6 +10,13 @@ import ErrorBoundary from "@/components/error-boundary";
 import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
 import { Suspense } from "react";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Новини",
+  description: "Керуйте новинами",
+};
+
 export default async function DashboardNewsPage() {
   const newsPromise = getNews();
 

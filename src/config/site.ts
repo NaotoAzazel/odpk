@@ -10,6 +10,7 @@ const links = {
 
 export const siteConfig = {
   name: "ОДПК",
+  fullName: "Олександрійський політехнічний фаховий коледж",
   description:
     "Офіційний сайт Олександрійського політехнічного фахового коледжу",
   url: env.NEXT_PUBLIC_APP_URL,

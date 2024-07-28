@@ -1,29 +1,68 @@
+import ErrorBoundary from "@/components/error-boundary";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
 
 import { AnotherNewsCards } from "../_components/another-news-cards";
 import { AnotherNewsSectionLoading } from "../_components/loading/another-news-loading";
 import { LoadingEditorOutput } from "../_components/loading/editor-output-loading";
+import { NewsHeadingLoading } from "../_components/loading/news-heading-loading";
 import { NewsContent } from "../_components/news-content";
 import { NewsHeading } from "../_components/news-heading";
 
-import {
-  getFutureNews,
-  getNewsById,
-  getNewsExceptOneById,
-} from "@/lib/actions/news";
+import { getNewsById, getNewsExceptOneById } from "@/lib/actions/news";
+import { authOptions } from "@/lib/auth";
+import { absoluteUrl } from "@/lib/utils";
 
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
-
-import { NewsHeadingLoading } from "../_components/loading/news-heading-loading";
-
-import ErrorBoundary from "@/components/error-boundary";
-import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
+import { notFound } from "next/navigation";
+
+import { Suspense, cache } from "react";
 
 interface NewsPageProps {
   params: {
     postId: string;
+  };
+}
+
+const getCachedUserSession = cache(async () => {
+  return await getServerSession(authOptions);
+});
+
+export async function generateMetadata({
+  params,
+}: NewsPageProps): Promise<Metadata> {
+  const news = await getNewsById(parseInt(params.postId));
+  const user = await getCachedUserSession();
+
+  if (!news || (!news.published && !user?.user)) {
+    return {};
+  }
+
+  const ogUrl = new URL(absoluteUrl("/api/og"));
+  ogUrl.searchParams.set("heading", news.title);
+  ogUrl.searchParams.set("type", "Новина");
+
+  return {
+    title: news.title,
+    openGraph: {
+      title: news.title,
+      type: "article",
+      url: absoluteUrl(`/news/${news.id}`),
+      images: [
+        {
+          url: ogUrl.toString(),
+          width: 1200,
+          height: 630,
+          alt: news.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: news.title,
+      images: [ogUrl.toString()],
+    },
   };
 }
 
@@ -34,7 +73,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
     id: parseInt(params.postId),
   });
 
-  const user = await getServerSession();
+  const user = await getCachedUserSession();
 
   const currentNews = await postPromise;
   if (!currentNews || (!currentNews.published && !user?.user)) {

@@ -17,6 +17,10 @@ import { Suspense } from "react";
 
 import LandingImage from "@/assets/images/landing.jpg";
 
+export const metadata = {
+  title: "Головна",
+};
+
 export default function Home() {
   return (
     <>
