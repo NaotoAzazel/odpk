@@ -27,7 +27,7 @@ export default function Home() {
       <section className="relative flex h-screen items-center justify-center">
         <ResponsiveImage
           src={LandingImage}
-          className="absolute left-0 top-0 h-screen w-full"
+          className="absolute left-0 top-0 h-screen w-full object-cover"
           alt="Landing-image"
           width={1000}
           height={1000}
