@@ -9,7 +9,7 @@ import { NewsHeadingLoading } from "./_components/loading/news-heading-loading";
 import { NewsContent } from "./_components/news-content";
 import { NewsHeading } from "./_components/news-heading";
 
-import { getNewsById, getNewsExceptOneById } from "@/lib/actions/news";
+import { getNewsById, getNewsByParams } from "@/lib/actions/news";
 import { authOptions } from "@/lib/auth";
 import { absoluteUrl } from "@/lib/utils";
 
@@ -68,9 +68,18 @@ export async function generateMetadata({
 
 export default async function NewsPage({ params }: NewsPageProps) {
   const postPromise = getNewsById(parseInt(params.postId));
-  const anotherNewsPromise = getNewsExceptOneById({
-    take: 3,
-    id: parseInt(params.postId),
+  const anotherNewsPromise = getNewsByParams({
+    pageNumber: 1,
+    pageSize: 3,
+    params: {
+      where: {
+        published: true,
+        id: { not: parseInt(params.postId) },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
   });
 
   const user = await getCachedUserSession();

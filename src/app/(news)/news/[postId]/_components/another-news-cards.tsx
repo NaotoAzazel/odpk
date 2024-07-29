@@ -1,20 +1,20 @@
 import { CropNewsCard } from "@/components/cards/crop-news-card";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { CardsHolder } from "@/components/layouts/cards-holder";
-import { getNewsExceptOneById } from "@/lib/actions/news";
+import { getNewsByParams } from "@/lib/actions/news";
 
 interface AnotherNewsCardsProps {
-  newsPromise: ReturnType<typeof getNewsExceptOneById>;
+  newsPromise: ReturnType<typeof getNewsByParams>;
 }
 
 export async function AnotherNewsCards({ newsPromise }: AnotherNewsCardsProps) {
-  const news = await newsPromise;
+  const { data } = await newsPromise;
 
   return (
     <>
-      {news.length ? (
+      {data.length ? (
         <CardsHolder className="grid-cols-1 lg:grid-cols-3">
-          {news.map((item, i) => (
+          {data.map((item, i) => (
             <CropNewsCard post={item} key={i} />
           ))}
         </CardsHolder>
