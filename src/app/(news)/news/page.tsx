@@ -29,6 +29,9 @@ export default function NewsPage({ searchParams }: NewsPageProps) {
       where: {
         published: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     },
   });
 
