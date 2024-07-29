@@ -1,17 +1,12 @@
-import { Post } from "@/types";
-import Link from "next/link";
+import { formatDate } from "@/lib/utils";
+import { Post } from "@/types"
+import Link from "next/link"
 
 interface SliceNewsCardProps {
   post: Post;
 }
 
 export function CropNewsCard({ post }: SliceNewsCardProps) {
-  const formattedDate = post.createdAt.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-  });
-
   return (
     <Link href={`/news/${post.id}`}>
       <div className="group flex flex-col border overflow-hidden rounded-md bg-slate-50 p-5">
@@ -20,7 +15,7 @@ export function CropNewsCard({ post }: SliceNewsCardProps) {
             {post.title}
           </h1>
         </div>
-        <span className="text-muted-foreground mb-2">{formattedDate}</span>
+        <span className="text-muted-foreground mb-2">{formatDate(post.createdAt)}</span>
         <span className="text-primary font-semibold group-hover:text-gray-800 transition-colors duration-200">
           Читати докладніше
         </span>

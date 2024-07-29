@@ -1,13 +1,28 @@
 import { NoNewsPlaceholder } from "@/components/no-news-placeholder";
+import { getNewsByParams } from "@/lib/actions/news";
 import { NewsCardsCarousel } from "../carousel/news-cards-carousel";
-import { getFutureNews } from "@/lib/actions/news";
 
 export async function NewsCardsSection() {
-  const news = await getFutureNews({ take: 6 });
+  const news = await getNewsByParams({
+    pageNumber: 1,
+    pageSize: 6,
+    params: {
+      where: {
+        published: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
+  });
 
   return (
     <>
-      {news.length ? <NewsCardsCarousel news={news} /> : <NoNewsPlaceholder />}
+      {news.data.length ? (
+        <NewsCardsCarousel news={news.data} />
+      ) : (
+        <NoNewsPlaceholder />
+      )}
     </>
   );
 }

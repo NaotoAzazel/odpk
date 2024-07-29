@@ -4,17 +4,13 @@ import Link from "next/link";
 import { ResponsiveImage } from "@/components/responsive-image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
+import { formatDate } from "@/lib/utils";
+
 interface NewsCardProps {
   post: Post;
 }
 
 export function NewsCard({ post }: NewsCardProps) {
-  const formattedDate = post.createdAt.toLocaleDateString("uk-UA", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-  });
-
   return (
     <Link href={`/news/${post.id}`}>
       <div className="group size-full overflow-hidden rounded-md border bg-slate-50">
@@ -36,7 +32,9 @@ export function NewsCard({ post }: NewsCardProps) {
               {post.title}
             </h1>
           </div>
-          <span className="text-muted-foreground">{formattedDate}</span>
+          <span className="text-muted-foreground">
+            {formatDate(post.createdAt)}
+          </span>
         </div>
       </div>
     </Link>

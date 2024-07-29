@@ -15,7 +15,7 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Post } from "@/types";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -55,13 +55,7 @@ export function getColumns(): ColumnDef<Post>[] {
       ),
       cell: ({ row }) => {
         const date = row.original.createdAt;
-        const formatted = date.toLocaleDateString("uk-UA", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-
-        return <span>{formatted}</span>;
+        return <span>{formatDate(date, { month: "long" })}</span>;
       },
     },
     {

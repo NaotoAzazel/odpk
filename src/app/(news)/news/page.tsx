@@ -25,6 +25,14 @@ export default function NewsPage({ searchParams }: NewsPageProps) {
   const newsPromise = getNewsByParams({
     pageNumber: page,
     pageSize: 6,
+    params: {
+      where: {
+        published: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
   });
 
   return (
