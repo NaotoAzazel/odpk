@@ -4,11 +4,11 @@ import ErrorBoundary from "@/components/error-boundary";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
 import { ResponsiveImage } from "@/components/responsive-image";
+import { NewsLoadingContainer } from "@/components/skeletons/news-loading-container";
 
 import { AboutCollegeCardsCarousel } from "./_components/carousel/about-college-cards-carousel";
 import { CollegeInfoSection } from "./_components/sections/college-info-section";
 import { NewsCardsSection } from "./_components/sections/news-cards-section";
-import { NewsCardsSectionSkeleton } from "./_components/sections/news-cards-section-skeleton";
 import { SpecialtieCardsHolder } from "./_components/specialtie-cards-holder";
 
 import Link from "next/link";
@@ -101,7 +101,14 @@ export default function Home() {
           </h2>
 
           <ErrorBoundary fallback={<NewsCardsErrorContainer />}>
-            <Suspense fallback={<NewsCardsSectionSkeleton cardsCount={3} />}>
+            <Suspense
+              fallback={
+                <NewsLoadingContainer
+                  className="grid-cols-1 md:grid-cols-3"
+                  cardsCount={3}
+                />
+              }
+            >
               <NewsCardsSection />
             </Suspense>
           </ErrorBoundary>
