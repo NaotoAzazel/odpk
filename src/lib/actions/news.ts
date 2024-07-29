@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { Post } from "@/types";
+import { Prisma } from "@prisma/client";
 
 export async function getNews() {
   const news = db.post.findMany();
@@ -55,4 +56,64 @@ export async function getNewsById(postId: number): Promise<Post | null> {
   });
 
   return news;
+}
+
+interface GetNewsByParamsParams {
+  params?: Prisma.PostFindManyArgs;
+
+  /**
+   * @default 1
+   */
+  pageNumber?: number;
+
+  /**
+   * @default 8
+   */
+  pageSize?: number;
+}
+
+export interface Metadata {
+  totalPages: number;
+  totalRecordsCount: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+interface GetNewsByParamsResult {
+  data: Post[];
+  metadata: Metadata;
+}
+
+export async function getNewsByParams({
+  params = {},
+  pageNumber = 1,
+  pageSize = 8,
+}: GetNewsByParamsParams = {}): Promise<GetNewsByParamsResult> {
+  const {
+    take = pageSize,
+    skip = (pageNumber - 1) * pageSize,
+    ...other
+  } = params;
+
+  const news = await db.post.findMany({
+    take,
+    skip,
+    ...other,
+  });
+
+  const totalRecordsCount = await db.post.count();
+  const totalPages = Math.ceil(totalRecordsCount / pageSize);
+
+  const hasNextPage = pageNumber < totalPages;
+  const hasPrevPage = pageNumber > 1;
+
+  return {
+    data: news,
+    metadata: {
+      totalPages,
+      totalRecordsCount,
+      hasNextPage,
+      hasPrevPage,
+    },
+  };
 }

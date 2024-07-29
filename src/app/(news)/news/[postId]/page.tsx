@@ -2,12 +2,12 @@ import ErrorBoundary from "@/components/error-boundary";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
 
-import { AnotherNewsCards } from "../_components/another-news-cards";
-import { AnotherNewsSectionLoading } from "../_components/loading/another-news-loading";
-import { LoadingEditorOutput } from "../_components/loading/editor-output-loading";
-import { NewsHeadingLoading } from "../_components/loading/news-heading-loading";
-import { NewsContent } from "../_components/news-content";
-import { NewsHeading } from "../_components/news-heading";
+import { AnotherNewsCards } from "./_components/another-news-cards";
+import { AnotherNewsSectionLoading } from "./_components/loading/another-news-loading";
+import { LoadingEditorOutput } from "./_components/loading/editor-output-loading";
+import { NewsHeadingLoading } from "./_components/loading/news-heading-loading";
+import { NewsContent } from "./_components/news-content";
+import { NewsHeading } from "./_components/news-heading";
 
 import { getNewsById, getNewsExceptOneById } from "@/lib/actions/news";
 import { authOptions } from "@/lib/auth";
