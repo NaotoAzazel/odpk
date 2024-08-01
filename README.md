@@ -12,6 +12,7 @@ Revamping college's website. This is a [Next.js](https://nextjs.org/) project bo
 - Database: [Prisma](https://www.prisma.io/)
 - Validation: [Zod](https://zod.dev)
 - Markdown: [Contentlayer](https://contentlayer.dev/)
+- Caching: [Redis](https://redis.io/)
 
 # Features
 
@@ -21,6 +22,7 @@ Revamping college's website. This is a [Next.js](https://nextjs.org/) project bo
 - Editor component for easy news editing
 - Usage of markdown(mdx)
 - Image storage in [uploadthing](https://uploadthing.com/)
+- News caching by redis
 
 # Running locally
 
