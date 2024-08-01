@@ -39,7 +39,7 @@ export function NewsCardsCarousel({ news }: NewsCardsCarouselProps) {
         opts={{
           align: "start",
         }}
-        className="mt-6 w-full cursor-grab overflow-hidden"
+        className="mt-6 w-full cursor-grab"
         setApi={setApi}
       >
         <CarouselContent className="h-auto">

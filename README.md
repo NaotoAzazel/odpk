@@ -12,6 +12,7 @@ Revamping college's website. This is a [Next.js](https://nextjs.org/) project bo
 - Database: [Prisma](https://www.prisma.io/)
 - Validation: [Zod](https://zod.dev)
 - Markdown: [Contentlayer](https://contentlayer.dev/)
+- Caching: [Redis](https://redis.io/)
 
 # Features
 
@@ -21,6 +22,7 @@ Revamping college's website. This is a [Next.js](https://nextjs.org/) project bo
 - Editor component for easy news editing
 - Usage of markdown(mdx)
 - Image storage in [uploadthing](https://uploadthing.com/)
+- News caching by redis
 
 # Running locally
 
@@ -74,6 +76,10 @@ dotenv -e .env.[development/production] -- prisma db push
 ### Uploadthing
 
 Now we should get the api keys for uploadthing. Go to [website](https://uploadthing.com/) and sign in. Create new application, or use an existing one. Navigate to `API Keys` in the left sidebar menu, copy `UPLOADTHING_SECRET` and `UPLOADTHING_APP_ID` and paste them into `.env`.
+
+### Redis
+
+For Redis we need to get two api keys. Go to [Upstash](https://upstash.com/), create **Redis database**, go to details tab, scroll down to `REST API`, copy `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` and paste them into `.env`.
 
 ### Other
 

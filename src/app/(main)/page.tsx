@@ -95,7 +95,7 @@ export default function Home() {
       </section>
 
       <section className="py-20 lg:py-32">
-        <MaxWidthWrapper className="space-y-5">
+        <MaxWidthWrapper className="space-y-5 overflow-hidden">
           <h2 className="text-heading text-3xl font-bold tracking-tight text-gray-800 md:text-4xl lg:text-5xl">
             Новини
           </h2>

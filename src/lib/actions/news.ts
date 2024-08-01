@@ -1,17 +1,37 @@
-import { db } from "@/lib/db";
+import { env } from "@/env";
 import { Post } from "@/types";
 import { Prisma } from "@prisma/client";
+
+import { CachedPost } from "@/types/redis";
+import { db } from "@/lib/db";
+import { redis } from "@/lib/redis";
 
 export async function getNews() {
   const news = db.post.findMany();
   return news;
 }
 
-export async function getNewsById(postId: number): Promise<Post | null> {
+export async function getNewsById(
+  postId: number,
+): Promise<CachedPost | Post | null> {
+  const cachedValue: CachedPost | null = await redis.get(
+    `post:${postId}:${env.NODE_ENV}`,
+  );
+
+  if (cachedValue) {
+    return cachedValue;
+  }
+
   const news = await db.post.findFirst({
     where: {
       id: postId,
     },
+  });
+
+  if (!news) return null;
+
+  await redis.set(`post:${postId}:${env.NODE_ENV}`, JSON.stringify(news), {
+    ex: 60, // expire in 60 sec
   });
 
   return news;
@@ -75,4 +95,28 @@ export async function getNewsByParams({
       hasPrevPage,
     },
   };
+}
+
+export async function updateNewsByParams(
+  params: Prisma.PostUpdateArgs,
+): Promise<Post | null> {
+  const updatedNews = await db.post.update(params);
+
+  if (updatedNews) {
+    await redis.del(`post:${updatedNews.id}:${env.NODE_ENV}`);
+  }
+
+  return updatedNews;
+}
+
+export async function deleteNewsByParams(
+  params: Prisma.PostDeleteArgs,
+): Promise<Post | null> {
+  const deletedNews = await db.post.delete(params);
+
+  if (deletedNews) {
+    await redis.del(`post:${deletedNews.id}:${env.NODE_ENV}`);
+  }
+
+  return deletedNews;
 }
