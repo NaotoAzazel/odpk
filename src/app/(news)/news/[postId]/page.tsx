@@ -1,3 +1,11 @@
+import { cache, Suspense } from "react";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
+
+import { getNewsById, getNewsByParams } from "@/lib/actions/news";
+import { authOptions } from "@/lib/auth";
+import { absoluteUrl } from "@/lib/utils";
 import ErrorBoundary from "@/components/error-boundary";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
@@ -9,15 +17,8 @@ import { NewsHeadingLoading } from "./_components/loading/news-heading-loading";
 import { NewsContent } from "./_components/news-content";
 import { NewsHeading } from "./_components/news-heading";
 
-import { getNewsById, getNewsByParams } from "@/lib/actions/news";
-import { authOptions } from "@/lib/auth";
-import { absoluteUrl } from "@/lib/utils";
-
-import { Metadata } from "next";
-import { getServerSession } from "next-auth";
-import { notFound } from "next/navigation";
-
-import { Suspense, cache } from "react";
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 interface NewsPageProps {
   params: {

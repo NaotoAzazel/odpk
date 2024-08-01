@@ -16,6 +16,8 @@ export const env = createEnv({
     POSTGRES_DATABASE: z.string().min(1),
     UPLOADTHING_APP_ID: z.string().min(1),
     UPLOADTHING_SECRET: z.string().min(1),
+    REDIS_URL: z.string().min(1),
+    REDIS_SECRET: z.string().min(1),
     NEXTAUTH_SECRET: z.string().min(1),
   },
 
@@ -37,6 +39,8 @@ export const env = createEnv({
     POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
     UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
     UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
+    REDIS_URL: process.env.REDIS_URL,
+    REDIS_SECRET: process.env.REDIS_SECRET,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,

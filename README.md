@@ -75,6 +75,10 @@ dotenv -e .env.[development/production] -- prisma db push
 
 Now we should get the api keys for uploadthing. Go to [website](https://uploadthing.com/) and sign in. Create new application, or use an existing one. Navigate to `API Keys` in the left sidebar menu, copy `UPLOADTHING_SECRET` and `UPLOADTHING_APP_ID` and paste them into `.env`.
 
+### Redis
+
+For Redis we need to get two api keys. Go to [Upstash](https://upstash.com/), create **Redis database**, go to details tab, scroll down to `REST API`, copy `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` and paste them into `.env`.
+
 ### Other
 
 The auth variables: `NEXTAUTH_SECRET` can take any value.

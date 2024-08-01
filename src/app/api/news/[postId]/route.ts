@@ -1,10 +1,9 @@
-import { z } from "zod";
-import { PostUpdateValidator } from "@/lib/validation/post";
-
-import { db } from "@/lib/db";
-
 import { getServerSession } from "next-auth";
+import { z } from "zod";
+
+import { deleteNewsByParams, updateNewsByParams } from "@/lib/actions/news";
 import { authOptions } from "@/lib/auth";
+import { PostUpdateValidator } from "@/lib/validation/post";
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -14,7 +13,7 @@ const routeContextSchema = z.object({
 
 export async function DELETE(
   req: Request,
-  context: z.infer<typeof routeContextSchema>
+  context: z.infer<typeof routeContextSchema>,
 ) {
   try {
     const { params } = routeContextSchema.parse(context);
@@ -24,11 +23,14 @@ export async function DELETE(
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
-    await db.post.delete({
-      where: {
-        id: parseInt(params.postId),
-      },
+    const deletedNews = await deleteNewsByParams({
+      where: { id: parseInt(params.postId) },
     });
+    if (!deletedNews) {
+      throw new Error(
+        `Failed to delete news with id: ${parseInt(params.postId)}`,
+      );
+    }
 
     return new Response(null, { status: 200 });
   } catch (error) {
@@ -42,7 +44,7 @@ export async function DELETE(
 
 export async function PATCH(
   req: Request,
-  context: z.infer<typeof routeContextSchema>
+  context: z.infer<typeof routeContextSchema>,
 ) {
   try {
     const { params } = routeContextSchema.parse(context);
@@ -55,12 +57,15 @@ export async function PATCH(
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
-    await db.post.update({
-      where: {
-        id: parseInt(params.postId),
-      },
+    const updatedNews = await updateNewsByParams({
+      where: { id: parseInt(params.postId) },
       data,
     });
+    if (!updatedNews) {
+      throw new Error(
+        `Failed to update the news with id:${parseInt(params.postId)}`,
+      );
+    }
 
     return new Response(null, { status: 200 });
   } catch (error) {
