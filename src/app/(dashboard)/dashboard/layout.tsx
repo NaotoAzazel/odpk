@@ -1,4 +1,4 @@
-import { DashboardNav } from "@/components/layouts/dashboard-nav";
+import { DashboardNav } from "@/components/layouts/navbar/dashboard-nav";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 
 import { navConfig } from "@/config/nav";

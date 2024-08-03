@@ -6,7 +6,7 @@ import { fontHeading, fontSans } from "@/lib/fonts";
 import { absoluteUrl, cn } from "@/lib/utils";
 
 import Footer from "@/components/layouts/footer/footer";
-import Navbar from "@/components/layouts/navbar";
+import Navbar from "@/components/layouts/navbar/navbar";
 import { Toaster } from "@/components/ui/toaster";
 
 import { siteConfig } from "@/config/site";

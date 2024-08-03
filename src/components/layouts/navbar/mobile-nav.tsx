@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Icons } from "@/components/icons";
-import { DashboardNav } from "@/components/layouts/dashboard-nav";
+import { DashboardNav } from "@/components/layouts/navbar/dashboard-nav";
 
 interface MobileNavProps {
   items: NavItem[];
