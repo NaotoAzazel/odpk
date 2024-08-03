@@ -1,9 +1,9 @@
-import MainNav from "@/components/layouts/main-nav";
-import MobileNav from "@/components/layouts/mobile-nav";
+import MainNav from "@/components/layouts/navbar/main-nav";
+import MobileNav from "@/components/layouts/navbar/mobile-nav";
 
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { CommandMenu } from "@/components/command-menu";
-import { AuthDropdown } from "@/components/layouts/auth-dropdown";
+import { AuthDropdown } from "@/components/layouts/navbar/auth-dropdown";
 
 import { navConfig } from "@/config/nav";
 
