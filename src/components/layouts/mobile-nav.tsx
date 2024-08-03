@@ -1,62 +1,65 @@
-"use client"
+"use client";
 
-import { 
-  Sheet, 
-  SheetContent, 
-  SheetTrigger 
-} from "@/components/ui/sheet";
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { NavItem } from "@/types";
+
+import { navConfig } from "@/config/nav";
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Icons } from "@/components/icons";
-
-import { NavItem } from "@/types";
-
-import { cn } from "@/lib/utils";
-
-import Link from "next/link";
-import * as React from "react";
-
-import { siteConfig } from "@/config/site";
+import { DashboardNav } from "@/components/layouts/dashboard-nav";
 
 interface MobileNavProps {
   items: NavItem[];
-};
+}
 
 export default function MobileNav({ items }: MobileNavProps) {
-  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const path = usePathname();
+  const isDashboardPath = !!path.startsWith("/dashboard");
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button 
+        <Button
           variant="ghost"
-          className="xl:hidden px-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="px-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 xl:hidden"
         >
           <Icons.alignLeft className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent 
-        side="left"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
+      <SheetContent side="left" onOpenAutoFocus={(e) => e.preventDefault()}>
         <MobileLink
           href="/"
           className="flex items-center"
-          setOpen={setIsOpen}
+          onClick={() => setIsOpen(false)}
         >
           <Icons.graduationCap className="mr-2 h-5 w-5" />
-          <span className="font-bold font-heading">{siteConfig.name}</span>
+          <span className="font-heading font-bold">{siteConfig.name}</span>
         </MobileLink>
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10">
-          <Accordion type="multiple" className="w-full">
-            <MobileNavItems items={items} setOpen={setIsOpen} />
+          <Accordion
+            type="multiple"
+            className="w-full"
+            onClick={() => setIsOpen(false)}
+          >
+            {isDashboardPath ? (
+              <DashboardNav items={navConfig.dashboardNav} />
+            ) : (
+              <MobileNavItems items={items} />
+            )}
           </Accordion>
         </ScrollArea>
       </SheetContent>
@@ -64,12 +67,9 @@ export default function MobileNav({ items }: MobileNavProps) {
   );
 }
 
-interface MobileNavItemsProps 
-  extends MobileNavProps {
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  };
+interface MobileNavItemsProps extends MobileNavProps {}
 
-function MobileNavItems({ items, setOpen }: MobileNavItemsProps) {
+function MobileNavItems({ items }: MobileNavItemsProps) {
   return (
     <>
       {items.map((item, i) => (
@@ -79,24 +79,16 @@ function MobileNavItems({ items, setOpen }: MobileNavItemsProps) {
           </AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col space-y-2">
-              {item.items.map((subItem, i) => 
+              {item.items.map((subItem, i) =>
                 subItem.href ? (
-                  <MobileLink
-                    key={i}
-                    href={subItem.href}
-                    setOpen={setOpen}
-                    className="m-1"
-                  >
+                  <MobileLink key={i} href={subItem.href} className="m-1">
                     {subItem.title}
                   </MobileLink>
                 ) : (
-                  <div
-                    key={i} 
-                    className="text-foreground/70 transition-colors"
-                  >
+                  <div key={i} className="text-foreground/70 transition-colors">
                     {item.title}
                   </div>
-                )
+                ),
               )}
             </div>
           </AccordionContent>
@@ -106,31 +98,22 @@ function MobileNavItems({ items, setOpen }: MobileNavItemsProps) {
   );
 }
 
-interface MobileLinkProps 
+interface MobileLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-    href: string;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-  };
+  href: string;
+}
 
-function MobileLink({
-  children,
-  href,
-  setOpen,
-  className,
-  ...props
-}: MobileLinkProps) {
+function MobileLink({ children, href, className, ...props }: MobileLinkProps) {
   return (
     <Link
       href={href}
       className={cn(
         "text-foreground/70 transition-colors hover:text-foreground",
-        className
+        className,
       )}
-      onClick={() => setOpen(false)}
       {...props}
     >
       {children}
     </Link>
   );
 }
-
