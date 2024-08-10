@@ -1,23 +1,27 @@
-import { Post } from "@/types";
 import Link from "next/link";
+import { Post } from "@/types";
 
-import { ResponsiveImage } from "@/components/responsive-image";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-
+import { isImageBlock } from "@/lib/editor";
 import { formatDate } from "@/lib/utils";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { ResponsiveImage } from "@/components/responsive-image";
 
 interface NewsCardProps {
   post: Post;
 }
 
 export function NewsCard({ post }: NewsCardProps) {
+  const imageSrc =
+    post.content.blocks.find(isImageBlock)?.data.file.url || undefined;
+
   return (
     <Link href={`/news/${post.id}`}>
       <div className="group size-full overflow-hidden rounded-md border bg-slate-50">
         <div className="flex flex-col space-y-1.5">
           <AspectRatio ratio={4 / 3}>
             <ResponsiveImage
-              src={post.images[0]}
+              // @ts-ignore
+              src={imageSrc}
               alt={post.title}
               fill
               className="border-b object-cover"

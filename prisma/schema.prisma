@@ -2,16 +2,20 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL")
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
 }
 
 model Post {
   id        Int      @id @default(autoincrement())
   title     String
-  content   Json?
-  images    String[]
+  /// [Content]
+  content   Json
   published Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -19,6 +23,6 @@ model Post {
 
 model Users {
   id       Int    @id @default(autoincrement())
-  email    String 
+  email    String
   password String
 }
