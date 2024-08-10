@@ -1,19 +1,14 @@
-import { z } from "zod"; 
-
-import { db } from "@/lib/db";
-
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { z } from "zod";
 
-const newsCreateSchema = z.object({
-  title: z.string(),
-  content: z.string().optional()
-});
+import { authOptions } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { newsCreateSchema } from "@/lib/validation/post";
 
 export async function POST(req: Request) {
   try {
-    const isAuth = await getServerSession(authOptions); 
-    if(!isAuth) {
+    const isAuth = await getServerSession(authOptions);
+    if (!isAuth) {
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
@@ -23,19 +18,20 @@ export async function POST(req: Request) {
     const post = await db.post.create({
       data: {
         title: body.title,
-        published: false
+        content: body.content,
+        published: body.published,
       },
       select: {
-        id: true
-      }
+        id: true,
+      },
     });
 
     return new Response(JSON.stringify(post), { status: 200 });
-  } catch(error) {
-    if(error instanceof z.ZodError) {
+  } catch (error) {
+    if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
     }
 
     return new Response(null, { status: 500 });
   }
-} 
+}

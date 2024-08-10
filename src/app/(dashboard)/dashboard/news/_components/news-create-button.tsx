@@ -1,12 +1,11 @@
 "use client";
 
-import { Icons } from "@/components/icons";
-import { Button, ButtonProps } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useState } from "react";
+import { Button, ButtonProps } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { Icons } from "@/components/icons";
 
 interface NewsCreateButtonProps extends ButtonProps {}
 
@@ -22,6 +21,8 @@ export function NewsCreateButton({
 
   async function onClick() {
     try {
+      const now = new Date().getTime();
+
       setIsLoading(true);
 
       const response = await fetch("/api/news", {
@@ -31,6 +32,12 @@ export function NewsCreateButton({
         },
         body: JSON.stringify({
           title: "Untitled Post",
+          content: {
+            blocks: [],
+            time: now,
+            version: "2.29.1",
+          },
+          published: false,
         }),
       });
 
@@ -64,9 +71,9 @@ export function NewsCreateButton({
       {...props}
     >
       {isLoading ? (
-        <Icons.spinner className="mr-2 w-4 h-4 animate-spin" />
+        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
       ) : (
-        <Icons.plus className="mr-2 w-4 h-4" />
+        <Icons.plus className="mr-2 h-4 w-4" />
       )}
       <span>Новина</span>
     </Button>

@@ -1,24 +1,21 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-import { useToast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/icons";
-
-import TextareaAutosize from "react-textarea-autosize";
+import { useRouter } from "next/navigation";
+import { Post } from "@/types";
+import EditorJS from "@editorjs/editorjs";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import TextareaAutosize from "react-textarea-autosize";
 
+import { imageRemove } from "@/lib/actions/image-remove";
+import { isImageBlock } from "@/lib/editor";
 import { uploadFiles } from "@/lib/uploadthing";
 import { PostCreationRequest, PostValidator } from "@/lib/validation/post";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import { Post } from "@/types";
-
-import EditorJS from "@editorjs/editorjs";
-import { imageRemove } from "@/lib/actions/image-remove";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { Icons } from "@/components/icons";
 
 export function Editor({ post }: { post: Post }) {
   const router = useRouter();
@@ -153,7 +150,6 @@ export function Editor({ post }: { post: Post }) {
         body: JSON.stringify({
           title: data.title,
           content: blocks,
-          images: imageData,
         }),
       });
 
@@ -161,9 +157,12 @@ export function Editor({ post }: { post: Post }) {
         throw new Error("Новину не збережно. Спробуйте ще раз");
       }
 
-      const initialPostImages: string[] = post.images;
+      const initialPostImages: string[] = post.content.blocks
+        .filter(isImageBlock)
+        .map((block) => block.data.file.url);
+
       const removed: string[] = initialPostImages.filter(
-        (url) => !imageData.includes(url)
+        (url) => !imageData.includes(url),
       );
 
       const modifiedRemoved = removed.map((url) => url.split("/")[4]);
@@ -272,7 +271,7 @@ export function Editor({ post }: { post: Post }) {
           </div>
         </div>
       </div>
-      <div className="w-full p-4 bg-zinc-50 rounded border border-zinc-200">
+      <div className="w-full rounded border border-zinc-200 bg-zinc-50 p-4">
         <form
           id="post-form"
           className="w-fit"
