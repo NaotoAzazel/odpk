@@ -1,9 +1,12 @@
 "use client";
 
-import { ResponsiveImage } from "@/components/responsive-image";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
 import dynamic from "next/dynamic";
+
+import { cn } from "@/lib/utils";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { ResponsiveImage } from "@/components/responsive-image";
+
 import { LoadingEditorOutput } from "./loading/editor-output-loading";
 
 const Output = dynamic(
@@ -41,10 +44,26 @@ function CustomHeaderRenderer({ data }: { data: HeaderRenderer }) {
 
 function CustomImageRenderer({ data }: any) {
   const src = data.file.url;
+  const [aspectRatio, setAspectRatio] = useState(16 / 9);
+
+  const handleImageLoad = (width: number, height: number) => {
+    setAspectRatio(width / height);
+  };
 
   return (
-    <AspectRatio ratio={16 / 9}>
-      <ResponsiveImage src={src} alt="Image" fill className="rounded-md" />
-    </AspectRatio>
+    <div className="mb-2 flex flex-col">
+      <AspectRatio ratio={aspectRatio}>
+        <ResponsiveImage
+          src={src}
+          alt="Image"
+          fill
+          className="rounded-md"
+          onLoad={({ target }) => {
+            const { naturalWidth, naturalHeight } = target as HTMLImageElement;
+            handleImageLoad(naturalWidth, naturalHeight);
+          }}
+        />
+      </AspectRatio>
+    </div>
   );
 }
