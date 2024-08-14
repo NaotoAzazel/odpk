@@ -56,6 +56,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.51.3",
+    "react-intersection-observer": "^9.13.0",
     "react-textarea-autosize": "^8.5.3",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
