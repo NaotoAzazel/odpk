@@ -58,7 +58,7 @@ export interface Metadata {
   hasPrevPage: boolean;
 }
 
-interface GetNewsByParamsResult {
+export interface GetNewsByParamsResult {
   data: Post[];
   metadata: Metadata;
 }

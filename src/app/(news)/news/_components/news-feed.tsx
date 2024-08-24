@@ -1,0 +1,66 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Post } from "@/types";
+import { useInView } from "react-intersection-observer";
+
+import { fetchNews } from "@/lib/actions";
+import { GetNewsByParamsResult } from "@/lib/actions/news";
+import { NewsCard } from "@/components/cards/news-card";
+import { Icons } from "@/components/icons";
+import { CardsHolder } from "@/components/layouts/cards-holder";
+import { NoNewsPlaceholder } from "@/components/no-news-placeholder";
+
+interface NewsFeedProps {
+  initialNews: GetNewsByParamsResult;
+}
+
+export function NewsFeed({ initialNews }: NewsFeedProps) {
+  const { data, metadata } = initialNews;
+
+  const [news, setNews] = useState<Post[]>(data);
+  const [page, setPage] = useState<number>(1);
+  const [ref, inView] = useInView();
+
+  async function loadMore() {
+    const next = page + 1;
+    const news = await fetchNews({ page: next });
+
+    if (news.data?.length) {
+      setPage(next);
+      setNews((prev: Post[] | undefined) => [
+        ...(prev?.length ? prev : []),
+        ...news.data,
+      ]);
+    }
+  }
+
+  useEffect(() => {
+    if (inView) {
+      loadMore();
+    }
+  }, [inView]);
+
+  return (
+    <div>
+      {news.length ? (
+        <div className="flex flex-col gap-2">
+          <CardsHolder className="w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {news.map((item, i) => (
+              <NewsCard post={item} key={i} />
+            ))}
+          </CardsHolder>
+
+          {metadata.totalRecordsCount !== news.length && (
+            <div className="mt-4 flex flex-row items-center justify-center">
+              <Icons.spinner ref={ref} className="mr-2 size-5 animate-spin" />
+              <span>Завантаження...</span>
+            </div>
+          )}
+        </div>
+      ) : (
+        <NoNewsPlaceholder />
+      )}
+    </div>
+  );
+}
