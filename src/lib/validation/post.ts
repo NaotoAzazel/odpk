@@ -19,6 +19,7 @@ const imageBlockSchema = baseBlockSchema.extend({
   data: z.object({
     file: z.object({
       url: z.string().url(),
+      base64: z.string().nullable().optional(),
     }),
     caption: z.string(),
     stretched: z.boolean(),

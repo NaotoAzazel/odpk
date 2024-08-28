@@ -14,6 +14,7 @@ export async function NewsCardsSection() {
         createdAt: "desc",
       },
     },
+    includeBase64: true
   });
 
   return (

@@ -1,4 +1,7 @@
+"use client";
+
 import Image, { ImageProps } from "next/image";
+
 import { PlaceholderImage } from "./placeholder-image";
 
 interface ResponsiveImageProps extends ImageProps {}
@@ -12,13 +15,7 @@ export function ResponsiveImage({
   return (
     <>
       {src ? (
-        <Image
-          src={src}
-          className={className}
-          alt={alt}
-          loading="lazy"
-          {...otherProps}
-        />
+        <Image src={src} className={className} alt={alt} {...otherProps} />
       ) : (
         <PlaceholderImage className="rounded-none border-b" asChild />
       )}
