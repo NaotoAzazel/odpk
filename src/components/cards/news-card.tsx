@@ -29,9 +29,9 @@ export function NewsCard({ post }: NewsCardProps) {
               blurDataURL={base64 || undefined}
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
-              className="border-b object-cover blur-md transition-transform duration-300"
-              onLoad={(e) => {
-                (e.target as HTMLImageElement).classList.remove("blur-md");
+              className="border-b object-cover blur-md transition-all duration-300"
+              onLoadingComplete={(img: HTMLImageElement) => {
+                img.classList.remove("blur-md");
               }}
             />
           </AspectRatio>

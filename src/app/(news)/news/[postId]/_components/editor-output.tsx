@@ -54,7 +54,7 @@ function CustomImageRenderer({ data }: ImageBlock) {
   };
 
   return (
-    <div className="mb-2 flex flex-col">
+    <div className="mb-2 flex flex-col overflow-hidden">
       <AspectRatio ratio={aspectRatio}>
         <ResponsiveImage
           src={src}
