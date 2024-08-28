@@ -29,6 +29,7 @@ export async function fetchNews({
         createdAt: "desc",
       },
     },
+    includeBase64: true,
   });
 
   return news;

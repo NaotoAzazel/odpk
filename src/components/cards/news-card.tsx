@@ -11,21 +11,28 @@ interface NewsCardProps {
 }
 
 export function NewsCard({ post }: NewsCardProps) {
-  const imageSrc =
-    post.content.blocks.find(isImageBlock)?.data.file.url || undefined;
+  const firstFoundImageBlock = post.content.blocks.find(isImageBlock);
+
+  const imageUrl = firstFoundImageBlock?.data.file.url;
+  const base64 = firstFoundImageBlock?.data.file.base64;
 
   return (
     <Link href={`/news/${post.id}`}>
       <div className="group size-full overflow-hidden rounded-md border bg-slate-50">
-        <div className="flex flex-col space-y-1.5">
+        <div className="flex flex-col space-y-1.5 overflow-hidden">
           <AspectRatio ratio={4 / 3}>
             <ResponsiveImage
               // @ts-ignore
-              src={imageSrc}
+              src={imageUrl}
               alt={post.title}
+              placeholder={base64 ? "blur" : "empty"}
+              blurDataURL={base64 || undefined}
               fill
-              className="border-b object-cover"
               sizes="(max-width: 768px) 100vw, 33vw"
+              className="border-b object-cover blur-md transition-transform duration-300"
+              onLoad={(e) => {
+                (e.target as HTMLImageElement).classList.remove("blur-md");
+              }}
             />
           </AspectRatio>
         </div>

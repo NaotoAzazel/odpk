@@ -33,7 +33,7 @@ const getCachedUserSession = cache(async () => {
 export async function generateMetadata({
   params,
 }: NewsPageProps): Promise<Metadata> {
-  const news = await getNewsById(parseInt(params.postId));
+  const news = await getNewsById({ postId: parseInt(params.postId) });
   const user = await getCachedUserSession();
 
   if (!news || (!news.published && !user?.user)) {
@@ -68,7 +68,10 @@ export async function generateMetadata({
 }
 
 export default async function NewsPage({ params }: NewsPageProps) {
-  const postPromise = getNewsById(parseInt(params.postId));
+  const postPromise = getNewsById({
+    postId: parseInt(params.postId),
+    includeBase64: true,
+  });
   const anotherNewsPromise = getNewsByParams({
     pageNumber: 1,
     pageSize: 3,
@@ -81,6 +84,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
         createdAt: "desc",
       },
     },
+    includeBase64: true,
   });
 
   const user = await getCachedUserSession();

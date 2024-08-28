@@ -16,7 +16,7 @@ export const metadata = {
 };
 
 export default function EditorPage({ params }: EditorPageProps) {
-  const postPromise = getNewsById(parseInt(params.postId));
+  const postPromise = getNewsById({ postId: parseInt(params.postId) });
 
   return (
     <Suspense fallback={<EditorContentSkeleton />}>
