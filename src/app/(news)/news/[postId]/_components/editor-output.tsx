@@ -62,7 +62,7 @@ function CustomImageRenderer({ data }: ImageBlock) {
           className="rounded-md blur-md transition-all duration-300"
           sizes="(max-width: 425px) 50vw, 75vw"
           onLoad={({ target }) => {
-            const { naturalWidth, naturalHeight, classList } =
+            const { naturalWidth, naturalHeight } =
               target as HTMLImageElement;
             handleImageLoad(naturalWidth, naturalHeight);
           }}
