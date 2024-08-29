@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { type ClassValue, clsx } from "clsx";
+import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -21,3 +21,5 @@ export function formatDate(
     ...options,
   }).format(new Date(date));
 }
+
+export const createCacheKey = (key: string) => `${key}:${env.NODE_ENV}`;

@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { ImageBlock } from "@/types/news";
 import { cn } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { ResponsiveImage } from "@/components/responsive-image";
+import { BlurImage } from "@/components/blur-image";
 
 import { LoadingEditorOutput } from "./loading/editor-output-loading";
 
@@ -56,7 +56,7 @@ function CustomImageRenderer({ data }: ImageBlock) {
   return (
     <div className="mb-2 flex flex-col overflow-hidden">
       <AspectRatio ratio={aspectRatio}>
-        <ResponsiveImage
+        <BlurImage
           src={src}
           alt="Image"
           fill

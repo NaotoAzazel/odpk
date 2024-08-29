@@ -4,6 +4,7 @@ import { Post } from "@/types";
 import { isImageBlock } from "@/lib/editor";
 import { formatDate } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { BlurImage } from "@/components/blur-image";
 import { ResponsiveImage } from "@/components/responsive-image";
 
 interface NewsCardProps {
@@ -21,7 +22,20 @@ export function NewsCard({ post }: NewsCardProps) {
       <div className="group size-full overflow-hidden rounded-md border bg-slate-50">
         <div className="flex flex-col space-y-1.5 overflow-hidden">
           <AspectRatio ratio={4 / 3}>
-            <ResponsiveImage
+            {/* <ResponsiveImage
+              // @ts-ignore
+              src={imageUrl}
+              alt={post.title}
+              placeholder={base64 ? "blur" : "empty"}
+              blurDataURL={base64 || undefined}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              className="border-b object-cover blur-md transition-all duration-300"
+              onLoadingComplete={(img: HTMLImageElement) => {
+                img.classList.remove("blur-md");
+              }}
+            /> */}
+            <BlurImage
               // @ts-ignore
               src={imageUrl}
               alt={post.title}

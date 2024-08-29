@@ -70,7 +70,6 @@ export async function generateMetadata({
 export default async function NewsPage({ params }: NewsPageProps) {
   const postPromise = getNewsById({
     postId: parseInt(params.postId),
-    includeBase64: true,
   });
   const anotherNewsPromise = getNewsByParams({
     pageNumber: 1,
@@ -84,7 +83,6 @@ export default async function NewsPage({ params }: NewsPageProps) {
         createdAt: "desc",
       },
     },
-    includeBase64: true,
   });
 
   const user = await getCachedUserSession();
