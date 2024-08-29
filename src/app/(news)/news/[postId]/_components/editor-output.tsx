@@ -45,7 +45,6 @@ function CustomHeaderRenderer({ data }: { data: HeaderRenderer }) {
 
 function CustomImageRenderer({ data }: ImageBlock) {
   const src = data.file.url;
-  const base64 = data.file.base64;
 
   const [aspectRatio, setAspectRatio] = useState(16 / 9);
 
@@ -60,16 +59,15 @@ function CustomImageRenderer({ data }: ImageBlock) {
           src={src}
           alt="Image"
           fill
-          placeholder={base64 ? "blur" : "empty"}
-          blurDataURL={base64 || undefined}
           className="rounded-md blur-md transition-all duration-300"
           sizes="(max-width: 425px) 50vw, 75vw"
           onLoad={({ target }) => {
             const { naturalWidth, naturalHeight, classList } =
               target as HTMLImageElement;
             handleImageLoad(naturalWidth, naturalHeight);
-
-            classList.remove("blur-md");
+          }}
+          onLoadingComplete={(img: HTMLImageElement) => {
+            img.classList.remove("blur-md");
           }}
         />
       </AspectRatio>
