@@ -114,7 +114,7 @@ export default function Home() {
           </ErrorBoundary>
 
           <div className="flex justify-center">
-            <Link href="/news" className={buttonVariants({ size: "lg" })}>
+            <Link href="/news" className={buttonVariants()}>
               Всі новини
             </Link>
           </div>

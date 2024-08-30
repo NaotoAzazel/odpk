@@ -3,6 +3,8 @@ import { z } from "zod";
 
 import { deleteNewsByParams, updateNewsByParams } from "@/lib/actions/news";
 import { authOptions } from "@/lib/auth";
+import { getBase64 } from "@/lib/base64";
+import { isImageBlock } from "@/lib/editor";
 import { PostUpdateValidator } from "@/lib/validation/post";
 
 const routeContextSchema = z.object({
@@ -57,6 +59,32 @@ export async function PATCH(
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
+    if (data.content) {
+      const blocksWithBase64 = await Promise.all(
+        data.content.blocks.map(async (block) => {
+          if (isImageBlock(block) && !block.data.file.base64) {
+            const base64 = await getBase64(block.data.file.url);
+            return {
+              ...block,
+              data: {
+                ...block.data,
+                file: {
+                  ...block.data.file,
+                  base64,
+                },
+              },
+            };
+          }
+
+          return block;
+        }),
+      );
+
+      data.content.blocks = blocksWithBase64.length
+        ? blocksWithBase64
+        : data.content.blocks;
+    }
+
     const updatedNews = await updateNewsByParams({
       where: { id: parseInt(params.postId) },
       data,
@@ -73,6 +101,10 @@ export async function PATCH(
       return new Response(JSON.stringify(error.issues), { status: 422 });
     }
 
-    return new Response(null, { status: 500 });
+    if (error instanceof Error) {
+      return new Response(JSON.stringify({ message: error.message }), {
+        status: 500,
+      });
+    }
   }
 }

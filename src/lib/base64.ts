@@ -1,5 +1,3 @@
-"use client";
-
 import { env } from "@/env";
 
 export async function getBase64(src: string) {
@@ -8,21 +6,6 @@ export async function getBase64(src: string) {
   }
 
   try {
-    const cacheKey = `imageHash:${src}`;
-    const cacheResponse = await fetch(`/api/cache?key=${cacheKey}`, {
-      method: "GET",
-    });
-
-    if (!cacheResponse.ok) {
-      throw new Error("cacheResponse was not ok");
-    }
-
-    const cachedValue = await cacheResponse.json();
-
-    if (cachedValue) {
-      return cachedValue;
-    }
-
     const response = await fetch(
       `${env.NEXT_PUBLIC_APP_URL}/_next/image?url=${encodeURIComponent(src)}&w=16&q=60`,
     );
@@ -47,18 +30,6 @@ export async function getBase64(src: string) {
       typeof window === "undefined"
         ? Buffer.from(src).toString("base64")
         : window.btoa(src);
-
-    const createCacheResponse = await fetch("/api/cache", {
-      method: "POST",
-      body: JSON.stringify({
-        data: `data:image/svg+xml;base64,${toBase64(blurSVG)}`,
-        key: cacheKey,
-      }),
-    });
-
-    if (!createCacheResponse.ok) {
-      throw `Cache for image ${src} not recorded`;
-    }
 
     return `data:image/svg+xml;base64,${toBase64(blurSVG)}`;
   } catch (error) {
