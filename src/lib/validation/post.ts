@@ -1,16 +1,5 @@
 import { z } from "zod";
 
-export const PostValidator = z.object({
-  title: z
-    .string()
-    .min(1, { message: "Заголовок повинен мiстити в собi мiнiмум 1 символ" }),
-  content: z.any(),
-  published: z.boolean(),
-});
-export type PostCreationRequest = z.infer<typeof PostValidator>;
-
-export const PostUpdateValidator = PostValidator.partial();
-
 const baseBlockSchema = z.object({
   id: z.string(),
 });
@@ -19,6 +8,7 @@ const imageBlockSchema = baseBlockSchema.extend({
   data: z.object({
     file: z.object({
       url: z.string().url(),
+      base64: z.string().optional(),
     }),
     caption: z.string(),
     stretched: z.boolean(),
@@ -70,6 +60,17 @@ const contentSchema = z.object({
   time: z.number(),
   version: z.string(),
 });
+
+export const PostValidator = z.object({
+  title: z
+    .string()
+    .min(1, { message: "Заголовок повинен мiстити в собi мiнiмум 1 символ" }),
+  content: contentSchema,
+  published: z.boolean(),
+});
+export type PostCreationRequest = z.infer<typeof PostValidator>;
+
+export const PostUpdateValidator = PostValidator.partial();
 
 export const newsCreateSchema = z.object({
   title: z.string(),

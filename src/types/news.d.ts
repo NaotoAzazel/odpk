@@ -1,3 +1,6 @@
+// When you add additional types or modify the current ones,
+// the schema in "/src/lib/validation/post.ts" should be updated accordingly
+
 type BaseBlock = {
   id: string;
 };
@@ -6,6 +9,7 @@ type ImageBlock = BaseBlock & {
   data: {
     file: {
       url: string;
+      base64?: string;
     };
     caption: string;
     stretched: boolean;
