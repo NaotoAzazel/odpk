@@ -1,29 +1,25 @@
 import { Post } from "@/types";
 import { Prisma } from "@prisma/client";
 
-import { CachedPost } from "@/types/redis";
-import { getCachedValue, setCachedValue } from "@/lib/actions/cache";
+import {
+  deleteCacheValue,
+  invalidateCache,
+  withCache,
+} from "@/lib/actions/cache";
 import { db } from "@/lib/db";
-import { redis } from "@/lib/redis";
 import { createCacheKey } from "@/lib/utils";
 
-// TODO: create callback func "withCache"
-// that receives cache key, actions and caches the data
 export async function getNews() {
-  const cacheKey = "allPosts";
-  const cachedValue = await getCachedValue<CachedPost[] | null>("allPosts");
+  const cacheKey = "posts:all";
 
-  if (cachedValue) {
-    return cachedValue;
-  }
-
-  const news = await db.post.findMany();
-
-  if (!news) return [];
-
-  await setCachedValue(cacheKey, JSON.stringify(news), 120);
-
-  return news;
+  return withCache<Post[]>({
+    key: cacheKey,
+    action: async () => {
+      const news = await db.post.findMany();
+      return news;
+    },
+    options: { skipCacheOnNull: true },
+  });
 }
 
 interface GetNewsByIdParams {
@@ -34,23 +30,20 @@ export async function getNewsById({
   postId,
 }: GetNewsByIdParams): Promise<Post | null> {
   const cacheKey = `post:${postId}`;
-  const cachedValue = await getCachedValue<CachedPost | null>(cacheKey);
 
-  if (cachedValue) {
-    return cachedValue;
-  }
+  return withCache<Post | null>({
+    key: cacheKey,
+    action: async () => {
+      const news = await db.post.findUnique({
+        where: {
+          id: postId,
+        },
+      });
 
-  const news = await db.post.findUnique({
-    where: {
-      id: postId,
+      return news;
     },
+    options: { skipCacheOnNull: true },
   });
-
-  if (!news) return null;
-
-  await setCachedValue(cacheKey, JSON.stringify(news), 120);
-
-  return news;
 }
 
 interface GetNewsByParamsParams {
@@ -94,68 +87,58 @@ export async function getNewsByParams({
   } = params;
 
   const cacheKey = `posts:${pageNumber}:${pageSize}:${JSON.stringify(params)}`;
-  const cachedValue = await getCachedValue<CachedPost[] | null>(cacheKey);
-  if (cachedValue) {
-    const totalPages = countTotalPages(cachedValue.length, pageSize);
-    const totalRecordsCount = await db.post.count({ where: other.where });
 
-    return {
-      data: cachedValue,
-      metadata: {
-        totalPages,
-        totalRecordsCount,
-        hasNextPage: pageNumber < totalPages,
-        hasPrevPage: pageNumber > 1,
-      },
-    };
-  }
+  return withCache({
+    key: cacheKey,
+    action: async () => {
+      const news = await db.post.findMany({
+        take,
+        skip,
+        ...other,
+      });
 
-  const news = await db.post.findMany({
-    take,
-    skip,
-    ...other,
-  });
+      if (!news) {
+        return {
+          data: [],
+          metadata: {
+            totalPages: 0,
+            totalRecordsCount: 0,
+            hasNextPage: false,
+            hasPrevPage: false,
+          },
+        };
+      }
 
-  if (!news) {
-    return {
-      data: [],
-      metadata: {
-        totalPages: 0,
-        totalRecordsCount: 0,
-        hasNextPage: false,
-        hasPrevPage: false,
-      },
-    };
-  }
+      const totalRecordsCount = await db.post.count({ where: other.where });
+      const totalPages = countTotalPages(totalRecordsCount, pageSize);
 
-  await setCachedValue(cacheKey, JSON.stringify(news), 120);
+      const hasNextPage = pageNumber < totalPages;
+      const hasPrevPage = pageNumber > 1;
 
-  const totalRecordsCount = await db.post.count({ where: other.where });
-  const totalPages = countTotalPages(totalRecordsCount, pageSize);
-
-  const hasNextPage = pageNumber < totalPages;
-  const hasPrevPage = pageNumber > 1;
-
-  return {
-    data: news,
-    metadata: {
-      totalPages,
-      totalRecordsCount,
-      hasNextPage,
-      hasPrevPage,
+      return {
+        data: news,
+        metadata: {
+          totalPages,
+          totalRecordsCount,
+          hasNextPage,
+          hasPrevPage,
+        },
+      };
     },
-  };
+    options: { skipCacheOnNull: true },
+  });
 }
 
-// TODO: add revalidation of all cached post
-// when update or delete one
 export async function updateNewsByParams(
   params: Prisma.PostUpdateArgs,
 ): Promise<Post | null> {
   const updatedNews = await db.post.update(params);
 
   if (updatedNews) {
-    await redis.del(createCacheKey(`post:${updatedNews.id}`));
+    const cacheKey = createCacheKey(`post:${updatedNews.id}`);
+
+    await deleteCacheValue(cacheKey);
+    await invalidateCache("posts:*");
   }
 
   return updatedNews;
@@ -167,7 +150,10 @@ export async function deleteNewsByParams(
   const deletedNews = await db.post.delete(params);
 
   if (deletedNews) {
-    await redis.del(createCacheKey(`post:${deletedNews.id}`));
+    const cacheKey = createCacheKey(`post:${deletedNews.id}`);
+
+    await deleteCacheValue(cacheKey);
+    await invalidateCache("posts:*");
   }
 
   return deletedNews;
