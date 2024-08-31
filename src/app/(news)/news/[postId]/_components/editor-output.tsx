@@ -6,9 +6,9 @@ import dynamic from "next/dynamic";
 import { ImageBlock } from "@/types/news";
 import { cn } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { ResponsiveImage } from "@/components/responsive-image";
 
 import { LoadingEditorOutput } from "./loading/editor-output-loading";
-import { ResponsiveImage } from '@/components/responsive-image'
 
 const Output = dynamic(
   async () => (await import("editorjs-react-renderer")).default,
@@ -45,7 +45,7 @@ function CustomHeaderRenderer({ data }: { data: HeaderRenderer }) {
 
 function CustomImageRenderer({ data }: ImageBlock) {
   const src = data.file.url;
-  const base64 = data.file.base64
+  const base64 = data.file.base64;
 
   const [aspectRatio, setAspectRatio] = useState(16 / 9);
 
@@ -58,19 +58,19 @@ function CustomImageRenderer({ data }: ImageBlock) {
       <AspectRatio ratio={aspectRatio}>
         <ResponsiveImage
           src={src}
-          alt="Image"
+          alt="News-image"
           fill
           placeholder={base64 ? "blur" : "empty"}
           blurDataURL={base64}
-          className="rounded-md blur-md transition-all duration-300"
+          loading="eager"
+          className="rounded-md blur-md transition-all duration-200"
           sizes="(max-width: 425px) 50vw, 75vw"
           onLoad={({ target }) => {
-            const { naturalWidth, naturalHeight } =
+            const { naturalWidth, naturalHeight, classList } =
               target as HTMLImageElement;
             handleImageLoad(naturalWidth, naturalHeight);
-          }}
-          onLoadingComplete={(img: HTMLImageElement) => {
-            img.classList.remove("blur-md");
+
+            classList.remove("blur-md");
           }}
         />
       </AspectRatio>
