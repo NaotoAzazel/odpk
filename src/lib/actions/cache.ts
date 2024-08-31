@@ -63,6 +63,6 @@ export async function withCache<T>({
     return result;
   }
 
-  await setCachedValue(cacheKey, JSON.stringify(result), expirationInSeconds);
+  await setCachedValue(key, JSON.stringify(result), expirationInSeconds);
   return result;
 }
