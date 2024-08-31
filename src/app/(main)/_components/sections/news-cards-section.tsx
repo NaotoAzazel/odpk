@@ -19,7 +19,7 @@ export async function NewsCardsSection() {
   return (
     <>
       {news.data.length ? (
-        <NewsCardsCarousel news={news.data} />
+        <NewsCardsCarousel news={news.data} title="Новини" />
       ) : (
         <NoNewsPlaceholder />
       )}

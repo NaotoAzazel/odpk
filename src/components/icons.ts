@@ -2,6 +2,7 @@ import {
   AlignJustify,
   AlignLeft,
   ArrowUpDown,
+  ChevronLeft,
   ChevronRight,
   CircleX,
   Facebook,
@@ -48,5 +49,6 @@ export const Icons = {
   trash: Trash,
   settings: Settings2,
   error: CircleX,
-  placeholder: ImageIcon
+  placeholder: ImageIcon,
+  chevronLeft: ChevronLeft,
 };

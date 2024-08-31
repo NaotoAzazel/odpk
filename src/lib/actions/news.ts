@@ -6,7 +6,9 @@ import {
   invalidateCache,
   withCache,
 } from "@/lib/actions/cache";
+import { imageRemove } from "@/lib/actions/image-remove";
 import { db } from "@/lib/db";
+import { isImageBlock } from "@/lib/editor";
 import { createCacheKey } from "@/lib/utils";
 
 export async function getNews() {
@@ -154,6 +156,17 @@ export async function deleteNewsByParams(
 
     await deleteCacheValue(cacheKey);
     await invalidateCache("posts:*");
+
+    deletedNews.content.blocks.forEach(async (block) => {
+      if (isImageBlock(block)) {
+        const modifiedURL = block.data.file.url.split("/")[4];
+        const { success } = await imageRemove(modifiedURL);
+
+        if (!success) {
+          throw `Image with url: ${block.data.file.url} hasn't been deleted from uploadthing`;
+        }
+      }
+    });
   }
 
   return deletedNews;

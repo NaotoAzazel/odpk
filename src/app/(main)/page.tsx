@@ -1,5 +1,8 @@
-import { buttonVariants } from "@/components/ui/button";
+import { Suspense } from "react";
+import Link from "next/link";
+import LandingImage from "@/assets/images/landing.jpg";
 
+import { buttonVariants } from "@/components/ui/button";
 import ErrorBoundary from "@/components/error-boundary";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
@@ -10,12 +13,6 @@ import { AboutCollegeCardsCarousel } from "./_components/carousel/about-college-
 import { CollegeInfoSection } from "./_components/sections/college-info-section";
 import { NewsCardsSection } from "./_components/sections/news-cards-section";
 import { SpecialtieCardsHolder } from "./_components/specialtie-cards-holder";
-
-import Link from "next/link";
-
-import { Suspense } from "react";
-
-import LandingImage from "@/assets/images/landing.jpg";
 
 export const metadata = {
   title: "Головна",
@@ -96,10 +93,6 @@ export default function Home() {
 
       <section className="py-20 lg:py-32">
         <MaxWidthWrapper className="space-y-5 overflow-hidden">
-          <h2 className="text-heading text-3xl font-bold tracking-tight text-gray-800 md:text-4xl lg:text-5xl">
-            Новини
-          </h2>
-
           <ErrorBoundary fallback={<NewsCardsErrorContainer />}>
             <Suspense
               fallback={
