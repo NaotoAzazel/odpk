@@ -16,15 +16,22 @@ export async function getBase64(src: string) {
     const base64 = Buffer.from(arrayBuffer).toString("base64");
 
     const blurSVG = `
-			<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%">
-				<defs>
-					<filter id="blur-filter">
-						<feGaussianBlur stdDeviation="10" />
-					</filter>
-				</defs>
-				<image href="data:image/avif;base64,${base64}" width="100%" height="100%" filter="url(#blur-filter)" />
-			</svg>
-		`;
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox='0 0 8 5'>
+        <filter id='b' color-interpolation-filters='sRGB'>
+          <feGaussianBlur stdDeviation='1' />
+        </filter>
+
+        <image 
+          preserveAspectRatio='none' 
+          filter='url(#b)' 
+          x='0' 
+          y='0' 
+          height='100%' 
+          width='100%' 
+          href='data:image/avif;base64,${base64}' 
+        />
+      </svg>
+    `;
 
     const toBase64 = (src: string) =>
       typeof window === "undefined"
