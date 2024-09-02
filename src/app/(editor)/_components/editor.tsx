@@ -179,7 +179,8 @@ export function Editor({ post }: { post: Post }) {
       router.refresh();
 
       return toast({
-        description: "Новину збережено",
+        title: "Успіх!",
+        description: "Новину було успішно збережено",
       });
     } catch (error) {
       setIsSaving(false);
@@ -220,7 +221,8 @@ export function Editor({ post }: { post: Post }) {
     router.refresh();
 
     return toast({
-      description: "Новину опубліковано",
+      title: "Успіх!",
+      description: "Новина була успішно опублікована",
     });
   }
 
