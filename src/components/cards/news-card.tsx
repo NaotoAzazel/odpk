@@ -38,7 +38,10 @@ export function NewsCard({ post }: NewsCardProps) {
 
         <div className="p-4">
           <div className="mb-4 overflow-hidden">
-            <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold text-gray-800 transition-colors duration-200 group-hover:text-primary">
+            <h1
+              title={post.title}
+              className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold text-gray-800 transition-colors duration-200 group-hover:text-primary"
+            >
               {post.title}
             </h1>
           </div>
