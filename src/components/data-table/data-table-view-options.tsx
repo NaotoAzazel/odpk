@@ -1,15 +1,16 @@
 "use client";
 
+import type { Table } from "@tanstack/react-table";
+
+import { CustomColumnMeta } from "@/types/table";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-
-import type { Table } from "@tanstack/react-table";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -22,7 +23,7 @@ export function DataTableViewOptions<TData>({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="items-center focus-visible:ring-0">
-          <Icons.settings className="w-4 h-4 mr-2" />
+          <Icons.settings className="mr-2 h-4 w-4" />
           <span>Вид</span>
         </Button>
       </DropdownMenuTrigger>
@@ -31,13 +32,17 @@ export function DataTableViewOptions<TData>({
           .getAllColumns()
           .filter((column) => column.getCanHide())
           .map((column) => {
+            const customMeta = column.columnDef.meta as
+              | CustomColumnMeta
+              | undefined;
+
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {customMeta?.translatedName || column.id}
               </DropdownMenuCheckboxItem>
             );
           })}

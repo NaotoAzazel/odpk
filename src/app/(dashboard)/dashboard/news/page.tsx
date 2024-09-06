@@ -8,7 +8,7 @@ import ErrorBoundary from "@/components/error-boundary";
 import { Header } from "@/components/header";
 import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
 
-import { NewsTable } from "./_components/news-table";
+import { NewsTable } from "./_components/table/news-table";
 
 export const metadata: Metadata = {
   title: "Новини",
