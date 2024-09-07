@@ -14,6 +14,6 @@ declare global {
       title: string;
       description: string;
       href: string;
-    }[]
+    }
   }
 }
