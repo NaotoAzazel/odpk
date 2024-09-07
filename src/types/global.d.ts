@@ -10,10 +10,10 @@ declare global {
       version: string;
     }
 
-    interface HeaderButtonItems {
+    type HeaderButtonItems = {
       title: string;
       description: string;
       href: string;
-    }
+    }[];
   }
 }
