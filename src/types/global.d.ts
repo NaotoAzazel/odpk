@@ -8,6 +8,12 @@ declare global {
       blocks: Blocks[];
       time: number;
       version: string;
-    };
+    }
+
+    interface HeaderButtonItems {
+      title: string;
+      description: string;
+      href: string;
+    }
   }
 }

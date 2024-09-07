@@ -11,6 +11,23 @@ datasource db {
   url      = env("POSTGRES_PRISMA_URL")
 }
 
+model HeaderButtons {
+  id    Int    @id @default(autoincrement())
+  title String
+  /// [HeaderButtonItems]
+  items Json
+}
+
+model StaticPages {
+  id        Int      @id @default(autoincrement())
+  title     String
+  href      String
+  /// [Content]
+  content   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Post {
   id        Int      @id @default(autoincrement())
   title     String
