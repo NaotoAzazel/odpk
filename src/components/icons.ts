@@ -9,11 +9,13 @@ import {
   File,
   GraduationCap,
   ImageIcon,
+  Info,
   Instagram,
   LayoutGrid,
   Loader2,
   LogOut,
   LucideIcon,
+  NotebookText,
   Pencil,
   Phone,
   Plus,
@@ -51,4 +53,6 @@ export const Icons = {
   error: CircleX,
   placeholder: ImageIcon,
   chevronLeft: ChevronLeft,
+  notebookText: NotebookText,
+  info: Info
 };
