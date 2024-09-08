@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }: { children?: React.ReactNo
           <aside className="hidden w-170px flex-col lg:flex">
             <DashboardNav items={navConfig.dashboardNav} />
           </aside>
-          <main className="flex w-full flex-1 flex-col overflow-hidden">
+          <main className="flex w-full flex-1 flex-col">
             {children}
           </main>
         </div>
