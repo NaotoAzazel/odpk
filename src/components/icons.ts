@@ -21,6 +21,7 @@ import {
   Plus,
   Search,
   Settings2,
+  SlidersHorizontal,
   SquareArrowOutUpRight,
   Trash,
   UserRound,
@@ -54,5 +55,6 @@ export const Icons = {
   placeholder: ImageIcon,
   chevronLeft: ChevronLeft,
   notebookText: NotebookText,
-  info: Info
+  info: Info,
+  sliders: SlidersHorizontal,
 };

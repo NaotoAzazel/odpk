@@ -13,5 +13,10 @@ export const navConfig: NavBarConfig = {
       href: "/dashboard/pages",
       icon: "notebookText",
     },
+    {
+      title: "Кнопки заголовка",
+      href: "/dashboard/header-buttons",
+      icon: "sliders",
+    },
   ],
 };
