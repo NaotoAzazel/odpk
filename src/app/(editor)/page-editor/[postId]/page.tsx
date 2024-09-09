@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { getPageByParams } from "@/lib/actions/pages";
+import { getPageById, getPageByParams } from "@/lib/actions/pages";
 
 import { EditorContentSkeleton } from "../../editor/[postId]/_components/editor-content-skeleton";
 import { PageEditorContent } from "./_components/page-editor-content";
@@ -16,9 +16,7 @@ export const metadata = {
 };
 
 export default function EditorPage({ params }: EditorPageProps) {
-  const pagePromise = getPageByParams({
-    params: { where: { id: Number(params.postId) } },
-  });
+  const pagePromise = getPageById(Number(params.postId))
 
   return (
     <Suspense fallback={<EditorContentSkeleton />}>

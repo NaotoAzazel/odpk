@@ -31,18 +31,24 @@ interface GetPageByParamsParams {
   params?: Prisma.StaticPagesFindFirstArgs;
 }
 
-export async function getPageByParams({ params }: GetPageByParamsParams = {}) {
-  const page = await db.staticPages.findFirst(params);
-
-  if (!page) {
-    return null;
-  }
-
-  const key = `page:${page.content.time}`;
-
+export async function getPageById(pageId: number) {
   return withCache({
-    key,
-    action: async () => page,
+    key: `page:${pageId}`,
+    action: async () => {
+      const page = await db.staticPages.findUnique({ where: { id: pageId } });
+      return page;
+    },
+    options: { skipCacheOnNull: true },
+  });
+}
+
+export async function getPageByParams({ params }: GetPageByParamsParams = {}) {
+  return withCache({
+    key: `page:${JSON.stringify(params)}`,
+    action: async () => {
+      const page = await db.staticPages.findFirst(params);
+      return page;
+    },
     options: { skipCacheOnNull: true },
   });
 }

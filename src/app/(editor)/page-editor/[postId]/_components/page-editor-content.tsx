@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 
-import { getPageByParams } from "@/lib/actions/pages";
+import { getPageById } from "@/lib/actions/pages";
 
 import { PageEditor } from "./page-editor";
 
 interface PageEditorContentProps {
-  pagePromise: ReturnType<typeof getPageByParams>;
+  pagePromise: ReturnType<typeof getPageById>;
 }
 
 export async function PageEditorContent({
