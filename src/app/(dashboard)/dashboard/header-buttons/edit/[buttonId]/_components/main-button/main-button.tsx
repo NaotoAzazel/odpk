@@ -18,10 +18,10 @@ import { Icons } from "@/components/icons";
 
 interface MainButtonProps {
   button: HeaderButtons;
-  onUpdateTitle: (newTitle: string) => void;
+  onUpdate: (data: { title?: string; href?: string }) => void;
 }
 
-export function MainButton({ button, onUpdateTitle }: MainButtonProps) {
+export function MainButton({ button, onUpdate }: MainButtonProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
@@ -45,9 +45,7 @@ export function MainButton({ button, onUpdateTitle }: MainButtonProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          title: data.title,
-        }),
+        body: JSON.stringify(data),
       });
 
       if (!response?.ok) {
@@ -56,7 +54,7 @@ export function MainButton({ button, onUpdateTitle }: MainButtonProps) {
         );
       }
 
-      onUpdateTitle(data.title as string);
+      onUpdate(data);
       setIsEditing(false);
       reset();
 
@@ -84,24 +82,49 @@ export function MainButton({ button, onUpdateTitle }: MainButtonProps) {
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col space-y-2"
         >
-          <div className="flex flex-col space-y-2">
-            <Label htmlFor="title">Назва кнопки</Label>
-            <Input
-              {...register("title")}
-              id="title"
-              type="text"
-              placeholder="Документи"
-              defaultValue={button.title}
-              disabled={isSaving}
-              className={cn({
-                "focus-visible:ring-red-500": errors.title,
-              })}
-            />
-            {errors?.title && (
-              <p className="px-1 text-xs text-red-600">
-                {errors.title.message}
-              </p>
-            )}
+          <div className="flex flex-row items-center gap-4">
+            <div className="flex w-1/2 flex-col space-y-2">
+              <Label htmlFor="title">Назва кнопки</Label>
+              <Input
+                {...register("title")}
+                id="title"
+                type="text"
+                placeholder="Документи"
+                defaultValue={button.title}
+                disabled={isSaving}
+                className={cn({
+                  "focus-visible:ring-red-500": errors.title,
+                })}
+              />
+              {errors?.title && (
+                <p className="px-1 text-xs text-red-600">
+                  {errors.title.message}
+                </p>
+              )}
+            </div>
+            <div className="flex w-1/2 flex-col space-y-2">
+              <div className="flex flex-row">
+                <Label htmlFor="href">Посилання</Label>
+                <p className="flex h-[14px] items-center text-sm text-muted-foreground">
+                  (не обов&apos;язково)
+                </p>
+              </div>
+              <Input
+                id="href"
+                type="text"
+                placeholder="path/to/page"
+                defaultValue={button.href}
+                {...register("href")}
+                className={cn("w-full", {
+                  "focus-visible:ring-red-500": errors.href,
+                })}
+              />
+              {errors?.title && (
+                <p className="px-1 text-xs text-red-600">
+                  {errors.href?.message}
+                </p>
+              )}
+            </div>
           </div>
           <div className="ml-auto flex gap-2">
             <Button
@@ -127,7 +150,7 @@ export function MainButton({ button, onUpdateTitle }: MainButtonProps) {
         </form>
       ) : (
         <>
-          <div className="flex flex-row items-center ml-2">
+          <div className="ml-2 flex flex-row items-center">
             <p className="font-heading font-semibold">{button.title}</p>
           </div>
           <Button

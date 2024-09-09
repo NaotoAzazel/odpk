@@ -38,6 +38,9 @@ export function ButtonsCreateButton() {
     formState: { errors },
   } = useForm<HeaderButtonCreationRequest>({
     resolver: zodResolver(HeaderButtonValidator),
+    defaultValues: {
+      href: "",
+    },
   });
 
   const onSubmit = async (data: HeaderButtonCreationRequest) => {
@@ -91,7 +94,7 @@ export function ButtonsCreateButton() {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-1 py-2">
+          <div className="grid gap-2 py-2">
             <Label htmlFor="text">Назва кнопки</Label>
             <Input
               id="text"
@@ -105,6 +108,28 @@ export function ButtonsCreateButton() {
             {errors?.title && (
               <p className="px-1 text-xs text-red-600">
                 {errors.title.message}
+              </p>
+            )}
+          </div>
+          <div className="grid gap-2 py-2">
+            <div className="flex flex-row items-center">
+              <Label htmlFor="href">Посилання</Label>
+              <p className="text-sm text-muted-foreground">
+                (не обов&apos;язково)
+              </p>
+            </div>
+            <Input
+              id="href"
+              type="text"
+              placeholder="path/to/page"
+              {...register("href")}
+              className={cn({
+                "focus-visible:ring-red-500": errors.href,
+              })}
+            />
+            {errors?.title && (
+              <p className="px-1 text-xs text-red-600">
+                {errors.href?.message}
               </p>
             )}
           </div>

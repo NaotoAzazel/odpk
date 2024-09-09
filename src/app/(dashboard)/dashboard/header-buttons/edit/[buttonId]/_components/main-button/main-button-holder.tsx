@@ -12,17 +12,17 @@ interface MainButtonHolderProps {
 export function MainButtonHolder({ buttonData }: MainButtonHolderProps) {
   const [button, setButton] = useState<HeaderButtons>(buttonData);
 
-  const updateButtonTitle = (newTitle: string) => {
+  const updateButton = (data: { title?: string; href?: string }) => {
     setButton((prevButton) => ({
       ...prevButton,
-      title: newTitle,
+      ...data,
     }));
   };
 
   return (
     <div className="space-y-1">
       <p className="text-muted-foreground">Головна кнопка</p>
-      <MainButton button={button} onUpdateTitle={updateButtonTitle} />
+      <MainButton button={button} onUpdate={updateButton} />
     </div>
   );
 }

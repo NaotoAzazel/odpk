@@ -16,6 +16,7 @@ export const HeaderButtonValidator = z.object({
   title: z
     .string()
     .min(1, { message: "Це поле має містити в собі хоча б один символ" }),
+  href: z.string().optional(),
   items: z.array(HeaderButtonItemsValidator).default([]),
 });
 
