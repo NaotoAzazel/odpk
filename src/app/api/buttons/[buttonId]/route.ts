@@ -1,9 +1,11 @@
 import { getServerSession } from "next-auth";
 import { z } from "zod";
 
-import { deleteHeaderButtonByParams } from "@/lib/actions/header-buttons";
+import {
+  deleteHeaderButtonByParams,
+  updateButtonByParams,
+} from "@/lib/actions/header-buttons";
 import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
 import { HeaderButtonUpdateValidator } from "@/lib/validation/header-buttons";
 
 const routeContextSchema = z.object({
@@ -56,8 +58,7 @@ export async function PATCH(
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
-    // TODO: add function updateButtonByParams
-    const updatedButton = await db.headerButtons.update({
+    const updatedButton = await updateButtonByParams({
       where: { id: Number(params.buttonId) },
       data,
     });

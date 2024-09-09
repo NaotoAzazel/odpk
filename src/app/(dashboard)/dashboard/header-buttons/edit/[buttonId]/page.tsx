@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { getHeaderButtonById } from "@/lib/actions/header-buttons";
 import { db } from "@/lib/db";
 import DashboardShell from "@/components/dashboard-shell";
 import { Header } from "@/components/header";
@@ -15,9 +16,7 @@ interface EditButtonPageProps {
 }
 
 export default async function EditButtonPage({ params }: EditButtonPageProps) {
-  const button = await db.headerButtons.findUnique({
-    where: { id: Number(params.buttonId) },
-  });
+  const button = await getHeaderButtonById(Number(params.buttonId));
 
   if (!button) {
     return notFound();
