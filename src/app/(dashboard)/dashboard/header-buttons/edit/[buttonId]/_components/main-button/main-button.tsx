@@ -82,8 +82,8 @@ export function MainButton({ button, onUpdate }: MainButtonProps) {
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col space-y-2"
         >
-          <div className="flex flex-row items-center gap-4">
-            <div className="flex w-1/2 flex-col space-y-2">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex w-full flex-col space-y-2">
               <Label htmlFor="title">Назва кнопки</Label>
               <Input
                 {...register("title")}
@@ -102,7 +102,7 @@ export function MainButton({ button, onUpdate }: MainButtonProps) {
                 </p>
               )}
             </div>
-            <div className="flex w-1/2 flex-col space-y-2">
+            <div className="flex w-full flex-col space-y-2">
               <div className="flex flex-row">
                 <Label htmlFor="href">Посилання</Label>
                 <p className="flex h-[14px] items-center text-sm text-muted-foreground">
