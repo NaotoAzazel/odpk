@@ -1,4 +1,5 @@
 import {
+  AlertTriangle,
   AlignJustify,
   AlignLeft,
   ArrowUpDown,
@@ -57,4 +58,5 @@ export const Icons = {
   notebookText: NotebookText,
   info: Info,
   sliders: SlidersHorizontal,
+  alertTriangle: AlertTriangle,
 };
