@@ -1,27 +1,46 @@
-import { db } from "@/lib/db";
+import { Suspense } from "react";
+
+import { getHeaderButtonsByParams } from "@/lib/actions/header-buttons";
 import DashboardShell from "@/components/dashboard-shell";
+import ErrorBoundary from "@/components/error-boundary";
+import { ErrorContainer } from "@/components/error-container";
 import { Header } from "@/components/header";
 
-import { ButtonItem } from "./_components/button-item";
+import { ButtonItemSkeleton } from "./_components/button-item-skeleton";
 import { ButtonsCreateButton } from "./_components/buttons-create-dialog";
+import { ButtonsHolder } from "./_components/buttons-holder";
 
 export default async function HeaderButtonsPage() {
-  // TODO: add getButtonsByParams
-  const buttons = await db.headerButtons.findMany();
+  const buttonsPromise = getHeaderButtonsByParams();
 
   return (
     <DashboardShell>
       <Header heading="Кнопки заголовка">
         <ButtonsCreateButton />
       </Header>
-      {/* TODO: make it so that when adding a button, only this 
-          button is re-rendered, not the whole page 
-      */}
-      <div className="divide-y divide-border rounded-md border">
-        {buttons.map((button, i) => (
-          <ButtonItem button={button} key={i} />
-        ))}
-      </div>
+      <ErrorBoundary
+        fallback={
+          <ErrorContainer
+            title="Виникла помилка з отриманням кнопок"
+            description="Ми вже працює над виправленням цієї помилки"
+          />
+        }
+      >
+        <Suspense
+          fallback={
+            <>
+              <div className="divide-border-200 divide-y rounded-md border">
+                <ButtonItemSkeleton />
+                <ButtonItemSkeleton />
+                <ButtonItemSkeleton />
+                <ButtonItemSkeleton />
+              </div>
+            </>
+          }
+        >
+          <ButtonsHolder buttonPromise={buttonsPromise} />
+        </Suspense>
+      </ErrorBoundary>
     </DashboardShell>
   );
 }

@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 
 import { getHeaderButtonById } from "@/lib/actions/header-buttons";
-import { db } from "@/lib/db";
 import DashboardShell from "@/components/dashboard-shell";
 import { Header } from "@/components/header";
+import { NoItemsPlaceholder } from "@/components/no-items-plaiceholder";
 
 import { AddButtonItem } from "./_components/add-button-item";
 import { ButtonElement } from "./_components/button-element";
@@ -43,7 +43,10 @@ export default async function EditButtonPage({ params }: EditButtonPageProps) {
                 ))}
               </>
             ) : (
-              <p>no items</p>
+              <NoItemsPlaceholder
+                title="Не вдалося знайти елементи кнопки"
+                description="Найімовірніше елементів не існує"
+              />
             )}
           </div>
         </div>
