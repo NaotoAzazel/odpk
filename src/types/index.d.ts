@@ -1,5 +1,6 @@
+import { Post as NewsPostType, Prisma } from "@prisma/client";
+
 import { Icons } from "@/components/icons";
-import { Prisma, Post as NewsPostType } from "@prisma/client";
 
 export type NavSubItem = {
   title: string;
@@ -45,3 +46,9 @@ export type Card = {
 };
 
 export type Post = NewsPostType;
+
+export type HeaderButtonItem = {
+  title: string;
+  description: string;
+  href: string;
+};

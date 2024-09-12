@@ -1,16 +1,81 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { HeaderButtons } from "@prisma/client";
+import { useForm } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
+import {
+  HeaderButtonItemCreateRequest,
+  HeaderButtonItemCreateValidator,
+} from "@/lib/validation/header-buttons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 
-export function AddButtonItem() {
+interface AddButtonItemProps {
+  button: HeaderButtons;
+}
+
+export function AddButtonItem({ button }: AddButtonItemProps) {
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<HeaderButtonItemCreateRequest>({
+    resolver: zodResolver(HeaderButtonItemCreateValidator),
+  });
+
+  const onSubmit = async (data: HeaderButtonItemCreateRequest) => {
+    try {
+      setIsSaving(true);
+
+      const buttonItemsWithCurrentData = { items: [...button.items, data] };
+
+      const response = await fetch(`/api/buttons/${button.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(buttonItemsWithCurrentData),
+      });
+
+      if (!response?.ok) {
+        throw new Error("Виникла помилка під час створення елемента");
+      }
+
+      setIsAdding(false);
+
+      reset();
+      router.refresh();
+
+      return toast({
+        title: "Успіх!",
+        description: "Елемент було створено",
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        return toast({
+          title: "Щось пiшло не так",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div
@@ -21,33 +86,73 @@ export function AddButtonItem() {
       )}
     >
       {isAdding ? (
-        <div className="flex w-full flex-col space-y-2">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex w-full flex-col space-y-2"
+        >
           <div className="flex flex-col gap-2 md:flex-row">
             <div className="flex w-full flex-col space-y-2">
               <Label htmlFor="title">Назва кнопки</Label>
-              <Input id="title" type="text" placeholder="Директор" />
+              <Input
+                id="title"
+                type="text"
+                {...register("title")}
+                placeholder="Директор"
+                className={cn({
+                  "focus-visible:ring-red-500": errors.title,
+                })}
+              />
+              {errors.title && (
+                <p className="px-1 text-xs text-red-600">
+                  {errors.title.message}
+                </p>
+              )}
             </div>
             <div className="flex w-full flex-col space-y-2">
               <Label htmlFor="description">Опис</Label>
               <Input
                 id="description"
                 type="text"
+                {...register("description")}
                 placeholder="Інформація про директора коледжу"
+                className={cn({
+                  "focus-visible:ring-red-500": errors.description,
+                })}
               />
+              {errors.description && (
+                <p className="px-1 text-xs text-red-600">
+                  {errors.description.message}
+                </p>
+              )}
             </div>
             <div className="flex w-full flex-col space-y-2">
-              <Label htmlFor="href">Посилання</Label>
+              <div className="flex flex-row">
+                <Label htmlFor="href">Посилання</Label>
+                <p className="flex h-[14px] items-center text-sm text-muted-foreground">
+                  (не обов&apos;язково)
+                </p>
+              </div>
               <Input
                 id="href"
                 type="text"
+                {...register("href")}
                 placeholder="Посилання/на/сторінку"
+                className={cn({
+                  "focus-visible:ring-red-500": errors.href,
+                })}
               />
+              {errors?.href && (
+                <p className="px-1 text-xs text-red-600">
+                  {errors.href.message}
+                </p>
+              )}
             </div>
           </div>
           <div className="ml-auto flex gap-2">
             <Button
               variant="outline"
               size="sm"
+              disabled={isSaving}
               onClick={(e) => {
                 e.stopPropagation();
                 setIsAdding(false);
@@ -55,14 +160,22 @@ export function AddButtonItem() {
             >
               Відміна
             </Button>
-            <Button size="sm">
+            <Button
+              size="sm"
+              type="submit"
+              disabled={isSaving}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSubmit(onSubmit);
+              }}
+            >
               {isSaving && (
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
               )}
               <span>Зберегти</span>
             </Button>
           </div>
-        </div>
+        </form>
       ) : (
         <div className="flex flex-row items-center">
           <Icons.plus className="mr-2 size-4" />

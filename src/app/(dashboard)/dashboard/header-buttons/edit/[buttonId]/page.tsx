@@ -29,7 +29,7 @@ export default async function EditButtonPage({ params }: EditButtonPageProps) {
         <MainButtonHolder buttonData={button} />
         <div className="space-y-2">
           <p className="text-muted-foreground">Елементи кнопки</p>
-          <AddButtonItem />
+          <AddButtonItem button={button} />
           <div className="divide-y divide-border rounded-md border">
             {button.items.length > 0 ? (
               <>
