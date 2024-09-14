@@ -4,8 +4,8 @@ import LandingImage from "@/assets/images/landing.jpg";
 
 import { buttonVariants } from "@/components/ui/button";
 import ErrorBoundary from "@/components/error-boundary";
+import { ErrorContainer } from "@/components/error-container";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
 import { ResponsiveImage } from "@/components/responsive-image";
 import { NewsLoadingContainer } from "@/components/skeletons/news-loading-container";
 
@@ -93,7 +93,14 @@ export default function Home() {
 
       <section className="py-20 lg:py-32">
         <MaxWidthWrapper className="space-y-5 overflow-hidden">
-          <ErrorBoundary fallback={<NewsCardsErrorContainer />}>
+          <ErrorBoundary
+            fallback={
+              <ErrorContainer
+                title="Виникла помилка з отримання новин"
+                description="Ми вже працює над виправленням цієї помилки"
+              />
+            }
+          >
             <Suspense
               fallback={
                 <NewsLoadingContainer

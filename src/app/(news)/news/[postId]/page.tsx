@@ -8,7 +8,6 @@ import { authOptions } from "@/lib/auth";
 import { absoluteUrl } from "@/lib/utils";
 import ErrorBoundary from "@/components/error-boundary";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
 
 import { AnotherNewsCards } from "./_components/another-news-cards";
 import { AnotherNewsSectionLoading } from "./_components/loading/another-news-loading";
@@ -16,6 +15,7 @@ import { LoadingEditorOutput } from "./_components/loading/editor-output-loading
 import { NewsHeadingLoading } from "./_components/loading/news-heading-loading";
 import { NewsContent } from "./_components/news-content";
 import { NewsHeading } from "./_components/news-heading";
+import { ErrorContainer } from '@/components/error-container'
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
@@ -111,7 +111,14 @@ export default async function NewsPage({ params }: NewsPageProps) {
               </h2>
             </div>
 
-            <ErrorBoundary fallback={<NewsCardsErrorContainer />}>
+            <ErrorBoundary
+              fallback={
+                <ErrorContainer
+                  title="Виникла помилка з отримання новин"
+                  description="Ми вже працює над виправленням цієї помилки"
+                />
+              }
+            >
               <Suspense fallback={<AnotherNewsSectionLoading />}>
                 <AnotherNewsCards newsPromise={anotherNewsPromise} />
               </Suspense>

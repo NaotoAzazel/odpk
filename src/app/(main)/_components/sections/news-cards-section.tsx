@@ -1,5 +1,6 @@
-import { NoNewsPlaceholder } from "@/components/no-news-placeholder";
 import { getNewsByParams } from "@/lib/actions/news";
+import { NoItemsPlaceholder } from "@/components/no-items-plaiceholder";
+
 import { NewsCardsCarousel } from "../carousel/news-cards-carousel";
 
 export async function NewsCardsSection() {
@@ -21,7 +22,10 @@ export async function NewsCardsSection() {
       {news.data.length ? (
         <NewsCardsCarousel news={news.data} title="Новини" />
       ) : (
-        <NoNewsPlaceholder />
+        <NoItemsPlaceholder
+          title="Не вдалось знайти новини"
+          description="Спробуйте змінити фільтри, або перевірте пізніше"
+        />
       )}
     </>
   );
