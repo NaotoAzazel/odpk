@@ -2,6 +2,8 @@ import "@prisma/client";
 
 import { Blocks } from "@/types/news";
 
+import { HeaderButtonItem } from ".";
+
 declare global {
   namespace PrismaJson {
     interface Content {
@@ -10,10 +12,6 @@ declare global {
       version: string;
     }
 
-    type HeaderButtonItems = {
-      title: string;
-      description: string;
-      href: string;
-    }[];
+    type HeaderButtonItems = HeaderButtonItem[];
   }
 }

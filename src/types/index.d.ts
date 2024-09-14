@@ -48,6 +48,7 @@ export type Card = {
 export type Post = NewsPostType;
 
 export type HeaderButtonItem = {
+  id: number;
   title: string;
   description: string;
   href: string;

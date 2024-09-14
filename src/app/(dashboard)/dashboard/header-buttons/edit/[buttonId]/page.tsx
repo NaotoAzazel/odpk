@@ -6,7 +6,7 @@ import { Header } from "@/components/header";
 import { NoItemsPlaceholder } from "@/components/no-items-plaiceholder";
 
 import { AddButtonItem } from "./_components/add-button-item";
-import { ButtonElement } from "./_components/button-element";
+import { ButtonElement } from "./_components/button-element/button-element";
 import { MainButtonHolder } from "./_components/main-button/main-button-holder";
 
 interface EditButtonPageProps {
@@ -34,10 +34,9 @@ export default async function EditButtonPage({ params }: EditButtonPageProps) {
             {button.items.length > 0 ? (
               <>
                 {button.items.map((buttonItem, i) => (
-                  <ButtonElement
-                    title={buttonItem.title}
-                    description={buttonItem.description}
-                    href={buttonItem.href}
+                 <ButtonElement
+                    rootButton={button}
+                    buttonElement={buttonItem}
                     key={i}
                   />
                 ))}
