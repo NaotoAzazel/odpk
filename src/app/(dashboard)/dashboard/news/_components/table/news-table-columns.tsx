@@ -120,11 +120,14 @@ export function getColumns(): CustomColumnDef<Post>[] {
         const [isShowDeleteDialog, setIsShowDeleteDialog] =
           useState<boolean>(false);
 
+        const linkToNewsItem = `/news/${id}`;
+        const editLink = `/news-editor/${id}`;
+
         return (
           <>
             <div className="hidden flex-row gap-2 md:flex">
-              <LinkTo href={`/news/${id}`} />
-              <EditButton href={`/editor/${id}`} />
+              <LinkTo href={linkToNewsItem} />
+              <EditButton href={editLink} />
               <DeleteButton onClick={() => setIsShowDeleteDialog(true)} />
             </div>
 
@@ -147,7 +150,7 @@ export function getColumns(): CustomColumnDef<Post>[] {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
                   <Link
-                    href={`/news/${id}`}
+                    href={linkToNewsItem}
                     className="flex flex-row items-center hover:cursor-default"
                   >
                     <Icons.openLink className="mr-2 h-4 w-4" />
@@ -156,7 +159,7 @@ export function getColumns(): CustomColumnDef<Post>[] {
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link
-                    href={`/editor/${id}`}
+                    href={editLink}
                     className="flex flex-row items-center hover:cursor-default"
                   >
                     <Icons.pencil className="mr-2 h-4 w-4" />

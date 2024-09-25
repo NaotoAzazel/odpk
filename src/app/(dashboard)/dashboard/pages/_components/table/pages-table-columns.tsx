@@ -96,11 +96,14 @@ export function getColumns(): CustomColumnDef<StaticPages>[] {
         const [isShowDeleteDialog, setIsShowDeleteDialog] =
           useState<boolean>(false);
 
+        const linkToPage = `/content-temp/${href}`;
+        const editLink = `/page-editor/${id}`;
+
         return (
           <>
             <div className="hidden flex-row gap-2 md:flex">
-              <LinkTo href={`/content-temp/${href}`} />
-              <EditButton href={`/page-editor/${id}`} />
+              <LinkTo href={linkToPage} />
+              <EditButton href={editLink} />
               <DeleteButton onClick={() => setIsShowDeleteDialog(true)} />
             </div>
 
@@ -124,7 +127,7 @@ export function getColumns(): CustomColumnDef<StaticPages>[] {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
                   <Link
-                    href={`/content-temp/${href}`}
+                    href={linkToPage}
                     className="flex flex-row items-center hover:cursor-default"
                   >
                     <Icons.openLink className="mr-2 h-4 w-4" />
@@ -133,7 +136,7 @@ export function getColumns(): CustomColumnDef<StaticPages>[] {
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link
-                    href={`/page-editor/${id}`}
+                    href={editLink}
                     className="flex flex-row items-center hover:cursor-default"
                   >
                     <Icons.pencil className="mr-2 h-4 w-4" />
