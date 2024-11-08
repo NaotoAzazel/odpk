@@ -50,7 +50,7 @@ export function NewsCreateButton({
       const news = await response.json();
 
       router.refresh();
-      router.push(`/editor/${news.id}`);
+      router.push(`/news-editor/${news.id}`);
     } catch (error) {
       if (error instanceof Error) {
         toast({
