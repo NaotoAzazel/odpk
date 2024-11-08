@@ -13,7 +13,6 @@ interface NewsCardProps {
 export function NewsCard({ post }: NewsCardProps) {
   const firstFoundImageBlock = post.content.blocks.find(isImageBlock);
   const imageUrl = firstFoundImageBlock?.data.file.url;
-  const base64 = firstFoundImageBlock?.data.file.base64;
 
   return (
     <Link href={`/news/${post.id}`}>
@@ -25,13 +24,8 @@ export function NewsCard({ post }: NewsCardProps) {
               src={imageUrl}
               alt={post.title}
               fill
-              placeholder={base64 ? "blur" : "empty"}
-              blurDataURL={base64}
               sizes="(max-width: 768px) 100vw, 33vw"
-              className="border-b object-cover blur-md transition-all duration-200"
-              onLoadingComplete={(img: HTMLImageElement) => {
-                img.classList.remove("blur-md");
-              }}
+              className="border-b object-cover"
             />
           </AspectRatio>
         </div>

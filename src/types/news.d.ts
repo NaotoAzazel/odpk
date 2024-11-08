@@ -9,7 +9,6 @@ type ImageBlock = BaseBlock & {
   data: {
     file: {
       url: string;
-      base64?: string;
     };
     caption: string;
     stretched: boolean;
