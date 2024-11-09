@@ -3,10 +3,11 @@ import ErrorBoundary from "@/components/error-boundary";
 import { ErrorContainer } from "@/components/error-container";
 
 import { NewsFeed } from "./news-feed";
+import { paginationConfig } from '@/config/pagination'
 
 export async function NewsContainer() {
   const initialNews = await getNewsByParams({
-    pageSize: 6,
+    pageSize: paginationConfig.newsPage.newsPerPage,
     params: {
       where: {
         published: true,

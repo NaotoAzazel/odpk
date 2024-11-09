@@ -16,6 +16,7 @@ import { NewsHeadingLoading } from "./_components/loading/news-heading-loading";
 import { NewsContent } from "./_components/news-content";
 import { NewsHeading } from "./_components/news-heading";
 import { ErrorContainer } from '@/components/error-container'
+import { paginationConfig } from '@/config/pagination'
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
@@ -73,7 +74,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
   });
   const anotherNewsPromise = getNewsByParams({
     pageNumber: 1,
-    pageSize: 3,
+    pageSize: paginationConfig.newsItemPage.anotherNewsAmount,
     params: {
       where: {
         published: true,

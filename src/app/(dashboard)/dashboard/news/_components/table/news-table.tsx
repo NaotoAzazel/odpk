@@ -2,13 +2,14 @@
 "use memo";
 
 import { use, useMemo } from "react";
-import { DataTable } from "@/components/data-table/data-table";
 
+import { paginationConfig } from "@/config/pagination";
 import { getNews } from "@/lib/actions/news";
+import { useDataTable } from "@/hooks/use-data-table";
+import { DataTable } from "@/components/data-table/data-table";
+import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 
 import { getColumns } from "./news-table-columns";
-import { useDataTable } from "@/hooks/use-data-table";
-import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { NewsTableToolbarActions } from "./news-table-toolbar-actions";
 
 interface NewsTableProps {
@@ -22,6 +23,7 @@ export function NewsTable({ newsPromise }: NewsTableProps) {
   const { table } = useDataTable({
     data: news,
     columns,
+    initialPageSize: paginationConfig.dashboard.news.rowsPerPage,
   });
 
   return (
