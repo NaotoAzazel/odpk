@@ -8,9 +8,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 
-import { imageRemove } from "@/lib/actions/image-remove";
-import { isImageBlock } from "@/lib/editor";
-import { PostCreationRequest, PostValidator } from "@/lib/validation/post";
+import {
+  NewsItemCreateRequest,
+  NewsItemValidator,
+} from "@/lib/validation/post";
 import { useEditor } from "@/hooks/useEditor";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -29,16 +30,12 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
   const { toast } = useToast();
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<PostCreationRequest>({
-    resolver: zodResolver(PostValidator),
+  const { register, handleSubmit } = useForm<NewsItemCreateRequest>({
+    resolver: zodResolver(NewsItemValidator),
     defaultValues: newsItem,
   });
 
-  async function onSubmit(data: PostCreationRequest) {
+  async function saveNewsItem(data: NewsItemCreateRequest) {
     setIsSaving(true);
 
     try {
@@ -46,10 +43,6 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
       if (!blocks) {
         return;
       }
-
-      const imageData = blocks.blocks
-        .filter((block) => block.type === "image")
-        .map((block) => block.data.file.url);
 
       const response = await fetch(`/api/news/${newsItem.id}`, {
         method: "PATCH",
@@ -66,25 +59,6 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
         throw new Error("Новину не збережно. Спробуйте ще раз");
       }
 
-      const initialPostImages: string[] = newsItem.content.blocks
-        .filter(isImageBlock)
-        .map((block) => block.data.file.url);
-
-      const removed: string[] = initialPostImages.filter(
-        (url) => !imageData.includes(url),
-      );
-
-      const modifiedRemoved = removed.map((url) => url.split("/")[4]);
-
-      if (removed) {
-        const removingStatus = await imageRemove(modifiedRemoved);
-        if (!removingStatus.success) {
-          throw new Error("Новину не збережно. Спробуйте ще раз");
-        }
-      }
-
-      setIsSaving(false);
-
       router.refresh();
 
       return toast({
@@ -92,8 +66,6 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
         description: "Новину було успішно збережено",
       });
     } catch (error) {
-      setIsSaving(false);
-
       if (error instanceof Error) {
         return toast({
           title: "Щось пiшло не так",
@@ -101,38 +73,46 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
           variant: "destructive",
         });
       }
+    } finally {
+      setIsSaving(false);
     }
   }
 
-  async function publishPost() {
+  async function publisnNewsItem() {
     setIsPublishing(true);
 
-    const response = await fetch(`/api/news/${newsItem.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        published: true,
-      }),
-    });
-
-    setIsPublishing(false);
-
-    if (!response?.ok) {
-      return toast({
-        title: "Щось пiшло не так",
-        description: "Новину не опубліковано. Спробуйте ще раз",
-        variant: "destructive",
+    try {
+      const response = await fetch(`/api/news/${newsItem.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          published: true,
+        }),
       });
+
+      if (!response?.ok) {
+        throw new Error("Новину не опубліковано. Спробуйте ще раз");
+      }
+
+      router.refresh();
+
+      return toast({
+        title: "Успіх!",
+        description: "Новина була успішно опублікована",
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        return toast({
+          title: "Щось пiшло не так",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsPublishing(false);
     }
-
-    router.refresh();
-
-    return toast({
-      title: "Успіх!",
-      description: "Новина була успішно опублікована",
-    });
   }
 
   const { ref: titleRef, ...rest } = register("title");
@@ -158,7 +138,7 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
           </div>
           <div className="flex items-center gap-2">
             <Button
-              onClick={publishPost}
+              onClick={publisnNewsItem}
               variant="outline"
               disabled={newsItem.published || isButtonsDisable}
             >
@@ -168,7 +148,7 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
               {newsItem.published ? "Опубліковано" : "Опублікувати"}
             </Button>
             <Button
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit(saveNewsItem)}
               type="submit"
               className="w-full"
               form="post-form"

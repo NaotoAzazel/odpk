@@ -2,15 +2,15 @@ import { z } from "zod";
 
 import { contentSchema } from "@/lib/validation/content";
 
-export const PostValidator = z.object({
+export const NewsItemValidator = z.object({
   title: z
     .string()
     .min(1, { message: "Заголовок повинен мiстити в собi мiнiмум 1 символ" }),
   content: contentSchema,
   published: z.boolean(),
 });
-export type PostCreationRequest = z.infer<typeof PostValidator>;
+export type NewsItemCreateRequest = z.infer<typeof NewsItemValidator>;
 
-export const PostUpdateValidator = PostValidator.partial();
+export const newsItemUpdateSchema = NewsItemValidator.partial();
 
-export const newsCreateSchema = PostValidator;
+export const newsItemCreateSchema = NewsItemValidator;
