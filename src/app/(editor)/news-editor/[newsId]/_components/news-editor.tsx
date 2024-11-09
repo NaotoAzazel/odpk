@@ -3,8 +3,8 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Post } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Post } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 

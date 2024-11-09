@@ -1,6 +1,7 @@
+import Link from "next/link";
+import { Post } from "@prisma/client";
+
 import { formatDate } from "@/lib/utils";
-import { Post } from "@/types"
-import Link from "next/link"
 
 interface SliceNewsCardProps {
   post: Post;

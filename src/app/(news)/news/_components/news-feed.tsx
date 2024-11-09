@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Post } from "@/types";
+import { Post } from "@prisma/client";
 import { useInView } from "react-intersection-observer";
 
 import { fetchNews } from "@/lib/actions";

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Post } from "@/types";
+import { Post } from "@prisma/client";
 
 import { CustomColumnDef } from "@/types/table";
 import { cn, formatDate } from "@/lib/utils";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Post } from "@/types";
+import { Post } from "@prisma/client";
 import { type Table } from "@tanstack/react-table";
 
 import { TableInputSearch } from "../../../_components/table/table-input-search";

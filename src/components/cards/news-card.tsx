@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Post } from "@/types";
+import { Post } from "@prisma/client";
 
 import { isImageBlock } from "@/lib/editor";
 import { formatDate } from "@/lib/utils";
