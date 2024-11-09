@@ -3,6 +3,7 @@ import Link from "next/link";
 import { StaticPages } from "@prisma/client";
 
 import { CustomColumnDef } from "@/types/table";
+import { redirects } from "@/config/constants";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -96,8 +97,8 @@ export function getColumns(): CustomColumnDef<StaticPages>[] {
         const [isShowDeleteDialog, setIsShowDeleteDialog] =
           useState<boolean>(false);
 
-        const linkToPage = `/content-temp/${href}`;
-        const editLink = `/page-editor/${id}`;
+        const linkToPage = `${redirects.toPageItem}/${href}`;
+        const editLink = `${redirects.toPageEditor}/${id}`;
 
         return (
           <>

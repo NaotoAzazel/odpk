@@ -5,6 +5,7 @@ import { isImageBlock } from "@/lib/editor";
 import { formatDate } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { ResponsiveImage } from "@/components/responsive-image";
+import { redirects } from '@/config/constants'
 
 interface NewsCardProps {
   post: Post;
@@ -15,7 +16,7 @@ export function NewsCard({ post }: NewsCardProps) {
   const imageUrl = firstFoundImageBlock?.data.file.url;
 
   return (
-    <Link href={`/news/${post.id}`}>
+    <Link href={`${redirects.toNewsItem}/${post.id}`}>
       <div className="group size-full overflow-hidden rounded-md border bg-slate-50">
         <div className="flex flex-col space-y-1.5 overflow-hidden">
           <AspectRatio ratio={4 / 3}>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Post } from "@prisma/client";
 
 import { formatDate } from "@/lib/utils";
+import { redirects } from '@/config/constants'
 
 interface SliceNewsCardProps {
   post: Post;
@@ -9,7 +10,7 @@ interface SliceNewsCardProps {
 
 export function CropNewsCard({ post }: SliceNewsCardProps) {
   return (
-    <Link href={`/news/${post.id}`}>
+    <Link href={`${redirects.toNewsItem}/${post.id}`}>
       <div className="group flex flex-col border overflow-hidden rounded-md bg-slate-50 p-5">
         <div className="overflow-hidden">
           <h1 className="overflow-hidden whitespace-nowrap text-ellipsis text-lg font-medium mb-4 text-gray-800">

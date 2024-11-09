@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { redirects } from "@/config/constants";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
@@ -50,7 +51,7 @@ export function NewsCreateButton({
       const news = await response.json();
 
       router.refresh();
-      router.push(`/news-editor/${news.id}`);
+      router.push(`${redirects.toNewsEditor}/${news.id}`);
     } catch (error) {
       if (error instanceof Error) {
         toast({

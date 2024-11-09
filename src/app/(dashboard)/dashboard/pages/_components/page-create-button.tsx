@@ -7,6 +7,7 @@ import { StaticPages } from "@prisma/client";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
+import { redirects } from '@/config/constants'
 
 interface PageCreateButtonProps extends ButtonProps {}
 
@@ -49,7 +50,7 @@ export function PageCreateButton({
       const createdPage: StaticPages = await response.json();
 
       router.refresh();
-      router.push(`/page-editor/${createdPage.id}`);
+      router.push(`${redirects.toPageEditor}/${createdPage.id}`);
     } catch (error) {
       if (error instanceof Error) {
         return toast({

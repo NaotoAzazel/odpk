@@ -14,6 +14,7 @@ import {
 import { Icons } from "@/components/icons";
 
 import { DeleteDialog } from "../../_components/delete-dialog";
+import { redirects } from '@/config/constants'
 
 interface OperationsProps {
   data: HeaderButtons;
@@ -41,7 +42,7 @@ export function Operations({ data }: OperationsProps) {
 
         <DropdownMenuContent align="end">
           <Link
-            href={`/dashboard/header-buttons/edit/${data.id}`}
+            href={`${redirects.toHeaderButtonEdit}/${data.id}`}
             className="flex flex-row items-center hover:cursor-default"
           >
             <DropdownMenuItem>

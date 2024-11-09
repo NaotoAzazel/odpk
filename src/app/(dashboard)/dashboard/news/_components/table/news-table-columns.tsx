@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Post } from "@prisma/client";
 
 import { CustomColumnDef } from "@/types/table";
+import { redirects } from "@/config/constants";
 import { cn, formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -120,8 +121,8 @@ export function getColumns(): CustomColumnDef<Post>[] {
         const [isShowDeleteDialog, setIsShowDeleteDialog] =
           useState<boolean>(false);
 
-        const linkToNewsItem = `/news/${id}`;
-        const editLink = `/news-editor/${id}`;
+        const linkToNewsItem = `${redirects.toNewsItem}/${id}`;
+        const editLink = `${redirects.toNewsEditor}/${id}`;
 
         return (
           <>
