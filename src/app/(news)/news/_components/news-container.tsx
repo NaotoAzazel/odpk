@@ -1,11 +1,21 @@
-import { fetchNews } from "@/lib/actions";
+import { getNewsByParams } from "@/lib/actions/news";
 import ErrorBoundary from "@/components/error-boundary";
+import { ErrorContainer } from "@/components/error-container";
 
 import { NewsFeed } from "./news-feed";
-import { ErrorContainer } from '@/components/error-container'
 
 export async function NewsContainer() {
-  const initialNews = await fetchNews();
+  const initialNews = await getNewsByParams({
+    pageSize: 6,
+    params: {
+      where: {
+        published: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
+  });
 
   return (
     <ErrorBoundary

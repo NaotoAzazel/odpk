@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { imageRemove } from "@/lib/actions/image-remove";
 import {
-  deleteNewsByParams,
+  deleteNewsItemById,
   getNewsById,
   updateNewsByParams,
 } from "@/lib/actions/news";
@@ -29,13 +29,11 @@ export async function DELETE(
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
-    const deletedNews = await deleteNewsByParams({
-      where: { id: parseInt(params.postId) },
+    const deletedNews = await deleteNewsItemById({
+      newsItemId: parseInt(params.postId),
     });
     if (!deletedNews) {
-      throw new Error(
-        `Failed to delete news with id: ${parseInt(params.postId)}`,
-      );
+      throw new Error(`Failed to delete news with id: ${params.postId}`);
     }
 
     return new Response(null, { status: 200 });
