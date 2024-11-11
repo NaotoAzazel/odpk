@@ -18,17 +18,6 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
     signOut: "/logout",
   },
-  cookies: {
-    sessionToken: {
-      name: "next-auth.session-token",
-      options: {
-        httpOnly: true,
-        secure: env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-      },
-    },
-  },
   providers: [
     CredentialProvider({
       name: "Credential",
