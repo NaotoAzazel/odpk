@@ -5,3 +5,8 @@ export const redirects = {
   toNewsItem: "/news",
   toPageItem: "/content-temp",
 } as const;
+
+const ONE_DAY_IN_MINUTES = 86_400;
+export const authConfig = {
+  sessionMaxAge: ONE_DAY_IN_MINUTES * 30,
+};
