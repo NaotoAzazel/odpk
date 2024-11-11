@@ -7,7 +7,9 @@ import { SessionCheckClient } from "./session-check-client";
 
 export async function SessionCheckServer() {
   const user = await getServerSession(authOptions);
-  const authCookies = cookies().get("next-auth.session-token");
+  const authCookies =
+    cookies().get("next-auth.session-token") ||
+    cookies().get("__Secure-next-auth.session-token");
 
   if (!user && !authCookies) {
     return null;
