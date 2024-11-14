@@ -1,25 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Post } from "@prisma/client";
 
 import { CustomColumnDef } from "@/types/table";
 import { redirects } from "@/config/constants";
 import { cn, formatDate } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { Icons } from "@/components/icons";
 
-import { DeleteButton } from "../../../_components/action-cell/delete-button";
-import { EditButton } from "../../../_components/action-cell/edit-button";
-import { LinkTo } from "../../../_components/action-cell/link-to-button";
+import {
+  DeleteButton,
+  EditButton,
+  LinkToButton,
+} from "../../../_components/action-cell/action-buttons";
+import { ActionMenu } from "../../../_components/action-cell/action-menu";
 import { DeleteDialog } from "../../../_components/delete-dialog";
 
 export function getColumns(): CustomColumnDef<Post>[] {
@@ -127,7 +121,7 @@ export function getColumns(): CustomColumnDef<Post>[] {
         return (
           <>
             <div className="hidden flex-row gap-2 md:flex">
-              <LinkTo href={linkToNewsItem} />
+              <LinkToButton href={linkToNewsItem} />
               <EditButton href={editLink} />
               <DeleteButton onClick={() => setIsShowDeleteDialog(true)} />
             </div>
@@ -140,42 +134,17 @@ export function getColumns(): CustomColumnDef<Post>[] {
               onOpenChange={(isOpen) => setIsShowDeleteDialog(isOpen)}
             />
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild className="flex md:hidden">
-                <Button variant="outline" className="h-8 w-8 p-0">
-                  <span className="sr-only">Відкрити меню</span>
-                  <Icons.alignJustify className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Link
-                    href={linkToNewsItem}
-                    className="flex flex-row items-center hover:cursor-default"
-                  >
-                    <Icons.openLink className="mr-2 h-4 w-4" />
-                    <span>Відкрити</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href={editLink}
-                    className="flex flex-row items-center hover:cursor-default"
-                  >
-                    <Icons.pencil className="mr-2 h-4 w-4" />
-                    <span>Редагувати</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => setIsShowDeleteDialog(true)}
-                  className="text-destructive focus:text-destructive"
-                >
-                  <Icons.trash className="mr-2 h-4 w-4" />
-                  <span>Видалити</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ActionMenu
+              buttons={[
+                { type: "link", href: linkToNewsItem },
+                { type: "edit", href: editLink },
+                {
+                  type: "delete",
+                  onClick: () => setIsShowDeleteDialog(true),
+                },
+              ]}
+              className="flex md:hidden"
+            />
           </>
         );
       },
