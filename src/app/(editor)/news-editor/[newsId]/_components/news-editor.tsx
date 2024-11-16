@@ -8,13 +8,13 @@ import { Post } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 
+import { showError, showSuccess } from "@/lib/notification";
 import {
   NewsItemCreateRequest,
   NewsItemValidator,
 } from "@/lib/validation/post";
 import { useEditor } from "@/hooks/useEditor";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 
 interface NewsEditorProps {
@@ -27,7 +27,6 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
 
   const _titleRef = useRef<HTMLTextAreaElement>(null);
   const { editorRef } = useEditor(newsItem.content);
-  const { toast } = useToast();
   const router = useRouter();
 
   const { register, handleSubmit } = useForm<NewsItemCreateRequest>({
@@ -60,19 +59,9 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
       }
 
       router.refresh();
-
-      return toast({
-        title: "Успіх!",
-        description: "Новину було успішно збережено",
-      });
+      showSuccess("Новину було успішно збережено");
     } catch (error) {
-      if (error instanceof Error) {
-        return toast({
-          title: "Щось пiшло не так",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+      showError(error);
     } finally {
       setIsSaving(false);
     }
@@ -98,18 +87,9 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
 
       router.refresh();
 
-      return toast({
-        title: "Успіх!",
-        description: "Новина була успішно опублікована",
-      });
+      showSuccess("Новина була успішно опублікована");
     } catch (error) {
-      if (error instanceof Error) {
-        return toast({
-          title: "Щось пiшло не так",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+      showError(error);
     } finally {
       setIsPublishing(false);
     }

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { HeaderButtons } from "@prisma/client";
 import { useForm } from "react-hook-form";
 
+import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import {
   HeaderButtonItemCreateRequest,
@@ -14,7 +15,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 
 interface AddButtonItemProps {
@@ -26,7 +26,6 @@ export function AddButtonItem({ button }: AddButtonItemProps) {
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const router = useRouter();
-  const { toast } = useToast();
 
   const {
     register,
@@ -66,18 +65,9 @@ export function AddButtonItem({ button }: AddButtonItemProps) {
       reset();
       router.refresh();
 
-      return toast({
-        title: "Успіх!",
-        description: "Елемент було створено",
-      });
+      showSuccess("Елемент було створено");
     } catch (error) {
-      if (error instanceof Error) {
-        return toast({
-          title: "Щось пiшло не так",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+      showError(error);
     } finally {
       setIsSaving(false);
     }

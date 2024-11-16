@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { HeaderButtons } from "@prisma/client";
 import { useForm } from "react-hook-form";
 
+import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import {
   HeaderButtonUpdateRequest,
@@ -13,7 +14,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 
 interface MainButtonProps {
@@ -24,8 +24,6 @@ interface MainButtonProps {
 export function MainButton({ button, onUpdate }: MainButtonProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-
-  const { toast } = useToast();
 
   const {
     register,
@@ -58,18 +56,9 @@ export function MainButton({ button, onUpdate }: MainButtonProps) {
       setIsEditing(false);
       reset();
 
-      return toast({
-        title: "Успіх!",
-        description: "Назву кнопки було змінено",
-      });
+      showSuccess("Назву кнопки було змінено");
     } catch (error) {
-      if (error instanceof Error) {
-        return toast({
-          title: "Щось пiшло не так",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+      showError(error);
     } finally {
       setIsSaving(false);
     }
@@ -82,7 +71,7 @@ export function MainButton({ button, onUpdate }: MainButtonProps) {
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col space-y-2"
         >
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col gap-4 md:flex-row">
             <div className="flex w-full flex-col space-y-2">
               <Label htmlFor="title">Назва кнопки</Label>
               <Input

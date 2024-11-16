@@ -8,15 +8,16 @@ import { StaticPages } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 
+import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import { PageCreationRequest, PageValidator } from "@/lib/validation/page";
 import { useEditor } from "@/hooks/useEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
-import { HrefInfoDialog } from './href-info-dialog'
+
+import { HrefInfoDialog } from "./href-info-dialog";
 
 interface PageEditorProps {
   page: StaticPages;
@@ -27,7 +28,6 @@ export function PageEditor({ page }: PageEditorProps) {
 
   const _titleRef = useRef<HTMLTextAreaElement>(null);
   const { editorRef } = useEditor(page.content);
-  const { toast } = useToast();
   const router = useRouter();
 
   const {
@@ -42,11 +42,7 @@ export function PageEditor({ page }: PageEditorProps) {
   useEffect(() => {
     if (Object.keys(errors).length) {
       for (const [_key, value] of Object.entries(errors)) {
-        toast({
-          title: "Щось пiшло не так",
-          description: (value as { message: string }).message,
-          variant: "destructive",
-        });
+        showError((value as { message: string }).message);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,19 +79,9 @@ export function PageEditor({ page }: PageEditorProps) {
       }
 
       router.refresh();
-
-      return toast({
-        title: "Успіх!",
-        description: "Новину було успішно збережено",
-      });
+      showSuccess("Новину було успішно збережено");
     } catch (error) {
-      if (error instanceof Error) {
-        return toast({
-          title: "Щось пiшло не так",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+      showError(error);
     } finally {
       setIsSaving(false);
     }

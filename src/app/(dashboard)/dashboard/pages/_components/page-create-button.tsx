@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { StaticPages } from "@prisma/client";
 
 import { Button, ButtonProps } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 import { redirects } from '@/config/constants'
+import { showError } from '@/lib/notification'
 
 interface PageCreateButtonProps extends ButtonProps {}
 
@@ -19,7 +19,6 @@ export function PageCreateButton({
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
-  const { toast } = useToast();
 
   async function onClick() {
     try {
@@ -52,13 +51,7 @@ export function PageCreateButton({
       router.refresh();
       router.push(`${redirects.toPageEditor}/${createdPage.id}`);
     } catch (error) {
-      if (error instanceof Error) {
-        return toast({
-          title: "Щось пiшло не так",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+      showError(error)
     } finally {
       setIsLoading(false);
     }

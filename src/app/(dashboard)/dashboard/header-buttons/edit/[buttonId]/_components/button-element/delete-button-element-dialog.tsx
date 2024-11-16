@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { HeaderButtonItem } from "@/types";
 import { HeaderButtons } from "@prisma/client";
 
+import { showError, showSuccess } from "@/lib/notification";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,7 +16,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 
 interface DeleteButtonElementDialogProps {
@@ -33,7 +33,6 @@ export function DeleteButtonElementDialog({
 }: DeleteButtonElementDialogProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { toast } = useToast();
   const router = useRouter();
 
   const onSubmit = async () => {
@@ -55,18 +54,9 @@ export function DeleteButtonElementDialog({
 
       router.refresh();
 
-      return toast({
-        title: "Успіх!",
-        description: "Видалення пройшло успішно",
-      });
+      showSuccess("Видалення пройшло успішно");
     } catch (error) {
-      if (error instanceof Error) {
-        return toast({
-          title: "Щось пiшло не так",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+      showError(error);
     } finally {
       setIsLoading(false);
       onOpenChange(false);

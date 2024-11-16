@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { redirects } from "@/config/constants";
+import { showError } from "@/lib/notification";
 import { Button, ButtonProps } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 
 interface NewsCreateButtonProps extends ButtonProps {}
@@ -17,7 +17,6 @@ export function NewsCreateButton({
 }: NewsCreateButtonProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { toast } = useToast();
   const router = useRouter();
 
   async function onClick() {
@@ -53,13 +52,7 @@ export function NewsCreateButton({
       router.refresh();
       router.push(`${redirects.toNewsEditor}/${news.id}`);
     } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          title: "Щось пiшло не так",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+      showError(error);
     }
   }
 

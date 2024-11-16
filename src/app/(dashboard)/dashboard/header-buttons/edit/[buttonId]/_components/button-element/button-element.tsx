@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { HeaderButtons } from "@prisma/client";
 import { useForm } from "react-hook-form";
 
+import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import {
   HeaderButtonItemUpdateRequest,
@@ -15,7 +16,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 
 import { ButtonElementOperations } from "./button-element-operations";
@@ -32,7 +32,6 @@ export function ButtonElement({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
-  const { toast } = useToast();
   const router = useRouter();
 
   const {
@@ -70,18 +69,9 @@ export function ButtonElement({
 
       router.refresh();
 
-      return toast({
-        title: "Успіх!",
-        description: "Елемент було змінено",
-      });
+      showSuccess("Елемент було змінено");
     } catch (error) {
-      if (error instanceof Error) {
-        return toast({
-          title: "Щось пiшло не так",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+      showError(error);
     } finally {
       setIsSaving(false);
       setIsEditing(false);

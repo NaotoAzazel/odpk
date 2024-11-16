@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { showError, showSuccess } from "@/lib/notification";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +14,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 
 async function deleteEntity(endpoint: string) {
@@ -42,7 +42,6 @@ export function DeleteDialog({
   onOpenChange,
 }: DeleteDialogProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { toast } = useToast();
   const router = useRouter();
 
   const onSubmit = async () => {
@@ -53,18 +52,9 @@ export function DeleteDialog({
 
       router.refresh();
 
-      return toast({
-        title: "Успіх!",
-        description: "Видалення пройшло успішно",
-      });
+      showSuccess("Видалення пройшло успішно");
     } catch (error) {
-      if (error instanceof Error) {
-        return toast({
-          title: "Щось пiшло не так",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+      showError(error);
     } finally {
       setIsLoading(false);
       onOpenChange(false);

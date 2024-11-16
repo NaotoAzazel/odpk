@@ -10,3 +10,6 @@ const ONE_DAY_IN_MINUTES = 86_400;
 export const authConfig = {
   sessionMaxAge: ONE_DAY_IN_MINUTES * 30,
 };
+
+export const unknownError =
+  "Виникла невідома помилка. Будь ласка, спробуйте пізніше.";

@@ -7,7 +7,7 @@ import { env } from "@/env";
 import { siteConfig } from "@/config/site";
 import { fontHeading, fontSans } from "@/lib/fonts";
 import { absoluteUrl, cn } from "@/lib/utils";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner"
 import Footer from "@/components/layouts/footer/footer";
 import Navbar from "@/components/layouts/navbar/navbar";
 import { SessionCheckServer } from "@/components/session-check/session-check-server";
@@ -66,7 +66,7 @@ export default function RootLayout({
         <main className="relative flex min-h-screen flex-col">
           <Navbar />
           <div className="flex-1 flex-grow">{children}</div>
-          <Toaster />
+          <Toaster visibleToasts={1} />
           <SessionCheckServer />
           <Footer />
         </main>
