@@ -1,6 +1,6 @@
 import { getNewsById } from "@/lib/actions/news";
 const EditorOutput = lazy(() =>
-  import("./editor-output").then((module) => {
+  import("@/components/editor/editor-output").then((module) => {
     return { default: module.EditorOutput };
   })
 );

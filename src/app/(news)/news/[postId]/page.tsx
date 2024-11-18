@@ -3,20 +3,20 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 
+import { paginationConfig } from "@/config/pagination";
 import { getNewsById, getNewsByParams } from "@/lib/actions/news";
 import { authOptions } from "@/lib/auth";
 import { absoluteUrl } from "@/lib/utils";
+import { LoadingEditorOutput } from "@/components/editor/editor-output-loading";
 import ErrorBoundary from "@/components/error-boundary";
+import { ErrorContainer } from "@/components/error-container";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 
 import { AnotherNewsCards } from "./_components/another-news-cards";
 import { AnotherNewsSectionLoading } from "./_components/loading/another-news-loading";
-import { LoadingEditorOutput } from "./_components/loading/editor-output-loading";
 import { NewsHeadingLoading } from "./_components/loading/news-heading-loading";
 import { NewsContent } from "./_components/news-content";
 import { NewsHeading } from "./_components/news-heading";
-import { ErrorContainer } from '@/components/error-container'
-import { paginationConfig } from '@/config/pagination'
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";

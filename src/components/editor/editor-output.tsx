@@ -6,9 +6,9 @@ import dynamic from "next/dynamic";
 import { ImageBlock } from "@/types/news";
 import { cn } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Skeleton } from "@/components/ui/skeleton";
+import { LoadingEditorOutput } from "@/components/editor/editor-output-loading";
 import { ResponsiveImage } from "@/components/responsive-image";
-
-import { LoadingEditorOutput } from "./loading/editor-output-loading";
 
 const Output = dynamic(
   async () => (await import("editorjs-react-renderer")).default,
@@ -55,11 +55,12 @@ function CustomImageRenderer({ data }: ImageBlock) {
   return (
     <div className="mb-2 flex flex-col overflow-hidden">
       <AspectRatio ratio={aspectRatio}>
+        <Skeleton className="-z-0 h-full w-full" />
         <ResponsiveImage
           src={src}
-          alt="News-image"
+          alt="image"
           fill
-          loading="eager"
+          loading="lazy"
           className="rounded-md"
           sizes="(max-width: 425px) 50vw, 75vw"
           onLoad={({ target }) => {
