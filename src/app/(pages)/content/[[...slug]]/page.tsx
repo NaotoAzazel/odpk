@@ -1,12 +1,13 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { redirects } from "@/config/constants";
 import { getPageByParams } from "@/lib/actions/pages";
 import { absoluteUrl } from "@/lib/utils";
+import { Header } from "@/components/header";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 
 import { PageContent } from "./_components/page-content";
-import { Header } from '@/components/header'
 
 interface PageProps {
   params: {
@@ -31,7 +32,7 @@ export async function generateMetadata({
     openGraph: {
       title: page.title,
       type: "article",
-      url: absoluteUrl(page.href),
+      url: absoluteUrl(`${redirects.toPageItem}/${page.href}`),
       images: [
         {
           url: ogUrl.toString(),

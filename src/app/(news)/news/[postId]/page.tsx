@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 
+import { redirects } from "@/config/constants";
 import { paginationConfig } from "@/config/pagination";
 import { getNewsById, getNewsByParams } from "@/lib/actions/news";
 import { authOptions } from "@/lib/auth";
@@ -50,7 +51,7 @@ export async function generateMetadata({
     openGraph: {
       title: news.title,
       type: "article",
-      url: absoluteUrl(`/news/${news.id}`),
+      url: absoluteUrl(`${redirects.toNewsItem}/${news.id}`),
       images: [
         {
           url: ogUrl.toString(),

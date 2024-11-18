@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { StaticPages } from "@prisma/client";
 
+import { redirects } from "@/config/constants";
 import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
@@ -82,7 +83,9 @@ export function CommandMenu() {
                       value={page.title}
                       className=""
                       onSelect={() => {
-                        runCommand(() => router.push(page.href));
+                        runCommand(() =>
+                          router.push(`${redirects.toPageItem}/${page.href}`),
+                        );
                       }}
                     >
                       <Icons.file className="mr-2 h-4 w-4" />
