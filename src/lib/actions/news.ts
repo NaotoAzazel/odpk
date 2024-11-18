@@ -1,5 +1,4 @@
-import { Post } from "@/types";
-import { Prisma } from "@prisma/client";
+import { Post, Prisma } from "@prisma/client";
 
 import {
   deleteCacheValue,
@@ -79,9 +78,6 @@ export async function getNewsByParams({
   pageNumber = 1,
   pageSize = 8,
 }: GetNewsByParamsParams = {}): Promise<GetNewsByParamsResult> {
-  const countTotalPages = (totalRecordsCount: number, pageSize: number) =>
-    Math.ceil(totalRecordsCount / pageSize);
-
   const {
     take = pageSize,
     skip = (pageNumber - 1) * pageSize,
@@ -112,18 +108,15 @@ export async function getNewsByParams({
       }
 
       const totalRecordsCount = await db.post.count({ where: other.where });
-      const totalPages = countTotalPages(totalRecordsCount, pageSize);
-
-      const hasNextPage = pageNumber < totalPages;
-      const hasPrevPage = pageNumber > 1;
+      const totalPages = Math.ceil(totalRecordsCount / pageSize);
 
       return {
         data: news,
         metadata: {
           totalPages,
           totalRecordsCount,
-          hasNextPage,
-          hasPrevPage,
+          hasNextPage: pageNumber < totalPages,
+          hasPrevPage: pageNumber > 1,
         },
       };
     },
@@ -146,18 +139,22 @@ export async function updateNewsByParams(
   return updatedNews;
 }
 
-export async function deleteNewsByParams(
-  params: Prisma.PostDeleteArgs,
-): Promise<Post | null> {
-  const deletedNews = await db.post.delete(params);
+interface deleteNewsItemByIdParams {
+  newsItemId: number;
+}
 
-  if (deletedNews) {
-    const cacheKey = createCacheKey(`post:${deletedNews.id}`);
+export async function deleteNewsItemById({
+  newsItemId,
+}: deleteNewsItemByIdParams) {
+  const deletedNewsItem = await db.post.delete({ where: { id: newsItemId } });
+
+  if (deletedNewsItem) {
+    const cacheKey = createCacheKey(`post:${deletedNewsItem.id}`);
 
     await deleteCacheValue(cacheKey);
     await invalidateCache("posts:*");
 
-    deletedNews.content.blocks.forEach(async (block) => {
+    deletedNewsItem.content.blocks.forEach(async (block) => {
       if (isImageBlock(block)) {
         const modifiedURL = block.data.file.url.split("/")[4];
         const { success } = await imageRemove(modifiedURL);
@@ -169,5 +166,5 @@ export async function deleteNewsByParams(
     });
   }
 
-  return deletedNews;
+  return deletedNewsItem;
 }

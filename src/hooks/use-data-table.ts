@@ -1,17 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
-import { useState } from "react";
 
 interface UseDatatTableProps<TData, TValue> {
   /**
@@ -27,11 +27,14 @@ interface UseDatatTableProps<TData, TValue> {
    * @type ColumnDef<TData, TValue>[]
    */
   columns: ColumnDef<TData, TValue>[];
+
+  initialPageSize?: number;
 }
 
 export function useDataTable<TData, TValue>({
   data,
   columns,
+  initialPageSize = 10,
 }: UseDatatTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -51,6 +54,11 @@ export function useDataTable<TData, TValue>({
       sorting,
       columnFilters,
       columnVisibility,
+    },
+    initialState: {
+      pagination: {
+        pageSize: initialPageSize,
+      },
     },
   });
 

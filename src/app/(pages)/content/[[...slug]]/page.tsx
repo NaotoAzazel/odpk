@@ -1,10 +1,13 @@
-import { PageHeader } from "@/components/layouts/page-header";
-import { Mdx } from "@/components/mdx-components";
-import { absoluteUrl } from "@/lib/utils";
-
-import { allPages } from "contentlayer/generated";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+import { redirects } from "@/config/constants";
+import { getPageByParams } from "@/lib/actions/pages";
+import { absoluteUrl } from "@/lib/utils";
+import { Header } from "@/components/header";
+import MaxWidthWrapper from "@/components/max-width-wrapper";
+
+import { PageContent } from "./_components/page-content";
 
 interface PageProps {
   params: {
@@ -12,33 +15,24 @@ interface PageProps {
   };
 }
 
-async function getPageFromParams(params: PageProps["params"]) {
-  const slug = params.slug.join("/");
-  const page = allPages.find((page) => page.slugAsParams === slug);
-
-  if (!page) null;
-  return page;
-}
-
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const page = await getPageFromParams(params);
-
   if (!page) {
     return {};
   }
 
   const ogUrl = new URL(absoluteUrl("/api/og"));
   ogUrl.searchParams.set("heading", page.title);
-  ogUrl.searchParams.set("type", "Інформаційна сторінка");
+  ogUrl.searchParams.set("type", "Сторінка");
 
   return {
     title: page.title,
     openGraph: {
       title: page.title,
       type: "article",
-      url: absoluteUrl(page.slug),
+      url: absoluteUrl(`${redirects.toPageItem}/${page.href}`),
       images: [
         {
           url: ogUrl.toString(),
@@ -56,8 +50,19 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams(): Promise<PageProps["params"][]> {
-  return allPages.map((page) => ({ slug: page.slugAsParams.split("/") }));
+async function getPageFromParams(params: PageProps["params"]) {
+  const slug = params.slug.join("/");
+
+  const page = await getPageByParams({
+    params: {
+      where: {
+        href: slug,
+      },
+    },
+  });
+
+  if (!page) null;
+  return page;
 }
 
 export default async function Page({ params }: PageProps) {
@@ -68,9 +73,13 @@ export default async function Page({ params }: PageProps) {
   }
 
   return (
-    <main className="relative py-6 lg:gap-10 lg:py-10">
-      <PageHeader heading={page.title} />
-      <Mdx code={page.body.code} />
-    </main>
+    <div className="min-h-screen bg-slate-50">
+      <section className="flex h-full w-full">
+        <MaxWidthWrapper className="relative my-6 bg-white p-5 xl:rounded-lg">
+          <Header heading={page.title} />
+          <PageContent pageContent={page.content} />
+        </MaxWidthWrapper>
+      </section>
+    </div>
   );
 }

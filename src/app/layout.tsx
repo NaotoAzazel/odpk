@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 
 import "../styles/globals.css";
 
-import { fontHeading, fontSans } from "@/lib/fonts";
-import { absoluteUrl, cn } from "@/lib/utils";
-
-import Footer from "@/components/layouts/footer/footer";
-import Navbar from "@/components/layouts/navbar/navbar";
-import { Toaster } from "@/components/ui/toaster";
+import { env } from "@/env";
 
 import { siteConfig } from "@/config/site";
-import { env } from "@/env";
+import { fontHeading, fontSans } from "@/lib/fonts";
+import { absoluteUrl, cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner"
+import Footer from "@/components/layouts/footer/footer";
+import Navbar from "@/components/layouts/navbar/navbar";
+import { SessionCheckServer } from "@/components/session-check/session-check-server";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
@@ -66,7 +66,8 @@ export default function RootLayout({
         <main className="relative flex min-h-screen flex-col">
           <Navbar />
           <div className="flex-1 flex-grow">{children}</div>
-          <Toaster />
+          <Toaster visibleToasts={1} />
+          <SessionCheckServer />
           <Footer />
         </main>
       </body>

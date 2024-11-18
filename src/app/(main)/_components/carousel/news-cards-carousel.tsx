@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Post } from "@/types";
+import { Post } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import {

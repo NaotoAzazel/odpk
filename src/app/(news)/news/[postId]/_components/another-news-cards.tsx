@@ -1,7 +1,7 @@
-import { CropNewsCard } from "@/components/cards/crop-news-card";
-import { EmptyPlaceholder } from "@/components/empty-placeholder";
-import { CardsHolder } from "@/components/layouts/cards-holder";
 import { getNewsByParams } from "@/lib/actions/news";
+import { CropNewsCard } from "@/components/cards/crop-news-card";
+import { CardsHolder } from "@/components/layouts/cards-holder";
+import { NoItemsPlaceholder } from "@/components/no-items-plaiceholder";
 
 interface AnotherNewsCardsProps {
   newsPromise: ReturnType<typeof getNewsByParams>;
@@ -19,15 +19,10 @@ export async function AnotherNewsCards({ newsPromise }: AnotherNewsCardsProps) {
           ))}
         </CardsHolder>
       ) : (
-        <EmptyPlaceholder>
-          <EmptyPlaceholder.Icon name="file" />
-          <EmptyPlaceholder.Title>
-            Не вдалося знайти інші новини
-          </EmptyPlaceholder.Title>
-          <EmptyPlaceholder.Description>
-            На даний момент немає інших новин
-          </EmptyPlaceholder.Description>
-        </EmptyPlaceholder>
+        <NoItemsPlaceholder
+          title="Не вдалося знайти інші новини"
+          description="На даний момент немає інших новин"
+        />
       )}
     </>
   );

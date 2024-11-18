@@ -1,5 +1,5 @@
-import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
+import { withAuth } from "next-auth/middleware";
 
 export default withAuth(
   async function middleware(req) {
@@ -7,15 +7,15 @@ export default withAuth(
     const isAuth = !!token;
 
     const isAuthPage = req.nextUrl.pathname.startsWith("/login");
-    if(isAuthPage) {
-      if(isAuth) {
+    if (isAuthPage) {
+      if (isAuth) {
         return NextResponse.redirect(new URL("/", req.url));
       }
 
       return null;
     }
 
-    if(!isAuth) {
+    if (!isAuth) {
       return NextResponse.redirect(new URL("/", req.url));
     }
   },
@@ -24,11 +24,16 @@ export default withAuth(
       authorized() {
         // Always return true to call middleware function above
         return true;
-      }
-    }
-  }
-)
+      },
+    },
+  },
+);
 
 export const config = {
-  matcher: ["/editor/:path*", "/login", "/dashboard/:path*"]
+  matcher: [
+    `/news-editor/:path*`,
+    `/page-editor/:path*`,
+    "/login",
+    "/dashboard/:path*",
+  ],
 };

@@ -1,38 +1,32 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import { useForm } from "react-hook-form";
 
+import { showError, showSuccess } from "@/lib/notification";
+import { cn } from "@/lib/utils";
+import { UserAuthSchema, userAuthSchema } from "@/lib/validation/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
-
 import { Icons } from "@/components/icons";
 
-import { cn } from "@/lib/utils";
-
-import { UserAuthSchema, userAuthSchema } from "@/lib/validation/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
-import { signIn } from "next-auth/react";
-
-interface UserAuthFormProps 
-  extends React.HTMLAttributes<HTMLDivElement> {};
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const router = useRouter();
-  const { toast } = useToast();
-  
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<UserAuthSchema>({
-    resolver: zodResolver(userAuthSchema)
+    resolver: zodResolver(userAuthSchema),
   });
 
   async function onSubmit(data: UserAuthSchema) {
@@ -41,26 +35,19 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const signInResult = await signIn("credentials", {
       email: data.email,
       password: data.password,
-      redirect: false
+      redirect: false,
     });
 
-    if(!signInResult?.ok) {
+    if (!signInResult?.ok) {
       setIsLoading(false);
-      
-      return toast({
-        title: "Щось пiшло не так",
-        description: "Ваш запит на вхід не пройшов. Спробуйте ще раз",
-        variant: "destructive"
-      });
+
+      showError("Ваш запит на вхід не пройшов. Спробуйте ще раз");
     }
 
     router.refresh();
-    
-    setIsLoading(false);
 
-    return toast({
-      description: "Ви успішно авторизувалися"
-    });
+    setIsLoading(false);
+    showSuccess("Ви успішно авторизувалися");
   }
 
   return (
@@ -69,11 +56,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         <div className="grid gap-2">
           <div className="grid gap-1 py-2">
             <Label htmlFor="email">Пошта</Label>
-            <Input 
+            <Input
               type="email"
               {...register("email")}
               className={cn({
-                "focus-visible:ring-red-500": errors.email
+                "focus-visible:ring-red-500": errors.email,
               })}
               autoComplete="email"
               placeholder="name@example.ua"
@@ -91,7 +78,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               type="password"
               {...register("password")}
               className={cn({
-                "focus-visible:ring-red-500": errors.password
+                "focus-visible:ring-red-500": errors.password,
               })}
               placeholder="Password"
               disabled={isLoading}

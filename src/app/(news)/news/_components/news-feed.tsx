@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Post } from "@/types";
+import { Post } from "@prisma/client";
 import { useInView } from "react-intersection-observer";
 
 import { fetchNews } from "@/lib/actions";
@@ -9,7 +9,7 @@ import { GetNewsByParamsResult } from "@/lib/actions/news";
 import { NewsCard } from "@/components/cards/news-card";
 import { Icons } from "@/components/icons";
 import { CardsHolder } from "@/components/layouts/cards-holder";
-import { NoNewsPlaceholder } from "@/components/no-news-placeholder";
+import { NoItemsPlaceholder } from "@/components/no-items-plaiceholder";
 
 interface NewsFeedProps {
   initialNews: GetNewsByParamsResult;
@@ -59,7 +59,10 @@ export function NewsFeed({ initialNews }: NewsFeedProps) {
           )}
         </div>
       ) : (
-        <NoNewsPlaceholder />
+        <NoItemsPlaceholder
+          title="Не вдалось знайти новини"
+          description="Спробуйте змінити фільтри, або перевірте пізніше"
+        />
       )}
     </div>
   );

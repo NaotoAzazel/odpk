@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { newsCreateSchema } from "@/lib/validation/post";
+import { newsItemCreateSchema } from "@/lib/validation/post";
 
 export async function POST(req: Request) {
   try {
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     }
 
     const json = await req.json();
-    const body = newsCreateSchema.parse(json);
+    const body = newsItemCreateSchema.parse(json);
 
     const post = await db.post.create({
       data: {

@@ -1,5 +1,13 @@
 "use client";
 
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { showError, showSuccess } from "@/lib/notification";
+import { cn } from "@/lib/utils";
+import { FeedbackSchema, feedbackSchema } from "@/lib/validation/feedback";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,27 +17,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
-
 import { Icons } from "@/components/icons";
-
-import { useState } from "react";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { FeedbackSchema, feedbackSchema } from "@/lib/validation/feedback";
-
-import { cn } from "@/lib/utils";
 
 export function FeedbackDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
-
-  const { toast } = useToast();
 
   const {
     register,
@@ -48,34 +43,26 @@ export function FeedbackDialog() {
 
     if (!sendedFeedback) {
       setIsLoading(false);
-
-      return toast({
-        title: "Щось пiшло не так",
-        description: "Ваш відгук не пройшов. Спробуйте ще раз",
-        variant: "destructive",
-      });
+      showError("Ваш відгук не пройшов. Спробуйте ще раз");
     }
 
     setIsLoading(false);
     setIsOpenDialog(false);
 
     reset();
-
-    return toast({
-      description: "Ваш відгук успішно відправлено",
-    });
+    showSuccess("Ваш відгук успішно відправлено");
   };
 
   return (
     <Dialog open={isOpenDialog} onOpenChange={setIsOpenDialog}>
       <DialogTrigger asChild>
-        <Button size="lg" className="bg-transparent border w-full">
+        <Button size="lg" className="w-full border bg-transparent">
           Зворотній зв&apos;язок
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:min-w-[600px]">
         <DialogHeader className="w-full">
-          <DialogTitle className="font-heading text-xl md:text-3xl tracking-tight text-gray-800">
+          <DialogTitle className="font-heading text-xl tracking-tight text-gray-800 md:text-3xl">
             Шановний відвідувач
           </DialogTitle>
           <DialogDescription className="text-base">
@@ -87,7 +74,7 @@ export function FeedbackDialog() {
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
             <div className="grid gap-1 py-2">
               <Label htmlFor="email" className="text-gray-800">
                 Пошта

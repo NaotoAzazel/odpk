@@ -1,11 +1,13 @@
-import { NoNewsPlaceholder } from "@/components/no-news-placeholder";
 import { getNewsByParams } from "@/lib/actions/news";
+import { NoItemsPlaceholder } from "@/components/no-items-plaiceholder";
+
 import { NewsCardsCarousel } from "../carousel/news-cards-carousel";
+import { paginationConfig } from '@/config/pagination'
 
 export async function NewsCardsSection() {
   const news = await getNewsByParams({
     pageNumber: 1,
-    pageSize: 6,
+    pageSize: paginationConfig.mainPage.newsCardsAmount,
     params: {
       where: {
         published: true,
@@ -21,7 +23,10 @@ export async function NewsCardsSection() {
       {news.data.length ? (
         <NewsCardsCarousel news={news.data} title="Новини" />
       ) : (
-        <NoNewsPlaceholder />
+        <NoItemsPlaceholder
+          title="Не вдалось знайти новини"
+          description="Спробуйте змінити фільтри, або перевірте пізніше"
+        />
       )}
     </>
   );

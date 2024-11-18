@@ -3,16 +3,18 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 
+import { redirects } from "@/config/constants";
+import { paginationConfig } from "@/config/pagination";
 import { getNewsById, getNewsByParams } from "@/lib/actions/news";
 import { authOptions } from "@/lib/auth";
 import { absoluteUrl } from "@/lib/utils";
+import { LoadingEditorOutput } from "@/components/editor/editor-output-loading";
 import ErrorBoundary from "@/components/error-boundary";
+import { ErrorContainer } from "@/components/error-container";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import { NewsCardsErrorContainer } from "@/components/news-cards-error-container";
 
 import { AnotherNewsCards } from "./_components/another-news-cards";
 import { AnotherNewsSectionLoading } from "./_components/loading/another-news-loading";
-import { LoadingEditorOutput } from "./_components/loading/editor-output-loading";
 import { NewsHeadingLoading } from "./_components/loading/news-heading-loading";
 import { NewsContent } from "./_components/news-content";
 import { NewsHeading } from "./_components/news-heading";
@@ -49,7 +51,7 @@ export async function generateMetadata({
     openGraph: {
       title: news.title,
       type: "article",
-      url: absoluteUrl(`/news/${news.id}`),
+      url: absoluteUrl(`${redirects.toNewsItem}/${news.id}`),
       images: [
         {
           url: ogUrl.toString(),
@@ -73,7 +75,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
   });
   const anotherNewsPromise = getNewsByParams({
     pageNumber: 1,
-    pageSize: 3,
+    pageSize: paginationConfig.newsItemPage.anotherNewsAmount,
     params: {
       where: {
         published: true,
@@ -106,12 +108,19 @@ export default async function NewsPage({ params }: NewsPageProps) {
 
           <div className="space-y-5 border-t">
             <div className="mt-5">
-              <h2 className="font-heading text-2xl font-semibold tracking-normal text-gray-800 md:text-4xl">
+              <h2 className="font-heading text-2xl font-semibold tracking-tight text-gray-800 md:text-4xl">
                 Інші новини
               </h2>
             </div>
 
-            <ErrorBoundary fallback={<NewsCardsErrorContainer />}>
+            <ErrorBoundary
+              fallback={
+                <ErrorContainer
+                  title="Виникла помилка з отримання новин"
+                  description="Ми вже працює над виправленням цієї помилки"
+                />
+              }
+            >
               <Suspense fallback={<AnotherNewsSectionLoading />}>
                 <AnotherNewsCards newsPromise={anotherNewsPromise} />
               </Suspense>

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NavItem } from "@/types";
+import { HeaderButtons } from "@prisma/client";
 
 import { navConfig } from "@/config/nav";
 import { siteConfig } from "@/config/site";
@@ -19,16 +19,44 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Icons } from "@/components/icons";
 import { DashboardNav } from "@/components/layouts/navbar/dashboard-nav";
+import { NavError } from "@/components/layouts/navbar/nav-error";
 
-interface MobileNavProps {
-  items: NavItem[];
+async function fetchButtonsData() {
+  const response = await fetch("/api/buttons");
+  if (!response.ok) {
+    throw new Error("Failed to fetch buttons");
+  }
+  return response.json();
 }
 
-export default function MobileNav({ items }: MobileNavProps) {
+export default function MobileNav() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [buttons, setButtons] = useState<HeaderButtons[]>([]);
+  const [isLoadingError, setIsLoadingError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const path = usePathname();
   const isDashboardPath = !!path.startsWith("/dashboard");
+
+  useEffect(() => {
+    if (isDashboardPath || buttons.length > 0) return;
+
+    const fetchButtons = async () => {
+      setIsLoading(true);
+      try {
+        const buttonsData = await fetchButtonsData();
+        setButtons(buttonsData);
+      } catch (error) {
+        setIsLoadingError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchButtons();
+    }
+  }, [isOpen, buttons.length, isDashboardPath]);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -49,49 +77,83 @@ export default function MobileNav({ items }: MobileNavProps) {
           <Icons.graduationCap className="mr-2 h-5 w-5" />
           <span className="font-heading font-bold">{siteConfig.name}</span>
         </MobileLink>
-        <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10">
-          <Accordion
-            type="multiple"
-            className="w-full"
-            onClick={() => setIsOpen(false)}
-          >
-            {isDashboardPath ? (
-              <DashboardNav items={navConfig.dashboardNav} />
-            ) : (
-              <MobileNavItems items={items} />
-            )}
-          </Accordion>
-        </ScrollArea>
+        {isLoading ? (
+          <div className="flex h-full flex-row items-center justify-center">
+            <Icons.spinner className="mr-2 size-4 animate-spin" />
+            <span>Завантаження...</span>
+          </div>
+        ) : isLoadingError ? (
+          <div className="flex h-full items-center">
+            <NavError />
+          </div>
+        ) : (
+          <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10">
+            <Accordion type="multiple" className="w-full">
+              {isDashboardPath ? (
+                <DashboardNav items={navConfig.dashboardNav} />
+              ) : (
+                <MobileNavItems
+                  items={buttons}
+                  onClick={(isOpen) => setIsOpen(isOpen)}
+                />
+              )}
+            </Accordion>
+          </ScrollArea>
+        )}
       </SheetContent>
     </Sheet>
   );
 }
 
-interface MobileNavItemsProps extends MobileNavProps {}
+interface MobileNavItemsProps {
+  items: HeaderButtons[];
+  onClick: (isOpen: boolean) => void;
+}
 
-function MobileNavItems({ items }: MobileNavItemsProps) {
+function MobileNavItems({ items, onClick }: MobileNavItemsProps) {
   return (
     <>
       {items.map((item, i) => (
         <AccordionItem value={item.title} key={i}>
-          <AccordionTrigger className="text-sm capitalize">
-            {item.title}
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-col space-y-2">
-              {item.items.map((subItem, i) =>
-                subItem.href ? (
-                  <MobileLink key={i} href={subItem.href} className="m-1">
-                    {subItem.title}
-                  </MobileLink>
-                ) : (
-                  <div key={i} className="text-foreground/70 transition-colors">
-                    {item.title}
-                  </div>
-                ),
-              )}
-            </div>
-          </AccordionContent>
+          {item.items.length > 0 ? (
+            <>
+              <AccordionTrigger className="text-sm capitalize">
+                {item.title}
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="flex flex-col space-y-2">
+                  {item.items.map((subItem, i) =>
+                    subItem.href ? (
+                      <MobileLink
+                        onClick={() => onClick(false)}
+                        key={i}
+                        href={subItem.href}
+                        className="m-1"
+                      >
+                        {subItem.title}
+                      </MobileLink>
+                    ) : (
+                      <div
+                        key={i}
+                        className="text-foreground/70 transition-colors"
+                        onClick={() => onClick(false)}
+                      >
+                        {item.title}
+                      </div>
+                    ),
+                  )}
+                </div>
+              </AccordionContent>
+            </>
+          ) : (
+            <Link
+              href={item.href}
+              onClick={() => onClick(false)}
+              className="flex py-4 text-sm font-medium capitalize hover:underline"
+            >
+              {item.title}
+            </Link>
+          )}
         </AccordionItem>
       ))}
     </>

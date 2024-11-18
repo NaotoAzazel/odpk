@@ -1,5 +1,6 @@
+import { Prisma } from "@prisma/client";
+
 import { Icons } from "@/components/icons";
-import { Prisma, Post as NewsPostType } from "@prisma/client";
 
 export type NavSubItem = {
   title: string;
@@ -44,4 +45,23 @@ export type Card = {
   description: string;
 };
 
-export type Post = NewsPostType;
+export type HeaderButtonItem = {
+  id: number;
+  title: string;
+  description: string;
+  href: string;
+};
+
+export type DisplayMode = "sm" | "md" | "lg" | "xl" | "";
+
+export interface BaseActionButton {
+  whenChangeDisplayMode?: DisplayMode;
+}
+
+export interface ActionButtonWithHref extends BaseActionButton {
+  href: string;
+}
+
+export interface ActionButtonWithOnClick extends BaseActionButton {
+  onClick: () => void;
+}

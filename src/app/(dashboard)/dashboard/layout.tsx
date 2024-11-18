@@ -7,11 +7,11 @@ export default function DashboardLayout({ children }: { children?: React.ReactNo
   return (
     <div className="flex flex-col">
       <MaxWidthWrapper>
-        <div className="grid flex-1 gap-12 lg:grid-cols-[160px_1fr] my-7">
+        <div className="grid flex-1 gap-12 lg:grid-cols-[200px_1fr] my-7">
           <aside className="hidden w-170px flex-col lg:flex">
             <DashboardNav items={navConfig.dashboardNav} />
           </aside>
-          <main className="flex w-full flex-1 flex-col overflow-hidden">
+          <main className="flex w-full flex-1 flex-col">
             {children}
           </main>
         </div>
