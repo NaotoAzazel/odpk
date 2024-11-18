@@ -3,7 +3,7 @@ export const redirects = {
   toPageEditor: "/page-editor",
   toHeaderButtonEdit: "/dashboard/header-buttons/edit",
   toNewsItem: "/news",
-  toPageItem: "/content-temp",
+  toPageItem: "/content",
 } as const;
 
 const ONE_DAY_IN_MINUTES = 86_400;
