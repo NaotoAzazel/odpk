@@ -15,5 +15,8 @@ export const paginationConfig = {
     pages: {
       rowsPerPage: 10,
     },
+    users: {
+      rowsPerPage: 10,
+    },
   },
 } as const;

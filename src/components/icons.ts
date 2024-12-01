@@ -26,6 +26,7 @@ import {
   SquareArrowOutUpRight,
   Trash,
   UserRound,
+  Users,
   Youtube,
 } from "lucide-react";
 
@@ -59,4 +60,5 @@ export const Icons = {
   info: Info,
   sliders: SlidersHorizontal,
   alertTriangle: AlertTriangle,
+  users: Users
 };
