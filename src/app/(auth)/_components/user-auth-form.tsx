@@ -14,6 +14,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/icons";
 
+function handleStatusCode(code: number) {
+  switch (code) {
+    case 0:
+      return "Статус запиту не визначений. Спробуйте ще раз";
+    case 401:
+      return "Неправильна пошта або пароль. Переконайтеся в коректності даних";
+    default:
+      return "Ваш запит на вхід не пройшов. Спробуйте ще раз";
+  }
+}
+
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
@@ -32,22 +43,25 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(data: UserAuthSchema) {
     setIsLoading(true);
 
-    const signInResult = await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    });
+    try {
+      const signInResult = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
 
-    if (!signInResult?.ok) {
+      if (!signInResult?.ok) {
+        const errorStatusCode = signInResult?.status ?? 0;
+        const errorMessage = handleStatusCode(errorStatusCode);
+        throw new Error(errorMessage);
+      }
+
+      showSuccess("Ви успішно авторизувалися");
+      router.refresh();
+    } catch (error) {
+      showError(error);
+    } finally {
       setIsLoading(false);
-
-      showError("Ваш запит на вхід не пройшов. Спробуйте ще раз");
     }
-
-    router.refresh();
-
-    setIsLoading(false);
-    showSuccess("Ви успішно авторизувалися");
   }
 
   return (
