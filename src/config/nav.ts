@@ -18,5 +18,10 @@ export const navConfig: NavBarConfig = {
       href: "/dashboard/header-buttons",
       icon: "sliders",
     },
+    {
+      title: "Користувачі",
+      href: "/dashboard/users",
+      icon: "users",
+    },
   ],
 };
