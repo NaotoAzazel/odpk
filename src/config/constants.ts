@@ -4,6 +4,7 @@ export const redirects = {
   toHeaderButtonEdit: "/dashboard/header-buttons/edit",
   toNewsItem: "/news",
   toPageItem: "/content",
+  toFilePreview: "/uploads"
 } as const;
 
 const ONE_DAY_IN_MINUTES = 86_400;

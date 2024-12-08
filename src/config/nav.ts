@@ -6,7 +6,7 @@ export const navConfig: NavBarConfig = {
     {
       title: "Новини",
       href: "/dashboard/news",
-      icon: "file",
+      icon: "newspaper",
     },
     {
       title: "Статичні сторінки",
@@ -22,6 +22,11 @@ export const navConfig: NavBarConfig = {
       title: "Користувачі",
       href: "/dashboard/users",
       icon: "users",
+    },
+    {
+      title: "Файли",
+      href: "/dashboard/files",
+      icon: "file",
     },
   ],
 };

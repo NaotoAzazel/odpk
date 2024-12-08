@@ -18,5 +18,8 @@ export const paginationConfig = {
     users: {
       rowsPerPage: 10,
     },
+    files: {
+      rowsPerPage: 10,
+    },
   },
 } as const;
