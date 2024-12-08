@@ -39,6 +39,7 @@ export function NewsFeed({ initialNews }: NewsFeedProps) {
     if (inView) {
       loadMore();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
 
   return (
