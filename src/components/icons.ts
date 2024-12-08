@@ -16,6 +16,7 @@ import {
   Loader2,
   LogOut,
   LucideIcon,
+  Newspaper,
   NotebookText,
   Pencil,
   Phone,
@@ -25,6 +26,7 @@ import {
   SlidersHorizontal,
   SquareArrowOutUpRight,
   Trash,
+  Upload,
   UserRound,
   Users,
   Youtube,
@@ -60,5 +62,7 @@ export const Icons = {
   info: Info,
   sliders: SlidersHorizontal,
   alertTriangle: AlertTriangle,
-  users: Users
+  users: Users,
+  newspaper: Newspaper,
+  upload: Upload
 };
