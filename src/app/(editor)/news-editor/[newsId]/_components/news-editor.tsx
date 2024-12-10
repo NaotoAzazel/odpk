@@ -13,7 +13,7 @@ import {
   NewsItemCreateRequest,
   NewsItemValidator,
 } from "@/lib/validation/post";
-import { useEditor } from "@/hooks/useEditor";
+import { useEditor } from "@/hooks/use-editor";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
