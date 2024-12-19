@@ -22,7 +22,7 @@ export function useEditor<T extends OutputData | undefined>(data?: T) {
       const editor = new EditorJS({
         holder: "editor",
         placeholder: "Почніть вводити тут...",
-        inlineToolbar: true,
+        inlineToolbar: ["link", "bold", "italic"],
         data,
         tools: {
           header: Header,
@@ -58,6 +58,73 @@ export function useEditor<T extends OutputData | undefined>(data?: T) {
                     };
                   }
                 },
+              },
+            },
+          },
+        },
+        i18n: {
+          messages: {
+            ui: {
+              blockTunes: {
+                toggler: {
+                  "Click to tune": "Натисніть, щоб налаштувати",
+                  "or drag to move": "або перетягніть",
+                },
+              },
+              popover: {
+                Filter: "Пошук...",
+                "Nothing found": "Нічого не знайдено...",
+                "Convert to": "Перетворити в",
+              },
+              toolbar: {
+                toolbox: {
+                  Add: "Додати",
+                },
+              },
+            },
+            toolNames: {
+              Text: "Абзац",
+              Heading: "Заголовок",
+              List: "Список",
+              Image: "Зображення",
+              Bold: "Напівжирний",
+              Italic: "Курсив",
+              Link: "Посилання",
+              ConvertTo: "123",
+            },
+            tools: {
+              header: {
+                "Heading 1": "Рівень 1",
+                "Heading 2": "Рівень 2",
+                "Heading 3": "Рівень 3",
+                "Heading 4": "Рівень 4",
+                "Heading 5": "Рівень 5",
+                "Heading 6": "Рівень 6",
+              },
+              image: {
+                Caption: "Підпис",
+                "Select an Image": "Виберіть файл",
+                "With border": "Додати рамку",
+                "Stretch image": "Розтягнути",
+                "With background": "З фоном",
+              },
+              link: {
+                "Add a link": "Вставте посилання",
+              },
+              list: {
+                Ordered: "Нумерований",
+                Unordered: "Маркований",
+              },
+            },
+            blockTunes: {
+              delete: {
+                Delete: "Видалити",
+              },
+              moveUp: {
+                "Move up": "Перемістити вгору",
+              },
+              moveDown: {
+                "Move down": "Перемістити вниз",
               },
             },
           },
