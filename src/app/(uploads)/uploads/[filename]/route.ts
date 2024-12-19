@@ -37,7 +37,7 @@ export async function GET(
       headers: {
         "Content-Type":
           mimeTypes[extension || "png"] || "application/octet-stream",
-        "Content-Disposition": `inline; filename="${encodeURIComponent(params.filename)}}"`,
+        "Content-Disposition": `inline; filename="${encodeURIComponent(params.filename)}"`,
       },
     });
   } catch (error) {
