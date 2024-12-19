@@ -3,7 +3,9 @@ import { Files, FileTypes } from "@prisma/client";
 
 import { CustomColumnDef } from "@/types/table";
 import { redirects } from "@/config/constants";
+import { showError, showSuccess } from "@/lib/notification";
 import { formatDate } from "@/lib/utils";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Icons } from "@/components/icons";
 import { ResponsiveImage } from "@/components/responsive-image";
@@ -61,9 +63,20 @@ export function getColumns(): CustomColumnDef<Files>[] {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Назва" />
       ),
-      cell: ({ row }) => {
+      cell: function Cell({ row }) {
+        const [_, copy] = useCopyToClipboard();
+
         const name = row.original.name;
         const type = row.original.type;
+
+        async function copyFilePreviewUrl(name: string) {
+          try {
+            await copy(`${redirects.toFilePreview}/${name}`);
+            showSuccess("Посилання на файл скопійовано");
+          } catch (error) {
+            showError(error);
+          }
+        }
 
         return (
           <div className="flex w-full flex-row items-center gap-3">
@@ -71,7 +84,8 @@ export function getColumns(): CustomColumnDef<Files>[] {
             <div className="max-w-56">
               <span
                 title={name}
-                className="line-clamp-2 overflow-hidden text-ellipsis whitespace-normal break-words"
+                onClick={() => copyFilePreviewUrl(name)}
+                className="line-clamp-2 cursor-pointer overflow-hidden text-ellipsis whitespace-normal break-words"
               >
                 {name}
               </span>
