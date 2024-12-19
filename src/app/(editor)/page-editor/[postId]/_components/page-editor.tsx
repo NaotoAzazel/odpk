@@ -11,7 +11,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import { PageCreationRequest, PageValidator } from "@/lib/validation/page";
-import { useEditor } from "@/hooks/useEditor";
+import { useEditor } from "@/hooks/use-editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

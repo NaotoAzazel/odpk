@@ -2,8 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import EditorJS, { OutputData } from "@editorjs/editorjs";
+import { Files } from "@prisma/client";
+import axios from "axios";
 
-import { uploadFiles } from "@/lib/uploadthing";
+import { redirects } from "@/config/constants";
+import { showError } from "@/lib/notification";
 
 export function useEditor<T extends OutputData | undefined>(data?: T) {
   const editorRef = useRef<EditorJS>();
@@ -31,16 +34,31 @@ export function useEditor<T extends OutputData | undefined>(data?: T) {
             config: {
               uploader: {
                 async uploadByFile(file: File) {
-                  const [res] = await uploadFiles("imageUploader", {
-                    files: [file],
-                  });
+                  // I know that there is a "use-upload-files" hook but
+                  // it does not work here
 
-                  return {
-                    success: true,
-                    file: {
-                      url: res.url,
-                    },
-                  };
+                  const formData = new FormData();
+                  formData.append("files", file);
+
+                  try {
+                    const response = await axios.post("/api/files", formData);
+                    const responseData: Files[] = response.data;
+
+                    return {
+                      success: true,
+                      file: {
+                        url: `${redirects.toFilePreview}/${responseData[0].name}`,
+                      },
+                    };
+                  } catch (error) {
+                    showError(error);
+                    return {
+                      success: false,
+                      file: {
+                        url: "",
+                      },
+                    };
+                  }
                 },
               },
             },

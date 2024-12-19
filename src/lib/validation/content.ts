@@ -7,7 +7,7 @@ const baseBlockSchema = z.object({
 const imageBlockSchema = baseBlockSchema.extend({
   data: z.object({
     file: z.object({
-      url: z.string().url(),
+      url: z.string(),
     }),
     caption: z.string(),
     stretched: z.boolean(),
