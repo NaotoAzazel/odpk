@@ -4,7 +4,6 @@ import { Files, FileTypes } from "@prisma/client";
 import { CustomColumnDef } from "@/types/table";
 import { redirects } from "@/config/constants";
 import { formatDate } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Icons } from "@/components/icons";
 import { ResponsiveImage } from "@/components/responsive-image";
@@ -13,6 +12,7 @@ import {
   DeleteButton,
   LinkToButton,
 } from "../../../_components/action-cell/action-buttons";
+import { ActionMenu } from "../../../_components/action-cell/action-menu";
 import { DeleteDialog } from "../../../_components/delete-dialog";
 
 const fileTypeMap: Record<FileTypes, string> = {
@@ -31,8 +31,8 @@ function FilePreviewIcon({ fileType, name }: FilePreviewIconProps) {
   return (
     <div className="relative">
       {fileType === "IMAGE" ? (
-        <div className="flex flex-row">
-          <Skeleton className="absolute inset-0 z-0 size-[52px]" />
+        <div className="flex min-h-[52px] min-w-[52px] flex-row">
+          <div className="absolute inset-0 z-0 size-[52px] rounded-md bg-accent" />
           <ResponsiveImage
             src={src}
             alt={name}
@@ -66,7 +66,7 @@ export function getColumns(): CustomColumnDef<Files>[] {
         const type = row.original.type;
 
         return (
-          <div className="flex flex-row items-center gap-3">
+          <div className="flex w-full flex-row items-center gap-3">
             <FilePreviewIcon fileType={type} name={name} />
             <div className="max-w-56">
               <span
@@ -117,12 +117,12 @@ export function getColumns(): CustomColumnDef<Files>[] {
         const [isShowDeleteDialog, setIsShowDeleteDialog] =
           useState<boolean>(false);
 
+        const toFilePreview = `${redirects.toFilePreview}/${row.original.name}`;
+
         return (
           <>
             <div className="hidden flex-row gap-2 md:flex">
-              <LinkToButton
-                href={`${redirects.toFilePreview}/${row.original.name}`}
-              />
+              <LinkToButton href={toFilePreview} />
               <DeleteButton onClick={() => setIsShowDeleteDialog(true)} />
             </div>
 
@@ -132,6 +132,14 @@ export function getColumns(): CustomColumnDef<Files>[] {
               endpoint={`/api/files/${row.original.name}`}
               isOpen={isShowDeleteDialog}
               onOpenChange={(isOpen) => setIsShowDeleteDialog(isOpen)}
+            />
+
+            <ActionMenu
+              buttons={[
+                { type: "link", href: toFilePreview  },
+                { type: "delete", onClick: () => setIsShowDeleteDialog(true) },
+              ]}
+              className="flex md:hidden"
             />
           </>
         );
