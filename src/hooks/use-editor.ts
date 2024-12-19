@@ -15,7 +15,6 @@ export function useEditor<T extends OutputData | undefined>(data?: T) {
   const initializeEditor = useCallback(async () => {
     const EditorJS = (await import("@editorjs/editorjs")).default;
     const Header = (await import("@editorjs/header")).default;
-    const Table = (await import("@editorjs/table")).default;
     const List = (await import("@editorjs/list")).default;
     const ImageTool = (await import("@editorjs/image")).default;
 
@@ -28,7 +27,6 @@ export function useEditor<T extends OutputData | undefined>(data?: T) {
         tools: {
           header: Header,
           list: List,
-          table: Table,
           image: {
             class: ImageTool,
             config: {
