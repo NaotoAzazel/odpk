@@ -73,6 +73,14 @@ export async function PATCH(
       throw new Error("Сторінка з таким посиланням вже існує");
     }
 
+    const pageWithSameTitle = await getPageByParams({
+      params: { where: { title: data.title } },
+    });
+
+    if (pageWithSameTitle && pageWithSameTitle.id !== pageId) {
+      throw new Error("Сторінка з такою назвою вже існує");
+    }
+
     const updatedPage = await updatePageByParams({
       params: {
         where: { id: pageId },

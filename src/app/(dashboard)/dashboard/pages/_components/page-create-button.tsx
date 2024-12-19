@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { StaticPages } from "@prisma/client";
 
+import { redirects } from "@/config/constants";
+import { showError } from "@/lib/notification";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import { redirects } from '@/config/constants'
-import { showError } from '@/lib/notification'
 
 interface PageCreateButtonProps extends ButtonProps {}
 
@@ -32,7 +32,7 @@ export function PageCreateButton({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: "Untitled page",
+          title: `Generated title ${now}`,
           href: now.toString(),
           content: {
             blocks: [],
@@ -51,7 +51,7 @@ export function PageCreateButton({
       router.refresh();
       router.push(`${redirects.toPageEditor}/${createdPage.id}`);
     } catch (error) {
-      showError(error)
+      showError(error);
     } finally {
       setIsLoading(false);
     }
