@@ -79,7 +79,7 @@ export function PageEditor({ page }: PageEditorProps) {
       }
 
       router.refresh();
-      showSuccess("Новину було успішно збережено");
+      showSuccess("Сторінку було успішно збережено");
     } catch (error) {
       showError(error);
     } finally {
