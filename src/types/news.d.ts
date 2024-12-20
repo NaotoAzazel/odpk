@@ -29,8 +29,8 @@ type HeaderBlock = BaseBlock & {
 type ListBlock = BaseBlock & {
   data: {
     items: string[];
+    style: "ordered" | "unordered";
   };
-  style: "ordered" | "unordered";
   type: "list";
 };
 
