@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 
-import { getNewsById } from "@/lib/actions/news";
+import { getNewsItemById } from "@/lib/actions/news";
 
 import { NewsEditor } from "./news-editor";
 
 interface NewsEditorContentProps {
-  newsPromise: ReturnType<typeof getNewsById>;
+  newsPromise: ReturnType<typeof getNewsItemById>;
 }
 
 export async function NewsEditorContent({

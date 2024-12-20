@@ -2,9 +2,10 @@ import { getServerSession } from "next-auth";
 import { z } from "zod";
 
 import {
-  deletePageByParams,
-  getPageByParams,
-  updatePageByParams,
+  deletePageById,
+  getPageByHref,
+  getPageByTitle,
+  updatePageById,
 } from "@/lib/actions/pages";
 import { authOptions } from "@/lib/auth";
 import { PageUpdateValidator } from "@/lib/validation/page";
@@ -27,14 +28,8 @@ export async function DELETE(
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
-    const deletedPage = await deletePageByParams({
-      where: { id: Number(params.pageId) },
-    });
-    if (!deletedPage) {
-      throw new Error(
-        `Failed to delete page with id: ${Number(params.pageId)}`,
-      );
-    }
+    // TODO: first check if a page with that id exists, then delete it
+    await deletePageById(Number(params.pageId));
 
     return new Response(null, { status: 200 });
   } catch (error) {
@@ -63,33 +58,29 @@ export async function PATCH(
 
     const pageId = Number(params.pageId);
 
-    const pageWithSameHref = await getPageByParams({
-      params: {
-        where: { href: data.href },
-      },
-    });
+    if (!data.href) {
+      return new Response(JSON.stringify({ message: "EMPTY_HREF" }), {
+        status: 400,
+      });
+    }
 
+    if (!data.title) {
+      return new Response(JSON.stringify({ message: "EMPTY_TITLE" }), {
+        status: 400,
+      });
+    }
+
+    const pageWithSameHref = await getPageByHref(data.href);
     if (pageWithSameHref && pageWithSameHref.id !== pageId) {
       throw new Error("Сторінка з таким посиланням вже існує");
     }
 
-    const pageWithSameTitle = await getPageByParams({
-      params: { where: { title: data.title } },
-    });
-
+    const pageWithSameTitle = await getPageByTitle(data.title);
     if (pageWithSameTitle && pageWithSameTitle.id !== pageId) {
       throw new Error("Сторінка з такою назвою вже існує");
     }
 
-    const updatedPage = await updatePageByParams({
-      params: {
-        where: { id: pageId },
-        data,
-      },
-    });
-    if (!updatedPage) {
-      throw new Error(`Failed to update the page with id: ${pageId}`);
-    }
+    await updatePageById(pageId, data);
 
     return new Response(null, { status: 200 });
   } catch (error) {

@@ -1,5 +1,6 @@
 "use server";
 
+import { EXPIRATION_IN_SECONDS } from "@/config/cache";
 import { redis } from "@/lib/redis";
 import { createCacheKey } from "@/lib/utils";
 
@@ -35,6 +36,16 @@ export async function invalidateCache(key: string) {
   }
 }
 
+/**
+ * @param {string} key - The value must not be formatted with `createCacheKey`
+ * function for example -> `page:{id}`
+ */
+export async function deleteAndInvalidateCache(key: string, pattern: string) {
+  const cacheKey = createCacheKey(key);
+  await deleteCacheValue(cacheKey);
+  await invalidateCache(pattern);
+}
+
 interface WithCacheParams<T> {
   key: string;
   action: () => Promise<T>;
@@ -47,7 +58,7 @@ interface WithCacheParams<T> {
 export async function withCache<T>({
   key,
   action,
-  expirationInSeconds = 120,
+  expirationInSeconds = EXPIRATION_IN_SECONDS,
   options = {},
 }: WithCacheParams<T>) {
   const cacheKey = createCacheKey(key);

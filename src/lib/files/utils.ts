@@ -13,7 +13,7 @@ export function getFileType(file: File): FileTypes {
   return file.type.startsWith("image/") ? "IMAGE" : "DOCUMENT";
 }
 
-interface UploadFileToLocalDirectoryParams {
+interface UploadFileToLocalDirectory {
   file: File;
   absoluteFolderPath: string;
   filename: string;
@@ -23,7 +23,7 @@ export async function uploadFileToLocalDirectory({
   file,
   absoluteFolderPath,
   filename,
-}: UploadFileToLocalDirectoryParams) {
+}: UploadFileToLocalDirectory) {
   try {
     await mkdir(absoluteFolderPath, { recursive: true });
 
@@ -39,7 +39,6 @@ export async function uploadFileToLocalDirectory({
       filePath,
     };
   } catch (error) {
-    console.error("Error saving file:", error);
     return {
       success: false,
       error: (error instanceof Error && error.message) || unknownError,

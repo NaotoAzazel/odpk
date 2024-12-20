@@ -1,15 +1,16 @@
-import { getNewsById } from "@/lib/actions/news";
+import { lazy } from "react";
+import { notFound } from "next/navigation";
+
+import { getNewsItemById } from "@/lib/actions/news";
+
 const EditorOutput = lazy(() =>
   import("@/components/editor/editor-output").then((module) => {
     return { default: module.EditorOutput };
-  })
+  }),
 );
 
-import { notFound } from "next/navigation";
-import { lazy } from "react";
-
 interface NewsContentProps {
-  postPromise: ReturnType<typeof getNewsById>;
+  postPromise: ReturnType<typeof getNewsItemById>;
 }
 
 export async function NewsContent({ postPromise }: NewsContentProps) {

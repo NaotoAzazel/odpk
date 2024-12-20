@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 
 import { siteConfig } from "@/config/site";
-import { getHeaderButtonsByParams } from "@/lib/actions/header-buttons";
+import { getHeaderButtons } from "@/lib/actions/header-buttons";
 import { authOptions } from "@/lib/auth";
 import { CommandMenu } from "@/components/command-menu";
 import { Icons } from "@/components/icons";
@@ -15,7 +15,7 @@ import MaxWidthWrapper from "@/components/max-width-wrapper";
 
 export default async function Navbar() {
   const user = await getServerSession(authOptions);
-  const headerButtonsPromise = getHeaderButtonsByParams();
+  const headerButtonsPromise = getHeaderButtons();
 
   return (
     <div className="sticky inset-x-0 top-0 z-50 h-16">

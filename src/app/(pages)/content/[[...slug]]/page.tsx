@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { redirects } from "@/config/constants";
-import { getPageByParams } from "@/lib/actions/pages";
+import { getPageByHref } from "@/lib/actions/pages";
 import { absoluteUrl } from "@/lib/utils";
 import { Header } from "@/components/header";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
@@ -52,14 +52,7 @@ export async function generateMetadata({
 
 async function getPageFromParams(params: PageProps["params"]) {
   const slug = params.slug.join("/");
-
-  const page = await getPageByParams({
-    params: {
-      where: {
-        href: slug,
-      },
-    },
-  });
+  const page = await getPageByHref(slug);
 
   if (!page) null;
   return page;

@@ -4,15 +4,18 @@ import { useEffect, useState } from "react";
 import { Post } from "@prisma/client";
 import { useInView } from "react-intersection-observer";
 
-import { fetchNews } from "@/lib/actions";
-import { GetNewsByParamsResult } from "@/lib/actions/news";
+import { paginationConfig } from "@/config/pagination";
+import {
+  getNewsForPagination,
+  GetNewsForPaginationResult,
+} from "@/lib/actions/news";
 import { NewsCard } from "@/components/cards/news-card";
 import { Icons } from "@/components/icons";
 import { CardsHolder } from "@/components/layouts/cards-holder";
 import { NoItemsPlaceholder } from "@/components/no-items-plaiceholder";
 
 interface NewsFeedProps {
-  initialNews: GetNewsByParamsResult;
+  initialNews: GetNewsForPaginationResult;
 }
 
 export function NewsFeed({ initialNews }: NewsFeedProps) {
@@ -24,7 +27,10 @@ export function NewsFeed({ initialNews }: NewsFeedProps) {
 
   async function loadMore() {
     const next = page + 1;
-    const news = await fetchNews({ page: next });
+    const news = await getNewsForPagination({
+      page: next,
+      itemsPerPage: paginationConfig.newsPage.newsPerPage,
+    });
 
     if (news.data?.length) {
       setPage(next);
@@ -52,7 +58,7 @@ export function NewsFeed({ initialNews }: NewsFeedProps) {
             ))}
           </CardsHolder>
 
-          {metadata.totalRecordsCount !== news.length && (
+          {metadata.totalNewsCount !== news.length && (
             <div className="mt-4 flex flex-row items-center justify-center">
               <Icons.spinner ref={ref} className="mr-2 size-5 animate-spin" />
               <span>Завантаження...</span>

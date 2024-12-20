@@ -2,8 +2,8 @@ import { getServerSession } from "next-auth";
 import { z } from "zod";
 
 import {
-  deleteHeaderButtonByParams,
-  updateButtonByParams,
+  deleteHeaderButtonById,
+  updateButtonById,
 } from "@/lib/actions/header-buttons";
 import { authOptions } from "@/lib/auth";
 import { HeaderButtonUpdateValidator } from "@/lib/validation/header-buttons";
@@ -26,12 +26,7 @@ export async function DELETE(
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
-    const deletedButton = await deleteHeaderButtonByParams({
-      where: { id: Number(params.buttonId) },
-    });
-    if (!deletedButton) {
-      throw new Error(`Failed to delete button with id: ${params.buttonId}`);
-    }
+    await deleteHeaderButtonById(Number(params.buttonId));
 
     return new Response(null, { status: 200 });
   } catch (error) {
@@ -58,15 +53,7 @@ export async function PATCH(
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
-    const updatedButton = await updateButtonByParams({
-      where: { id: Number(params.buttonId) },
-      data,
-    });
-    if (!updatedButton) {
-      throw new Error(
-        `Failed to update the button with id: ${params.buttonId}`,
-      );
-    }
+    await updateButtonById(Number(params.buttonId), data);
 
     return new Response(null, { status: 200 });
   } catch (error) {

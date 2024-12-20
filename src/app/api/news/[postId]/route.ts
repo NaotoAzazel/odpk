@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { z } from "zod";
 
-import { deleteNewsItemById, updateNewsByParams } from "@/lib/actions/news";
+import { deleteNewsItemById, updateNewsById } from "@/lib/actions/news";
 import { authOptions } from "@/lib/auth";
 import { newsItemUpdateSchema } from "@/lib/validation/post";
 
@@ -23,12 +23,7 @@ export async function DELETE(
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
-    const deletedNews = await deleteNewsItemById({
-      newsItemId: parseInt(params.postId),
-    });
-    if (!deletedNews) {
-      throw new Error(`Failed to delete news with id: ${params.postId}`);
-    }
+    await deleteNewsItemById(Number(params.postId));
 
     return new Response(null, { status: 200 });
   } catch (error) {
@@ -55,13 +50,7 @@ export async function PATCH(
       return Response.json({ message: "Not authorized" }, { status: 403 });
     }
 
-    const updatedNews = await updateNewsByParams({
-      where: { id: parseInt(params.postId) },
-      data,
-    });
-    if (!updatedNews) {
-      throw new Error(`Failed to update the news with id: ${params.postId}`);
-    }
+    await updateNewsById(Number(params.postId), data);
 
     return new Response(null, { status: 200 });
   } catch (error) {

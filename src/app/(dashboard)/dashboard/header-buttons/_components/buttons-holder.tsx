@@ -1,10 +1,10 @@
-import { getHeaderButtonsByParams } from "@/lib/actions/header-buttons";
+import { getHeaderButtons } from "@/lib/actions/header-buttons";
 import { NoItemsPlaceholder } from "@/components/no-items-plaiceholder";
 
 import { ButtonItem } from "./button-item";
 
 interface ButtonsHolder {
-  buttonPromise: ReturnType<typeof getHeaderButtonsByParams>;
+  buttonPromise: ReturnType<typeof getHeaderButtons>;
 }
 
 export async function ButtonsHolder({ buttonPromise }: ButtonsHolder) {

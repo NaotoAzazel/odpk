@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 import { redirects } from "@/config/constants";
 import { getNews } from "@/lib/actions/news";
-import { getPagesByParams } from "@/lib/actions/pages";
+import { getPages } from "@/lib/actions/pages";
 import { absoluteUrl } from "@/lib/utils";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -11,7 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date().toISOString(),
   }));
 
-  const pagesRoutes = (await getPagesByParams()).map((page) => ({
+  const pagesRoutes = (await getPages()).map((page) => ({
     url: absoluteUrl(`${redirects.toPageItem}/${page.href}`),
     lastModified: new Date().toISOString(),
   }));

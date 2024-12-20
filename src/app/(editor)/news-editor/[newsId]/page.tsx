@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { getNewsById } from "@/lib/actions/news";
+import { getNewsItemById } from "@/lib/actions/news";
 
 import { EditorContentSkeleton } from "../../_components/editor-content-skeleton";
 import { NewsEditorContent } from "./_components/news-editor-content";
@@ -16,7 +16,7 @@ export const metadata = {
 };
 
 export default function NewsEditorPage({ params }: NewsEditorPageProps) {
-  const newsPromise = getNewsById({ postId: Number(params.newsId) });
+  const newsPromise = getNewsItemById(Number(params.newsId));
 
   return (
     <Suspense fallback={<EditorContentSkeleton />}>

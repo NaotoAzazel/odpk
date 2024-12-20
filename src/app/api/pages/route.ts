@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { z } from "zod";
 
-import { getPagesByParams } from "@/lib/actions/pages";
+import { getPages } from "@/lib/actions/pages";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { pageCreateSchema } from "@/lib/validation/page";
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const pages = await getPagesByParams();
+    const pages = await getPages();
     return new Response(JSON.stringify(pages), { status: 200 });
   } catch (error) {
     return new Response(null, { status: 500 });
