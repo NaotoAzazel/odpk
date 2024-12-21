@@ -1,8 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import DashboardShell from "@/components/dashboard-shell";
 import { Header } from "@/components/header";
 
 import { ButtonItemSkeleton } from "../../_components/button-item-skeleton";
+import DashboardShell from "../../../_components/dashboard-shell";
 
 export default function LoadingEditPage() {
   return (

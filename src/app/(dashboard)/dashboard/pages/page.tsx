@@ -2,12 +2,12 @@ import { Suspense } from "react";
 import { Metadata } from "next";
 
 import { getPages } from "@/lib/actions/pages";
-import DashboardShell from "@/components/dashboard-shell";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import ErrorBoundary from "@/components/error-boundary";
 import { ErrorContainer } from "@/components/error-container";
 import { Header } from "@/components/header";
 
+import DashboardShell from "../_components/dashboard-shell";
 import { PagesTable } from "./_components/table/pages-table";
 
 export const metadata: Metadata = {

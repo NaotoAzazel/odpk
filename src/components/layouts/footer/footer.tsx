@@ -3,7 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { CardsHolder } from "@/components/layouts/cards-holder";
 import { Icons } from "@/components/icons";
-import { FeedbackDialog } from "@/components/feedback-dialog";
+import { FeedbackDialog } from "@/components/layouts/footer/feedback-dialog";
 
 import { FooterMainSection } from "./footer-main-section";
 

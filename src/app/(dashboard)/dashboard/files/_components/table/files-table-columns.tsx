@@ -8,7 +8,7 @@ import { formatDate } from "@/lib/utils";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Icons } from "@/components/icons";
-import { ResponsiveImage } from "@/components/responsive-image";
+import { ResponsiveImage } from "@/components/image/responsive-image";
 
 import {
   DeleteButton,
@@ -150,7 +150,7 @@ export function getColumns(): CustomColumnDef<Files>[] {
 
             <ActionMenu
               buttons={[
-                { type: "link", href: toFilePreview  },
+                { type: "link", href: toFilePreview },
                 { type: "delete", onClick: () => setIsShowDeleteDialog(true) },
               ]}
               className="flex md:hidden"

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Post } from "@prisma/client";
 
+import { redirects } from "@/config/constants";
 import { isImageBlock } from "@/lib/editor";
 import { formatDate } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { ResponsiveImage } from "@/components/responsive-image";
-import { redirects } from '@/config/constants'
+import { ResponsiveImage } from "@/components/image/responsive-image";
 
 interface NewsCardProps {
   post: Post;
