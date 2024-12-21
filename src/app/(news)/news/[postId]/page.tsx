@@ -14,10 +14,10 @@ import { ErrorContainer } from "@/components/error-container";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 
 import { AnotherNewsCards } from "./_components/another-news-cards";
-import { AnotherNewsSectionLoading } from "./_components/loading/another-news-loading";
-import { NewsHeadingLoading } from "./_components/loading/news-heading-loading";
 import { NewsContent } from "./_components/news-content";
 import { NewsHeading } from "./_components/news-heading";
+import { AnotherNewsSectionSkeleton } from "./_components/skeletons/another-news-skeletons";
+import { NewsHeadingSkeleton } from "./_components/skeletons/news-heading-skeletons";
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
@@ -87,7 +87,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
     <div className="min-h-screen bg-slate-50">
       <section className="flex h-full w-full">
         <MaxWidthWrapper className="relative my-6 bg-white p-5 xl:rounded-lg">
-          <Suspense fallback={<NewsHeadingLoading />}>
+          <Suspense fallback={<NewsHeadingSkeleton />}>
             <NewsHeading postPromise={postPromise} />
           </Suspense>
 
@@ -110,7 +110,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
                 />
               }
             >
-              <Suspense fallback={<AnotherNewsSectionLoading />}>
+              <Suspense fallback={<AnotherNewsSectionSkeleton />}>
                 <AnotherNewsCards newsPromise={anotherNewsPromise} />
               </Suspense>
             </ErrorBoundary>

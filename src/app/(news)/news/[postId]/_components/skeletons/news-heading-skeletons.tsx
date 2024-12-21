@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function NewsHeadingLoading() {
+export function NewsHeadingSkeleton() {
   return (
     <div className="space-y-2">
       <Skeleton className="h-8 w-4/5" />
