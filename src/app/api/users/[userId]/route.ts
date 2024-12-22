@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { deleteUserById } from "@/lib/actions/users";
 import { authOptions } from "@/lib/auth";
-import { revalidatePath } from 'next/cache'
 
 const routeContextSchema = z.object({
   params: z.object({
