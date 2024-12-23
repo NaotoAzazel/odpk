@@ -1,5 +1,6 @@
 import { env } from "@/env";
 import { clsx, type ClassValue } from "clsx";
+import { Session } from "next-auth";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -42,3 +43,11 @@ export function formatBytes(
 }
 
 export const createCacheKey = (key: string) => `${key}:${env.NODE_ENV}`;
+
+export function isValidUser(user: Session["user"] | undefined) {
+  if (!user) {
+    return false;
+  }
+
+  return user.id !== "" && user.email !== "";
+}
