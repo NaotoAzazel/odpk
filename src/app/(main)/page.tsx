@@ -26,6 +26,7 @@ export default function Home() {
           src={LandingImage}
           className="absolute left-0 top-0 h-screen w-full object-cover"
           alt="Landing-image"
+          loading="lazy"
           width={1000}
           height={1000}
         />
