@@ -17,6 +17,7 @@ export const env = createEnv({
     REDIS_URL: z.string().min(1),
     REDIS_SECRET: z.string().min(1),
     NEXTAUTH_SECRET: z.string().min(1),
+    NEXTAUTH_URL: z.string().min(1),
   },
 
   /**

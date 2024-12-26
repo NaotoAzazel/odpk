@@ -8,6 +8,11 @@ import { Post } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 
+import { Content } from "@/types/news";
+import { ERROR_MESSAGES } from "@/config/messages/error";
+import { SUCCESS_MESSAGES } from "@/config/messages/success";
+import { updateNewsItemByIdRequest } from "@/lib/api/actions/news";
+import { API_SUCCESS } from "@/lib/api/responses/success-messages";
 import { showError, showSuccess } from "@/lib/notification";
 import {
   NewsItemCreateRequest,
@@ -40,26 +45,16 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
     try {
       const blocks = await editorRef.current?.save();
       if (!blocks) {
-        return;
+        throw new Error(ERROR_MESSAGES["CANT_SAVE_EDITOR_DATA"]);
       }
 
-      const response = await fetch(`/api/news/${newsItem.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: data.title,
-          content: blocks,
-        }),
+      const { message } = await updateNewsItemByIdRequest(newsItem.id, {
+        ...data,
+        content: blocks as Content,
       });
 
-      if (!response?.ok) {
-        throw new Error("Новину не збережно. Спробуйте ще раз");
-      }
-
       router.refresh();
-      showSuccess("Новину було успішно збережено");
+      showSuccess(API_SUCCESS[message]);
     } catch (error) {
       showError(error);
     } finally {
@@ -71,23 +66,12 @@ export function NewsEditor({ newsItem }: NewsEditorProps) {
     setIsPublishing(true);
 
     try {
-      const response = await fetch(`/api/news/${newsItem.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          published: true,
-        }),
+      await updateNewsItemByIdRequest(newsItem.id, {
+        published: true,
       });
 
-      if (!response?.ok) {
-        throw new Error("Новину не опубліковано. Спробуйте ще раз");
-      }
-
       router.refresh();
-
-      showSuccess("Новина була успішно опублікована");
+      showSuccess(SUCCESS_MESSAGES["NEWS_ITEM_PUBLISHED"]);
     } catch (error) {
       showError(error);
     } finally {

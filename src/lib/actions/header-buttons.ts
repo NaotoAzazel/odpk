@@ -1,71 +1,40 @@
-import { Prisma } from "@prisma/client";
+"use server";
 
-import {
-  deleteCacheValue,
-  invalidateCache,
-  withCache,
-} from "@/lib/actions/cache";
+import { HeaderButtons } from "@prisma/client";
+
+import { CACHE_OPTIONS } from "@/config/cache";
+import { deleteAndInvalidateCache, withCache } from "@/lib/actions/cache";
 import { db } from "@/lib/db";
-import { createCacheKey } from "@/lib/utils";
 
-export async function getHeaderButtonById(buttonId: number) {
+const EXPIRATION_IN_SECONDS = 300; // 5 min
+
+export async function getHeaderButtons() {
   return withCache({
-    key: `header-button:${buttonId}`,
-    action: async () => {
-      const headerButton = await db.headerButtons.findUnique({
-        where: { id: buttonId },
-      });
-      return headerButton;
-    },
-    expirationInSeconds: 300, // 5 min
-    options: { skipCacheOnNull: true },
+    key: `header-buttons:all`,
+    action: async () => await db.headerButtons.findMany(),
+    expirationInSeconds: EXPIRATION_IN_SECONDS,
+    options: CACHE_OPTIONS,
   });
 }
 
-interface GetHeaderButtonsByParamsParams {
-  params?: Prisma.HeaderButtonsFindManyArgs;
-}
-
-export async function getHeaderButtonsByParams({
-  params,
-}: GetHeaderButtonsByParamsParams = {}) {
+export async function getHeaderButtonById(id: number) {
   return withCache({
-    key: `header-buttons:${JSON.stringify(params)}`,
-    action: async () => {
-      const headerButtons = await db.headerButtons.findMany(params);
-      return headerButtons;
-    },
-    expirationInSeconds: 300, // 5 min
-    options: { skipCacheOnNull: true },
+    key: `header-button:${id}`,
+    action: async () => await db.headerButtons.findUnique({ where: { id } }),
+    expirationInSeconds: EXPIRATION_IN_SECONDS,
+    options: CACHE_OPTIONS,
   });
 }
 
-export async function updateButtonByParams(
-  params: Prisma.HeaderButtonsUpdateArgs,
+export async function updateButtonById(
+  id: number,
+  data: Partial<HeaderButtons>,
 ) {
-  const updatedButton = await db.headerButtons.update(params);
-
-  if (updatedButton) {
-    const cacheKey = createCacheKey(`header-button:${updatedButton.id}`);
-
-    await deleteCacheValue(cacheKey);
-    await invalidateCache("header-buttons:*");
-  }
-
-  return updatedButton;
+  await db.headerButtons.update({ where: { id }, data });
+  await deleteAndInvalidateCache(`header-button:${id}`, "header-buttons:*");
 }
 
-export async function deleteHeaderButtonByParams(
-  params: Prisma.HeaderButtonsDeleteArgs,
-) {
-  const deletedButton = await db.headerButtons.delete(params);
-
-  if (deletedButton) {
-    const cacheKey = createCacheKey(`header-button:${deletedButton.id}`);
-
-    await deleteCacheValue(cacheKey);
-    await invalidateCache("header-buttons:*");
-  }
-
-  return deletedButton;
+export async function deleteHeaderButtonById(id: number) {
+  await db.headerButtons.delete({ where: { id } });
+  await deleteAndInvalidateCache(`header-button:${id}`, "header-buttons:*");
 }

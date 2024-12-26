@@ -81,6 +81,9 @@ export async function GET(request: Request) {
       },
     );
   } catch (error) {
-    return new Response("Failed to generate OG image", { status: 500 });
+    return Response.json(
+      { message: "FAILED_GENERATE_OG_IMAGE" },
+      { status: 500 },
+    );
   }
 }

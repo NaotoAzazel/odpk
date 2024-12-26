@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { redirects } from "@/config/constants";
+import { createNewsItemRequest } from "@/lib/api/actions/news";
 import { showError } from "@/lib/notification";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
@@ -25,34 +26,22 @@ export function NewsCreateButton({
 
       setIsLoading(true);
 
-      const response = await fetch("/api/news", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const { data } = await createNewsItemRequest({
+        title: "Untitled Post",
+        content: {
+          blocks: [],
+          time: now,
+          version: "2.29.1",
         },
-        body: JSON.stringify({
-          title: "Untitled Post",
-          content: {
-            blocks: [],
-            time: now,
-            version: "2.29.1",
-          },
-          published: false,
-        }),
+        published: false,
       });
 
-      setIsLoading(false);
-
-      if (!response?.ok) {
-        throw new Error("Новину не вдалося створити, спробуйте пізніше");
-      }
-
-      const news = await response.json();
-
       router.refresh();
-      router.push(`${redirects.toNewsEditor}/${news.id}`);
+      router.push(`${redirects.toNewsEditor}/${data.id}`);
     } catch (error) {
       showError(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 

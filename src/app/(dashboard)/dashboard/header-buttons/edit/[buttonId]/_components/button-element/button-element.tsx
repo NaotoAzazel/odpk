@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { HeaderButtons } from "@prisma/client";
 import { useForm } from "react-hook-form";
 
+import { updateButtonByIdRequest } from "@/lib/api/actions/buttons";
+import { API_SUCCESS } from "@/lib/api/responses/success-messages";
 import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import {
@@ -38,7 +40,6 @@ export function ButtonElement({
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<HeaderButtonItemUpdateRequest>({
     resolver: zodResolver(HeaderButtonItemUpdateValidator),
     defaultValues: {
@@ -58,18 +59,12 @@ export function ButtonElement({
         return element;
       });
 
-      const response = await fetch(`/api/buttons/${rootButton.id}`, {
-        method: "PATCH",
-        body: JSON.stringify({ items: editedButtonItems }),
+      const { message } = await updateButtonByIdRequest(rootButton.id, {
+        items: editedButtonItems,
       });
 
-      if (!response?.ok) {
-        throw new Error("Виникла помилка під час зміни елемента");
-      }
-
       router.refresh();
-
-      showSuccess("Елемент було змінено");
+      showSuccess(API_SUCCESS[message]);
     } catch (error) {
       showError(error);
     } finally {

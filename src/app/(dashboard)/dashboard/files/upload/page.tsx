@@ -1,6 +1,6 @@
-import DashboardShell from "@/components/dashboard-shell";
 import { Header } from "@/components/header";
 
+import DashboardShell from "../../_components/dashboard-shell";
 import { FileUploadHolder } from "./_components/file-upload-holder";
 
 export const metadata = {

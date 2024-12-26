@@ -5,8 +5,8 @@ import LandingImage from "@/assets/images/landing.jpg";
 import { buttonVariants } from "@/components/ui/button";
 import ErrorBoundary from "@/components/error-boundary";
 import { ErrorContainer } from "@/components/error-container";
+import { ResponsiveImage } from "@/components/image/responsive-image";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
-import { ResponsiveImage } from "@/components/responsive-image";
 import { NewsLoadingContainer } from "@/components/skeletons/news-loading-container";
 
 import { AboutCollegeCardsCarousel } from "./_components/carousel/about-college-cards-carousel";
@@ -26,6 +26,7 @@ export default function Home() {
           src={LandingImage}
           className="absolute left-0 top-0 h-screen w-full object-cover"
           alt="Landing-image"
+          loading="lazy"
           width={1000}
           height={1000}
         />

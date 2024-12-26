@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 
 import { redirects } from "@/config/constants";
 import { paginationConfig } from "@/config/pagination";
-import { getNewsById, getNewsByParams } from "@/lib/actions/news";
+import { getAnotherNews, getNewsItemById } from "@/lib/actions/news";
 import { authOptions } from "@/lib/auth";
 import { absoluteUrl } from "@/lib/utils";
 import { LoadingEditorOutput } from "@/components/editor/editor-output-loading";
@@ -14,10 +14,10 @@ import { ErrorContainer } from "@/components/error-container";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 
 import { AnotherNewsCards } from "./_components/another-news-cards";
-import { AnotherNewsSectionLoading } from "./_components/loading/another-news-loading";
-import { NewsHeadingLoading } from "./_components/loading/news-heading-loading";
 import { NewsContent } from "./_components/news-content";
 import { NewsHeading } from "./_components/news-heading";
+import { AnotherNewsSectionSkeleton } from "./_components/skeletons/another-news-skeletons";
+import { NewsHeadingSkeleton } from "./_components/skeletons/news-heading-skeletons";
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
@@ -35,7 +35,7 @@ const getCachedUserSession = cache(async () => {
 export async function generateMetadata({
   params,
 }: NewsPageProps): Promise<Metadata> {
-  const news = await getNewsById({ postId: parseInt(params.postId) });
+  const news = await getNewsItemById(Number(params.postId));
   const user = await getCachedUserSession();
 
   if (!news || (!news.published && !user?.user)) {
@@ -70,21 +70,10 @@ export async function generateMetadata({
 }
 
 export default async function NewsPage({ params }: NewsPageProps) {
-  const postPromise = getNewsById({
-    postId: parseInt(params.postId),
-  });
-  const anotherNewsPromise = getNewsByParams({
-    pageNumber: 1,
-    pageSize: paginationConfig.newsItemPage.anotherNewsAmount,
-    params: {
-      where: {
-        published: true,
-        id: { not: parseInt(params.postId) },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    },
+  const postPromise = getNewsItemById(Number(params.postId));
+  const anotherNewsPromise = getAnotherNews({
+    exceptId: Number(params.postId),
+    itemsPerPage: paginationConfig.newsItemPage.anotherNewsAmount,
   });
 
   const user = await getCachedUserSession();
@@ -98,7 +87,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
     <div className="min-h-screen bg-slate-50">
       <section className="flex h-full w-full">
         <MaxWidthWrapper className="relative my-6 bg-white p-5 xl:rounded-lg">
-          <Suspense fallback={<NewsHeadingLoading />}>
+          <Suspense fallback={<NewsHeadingSkeleton />}>
             <NewsHeading postPromise={postPromise} />
           </Suspense>
 
@@ -121,7 +110,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
                 />
               }
             >
-              <Suspense fallback={<AnotherNewsSectionLoading />}>
+              <Suspense fallback={<AnotherNewsSectionSkeleton />}>
                 <AnotherNewsCards newsPromise={anotherNewsPromise} />
               </Suspense>
             </ErrorBoundary>

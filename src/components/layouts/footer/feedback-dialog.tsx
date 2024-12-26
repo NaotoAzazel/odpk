@@ -4,6 +4,8 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { ERROR_MESSAGES } from "@/config/messages/error";
+import { SUCCESS_MESSAGES } from "@/config/messages/success";
 import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import { FeedbackSchema, feedbackSchema } from "@/lib/validation/feedback";
@@ -43,14 +45,14 @@ export function FeedbackDialog() {
 
     if (!sendedFeedback) {
       setIsLoading(false);
-      showError("Ваш відгук не пройшов. Спробуйте ще раз");
+      showError(ERROR_MESSAGES["YOUR_REVIEW_NOT_SUBMITTED"]);
     }
 
     setIsLoading(false);
     setIsOpenDialog(false);
 
     reset();
-    showSuccess("Ваш відгук успішно відправлено");
+    showSuccess(SUCCESS_MESSAGES["YOUR_REVIEW_SUBMITTED"]);
   };
 
   return (

@@ -6,6 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
+import { ApiErrorKey } from "@/types/api/errors";
+import { SUCCESS_MESSAGES } from "@/config/messages/success";
+import { ApiErrorResponse } from "@/lib/api/exceptions";
 import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import { UserAuthSchema, userAuthSchema } from "@/lib/validation/auth";
@@ -13,17 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/icons";
-
-function handleStatusCode(code: number) {
-  switch (code) {
-    case 0:
-      return "Статус запиту не визначений. Спробуйте ще раз";
-    case 401:
-      return "Неправильна пошта або пароль. Переконайтеся в коректності даних";
-    default:
-      return "Ваш запит на вхід не пройшов. Спробуйте ще раз";
-  }
-}
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -50,12 +42,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       });
 
       if (!signInResult?.ok) {
-        const errorStatusCode = signInResult?.status ?? 0;
-        const errorMessage = handleStatusCode(errorStatusCode);
-        throw new Error(errorMessage);
+        throw new ApiErrorResponse(signInResult?.error as ApiErrorKey);
       }
 
-      showSuccess("Ви успішно авторизувалися");
+      showSuccess(SUCCESS_MESSAGES["SUCCESSFULLY_LOGIN"]);
+      router.push("/");
       router.refresh();
     } catch (error) {
       showError(error);

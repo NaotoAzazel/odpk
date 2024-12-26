@@ -1,157 +1,169 @@
+"use server";
+
 import { Post, Prisma } from "@prisma/client";
 
-import {
-  deleteCacheValue,
-  invalidateCache,
-  withCache,
-} from "@/lib/actions/cache";
+import { CACHE_OPTIONS } from "@/config/cache";
+import { deleteAndInvalidateCache, withCache } from "@/lib/actions/cache";
 import { db } from "@/lib/db";
-import { createCacheKey } from "@/lib/utils";
 
 export async function getNews() {
-  const cacheKey = "posts:all";
-
-  return withCache<Post[]>({
-    key: cacheKey,
-    action: async () => {
-      const news = await db.post.findMany();
-      return news;
-    },
-    options: { skipCacheOnNull: true },
+  return withCache({
+    key: "news:all",
+    action: async () => await db.post.findMany(),
+    options: CACHE_OPTIONS,
   });
 }
 
-interface GetNewsByIdParams {
-  postId: number;
-}
-
-export async function getNewsById({
-  postId,
-}: GetNewsByIdParams): Promise<Post | null> {
-  const cacheKey = `post:${postId}`;
-
-  return withCache<Post | null>({
-    key: cacheKey,
-    action: async () => {
-      const news = await db.post.findUnique({
-        where: {
-          id: postId,
-        },
-      });
-
-      return news;
-    },
-    options: { skipCacheOnNull: true },
+export async function getNewsItemById(id: number) {
+  return withCache({
+    key: `newsItem:${id}`,
+    action: async () => await db.post.findUnique({ where: { id } }),
+    options: CACHE_OPTIONS,
   });
 }
 
-interface GetNewsByParamsParams {
-  params?: Prisma.PostFindManyArgs;
-
+interface GetNewsWithPagination {
   /**
    * @default 1
    */
-  pageNumber?: number;
+  page?: number;
 
   /**
-   * @default 8
+   * @default 6
    */
-  pageSize?: number;
+  itemsPerPage?: number;
 }
 
 export interface Metadata {
   totalPages: number;
-  totalRecordsCount: number;
+  totalNewsCount: number;
   hasNextPage: boolean;
   hasPrevPage: boolean;
 }
 
-export interface GetNewsByParamsResult {
+export interface GetNewsForPaginationResult {
   data: Post[];
   metadata: Metadata;
 }
 
-export async function getNewsByParams({
-  params = {},
-  pageNumber = 1,
-  pageSize = 8,
-}: GetNewsByParamsParams = {}): Promise<GetNewsByParamsResult> {
-  const {
-    take = pageSize,
-    skip = (pageNumber - 1) * pageSize,
-    ...other
-  } = params;
+interface GetNewsForPagination extends GetNewsWithPagination {
+  title?: string;
+  published?: boolean;
 
-  const cacheKey = `posts:${pageNumber}:${pageSize}:${JSON.stringify(params)}`;
+  /**
+   * @default desc
+   */
+  sortByCreatedAt?: Prisma.SortOrder;
+}
 
-  return withCache({
-    key: cacheKey,
-    action: async () => {
-      const news = await db.post.findMany({
-        take,
-        skip,
-        ...other,
-      });
+export async function getNewsForPagination({
+  page = 1,
+  itemsPerPage = 6,
+  title,
+  published,
+  sortByCreatedAt = "desc",
+}: GetNewsForPagination): Promise<GetNewsForPaginationResult> {
+  const skip = (page - 1) * itemsPerPage;
+  const key = `news:${page},${itemsPerPage},${title},${published},${sortByCreatedAt}`;
 
-      if (!news) {
+  try {
+    return withCache({
+      key,
+      action: async () => {
+        const whereClause = { published, title };
+
+        const totalNewsCount = await db.post.count({
+          where: whereClause,
+        });
+
+        const news = await db.post.findMany({
+          where: whereClause,
+          orderBy: {
+            createdAt: sortByCreatedAt,
+          },
+          take: itemsPerPage,
+          skip,
+        });
+
+        const totalPages = Math.ceil(totalNewsCount / itemsPerPage);
+
         return {
-          data: [],
+          data: news,
           metadata: {
-            totalPages: 0,
-            totalRecordsCount: 0,
-            hasNextPage: false,
-            hasPrevPage: false,
+            totalPages,
+            totalNewsCount,
+            hasNextPage: page < totalPages,
+            hasPrevPage: page > 1,
           },
         };
-      }
+      },
+      options: CACHE_OPTIONS,
+    });
+  } catch (error) {
+    return {
+      data: [],
+      metadata: {
+        totalPages: 0,
+        totalNewsCount: 0,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
+    };
+  }
+}
 
-      const totalRecordsCount = await db.post.count({ where: other.where });
-      const totalPages = Math.ceil(totalRecordsCount / pageSize);
+interface GetPublishedNews extends GetNewsWithPagination {}
 
-      return {
-        data: news,
-        metadata: {
-          totalPages,
-          totalRecordsCount,
-          hasNextPage: pageNumber < totalPages,
-          hasPrevPage: pageNumber > 1,
+export async function getPublishedNews({ itemsPerPage = 6 }: GetPublishedNews) {
+  return withCache({
+    key: `news:published`,
+    action: async () => {
+      return await db.post.findMany({
+        where: {
+          published: true,
         },
-      };
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: itemsPerPage,
+      });
     },
-    options: { skipCacheOnNull: true },
+    options: CACHE_OPTIONS,
   });
 }
 
-export async function updateNewsByParams(
-  params: Prisma.PostUpdateArgs,
-): Promise<Post | null> {
-  const updatedNews = await db.post.update(params);
-
-  if (updatedNews) {
-    const cacheKey = createCacheKey(`post:${updatedNews.id}`);
-
-    await deleteCacheValue(cacheKey);
-    await invalidateCache("posts:*");
-  }
-
-  return updatedNews;
+interface GetAnotherNews extends GetNewsWithPagination {
+  exceptId: number;
 }
 
-interface deleteNewsItemByIdParams {
-  newsItemId: number;
+export async function getAnotherNews({
+  exceptId,
+  itemsPerPage = 6,
+}: GetAnotherNews) {
+  return withCache({
+    key: `news:another`,
+    action: async () => {
+      return await db.post.findMany({
+        where: {
+          published: true,
+          id: { not: exceptId },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: itemsPerPage,
+      });
+    },
+    options: CACHE_OPTIONS,
+  });
 }
 
-export async function deleteNewsItemById({
-  newsItemId,
-}: deleteNewsItemByIdParams) {
-  const deletedNewsItem = await db.post.delete({ where: { id: newsItemId } });
+export async function updateNewsById(id: number, data: Partial<Post>) {
+  await db.post.update({ where: { id }, data });
+  await deleteAndInvalidateCache(`newsItem:${id}`, "news:*");
+}
 
-  if (deletedNewsItem) {
-    const cacheKey = createCacheKey(`post:${deletedNewsItem.id}`);
-
-    await deleteCacheValue(cacheKey);
-    await invalidateCache("posts:*");
-  }
-
-  return deletedNewsItem;
+export async function deleteNewsItemById(id: number) {
+  await db.post.delete({ where: { id } });
+  await deleteAndInvalidateCache(`newsItem:${id}`, "news:*");
 }

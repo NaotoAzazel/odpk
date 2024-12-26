@@ -20,8 +20,8 @@ const imageBlockSchema = baseBlockSchema.extend({
 const listBlockSchema = baseBlockSchema.extend({
   data: z.object({
     items: z.array(z.string()),
+    style: z.union([z.literal("ordered"), z.literal("unordered")]),
   }),
-  style: z.union([z.literal("ordered"), z.literal("unordered")]),
   type: z.literal("list"),
 });
 

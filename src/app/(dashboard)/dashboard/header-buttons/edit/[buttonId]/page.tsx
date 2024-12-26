@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 
 import { getHeaderButtonById } from "@/lib/actions/header-buttons";
-import DashboardShell from "@/components/dashboard-shell";
 import { Header } from "@/components/header";
 import { NoItemsPlaceholder } from "@/components/no-items-plaiceholder";
 
+import DashboardShell from "../../../_components/dashboard-shell";
 import { AddButtonItem } from "./_components/add-button-item";
 import { ButtonElement } from "./_components/button-element/button-element";
 import { MainButtonHolder } from "./_components/main-button/main-button-holder";
@@ -34,7 +34,7 @@ export default async function EditButtonPage({ params }: EditButtonPageProps) {
             {button.items.length > 0 ? (
               <>
                 {button.items.map((buttonItem, i) => (
-                 <ButtonElement
+                  <ButtonElement
                     rootButton={button}
                     buttonElement={buttonItem}
                     key={i}

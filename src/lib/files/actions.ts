@@ -9,7 +9,7 @@ export async function getFiles() {
   return files;
 }
 
-interface UploadFileToDatabaseParams {
+interface UploadFileToDatabase {
   filename: string;
   fileType: FileTypes;
 }
@@ -17,7 +17,7 @@ interface UploadFileToDatabaseParams {
 export async function uploadFileToDatabase({
   filename,
   fileType,
-}: UploadFileToDatabaseParams) {
+}: UploadFileToDatabase) {
   try {
     const addedFile = await db.files.create({
       data: { name: filename, type: fileType },
@@ -25,7 +25,6 @@ export async function uploadFileToDatabase({
 
     return { success: true, addedFile };
   } catch (error) {
-    console.error("Error add file to db:", error);
     return {
       success: false,
       error: (error instanceof Error && error.message) || unknownError,
@@ -43,7 +42,6 @@ export async function deleteFileByNameFromDatabase(filename: string) {
 
     return { success: true, deletedFile };
   } catch (error) {
-    console.error("Error delete file from db:", error);
     return {
       success: false,
       error: (error instanceof Error && error.message) || unknownError,

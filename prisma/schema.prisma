@@ -21,8 +21,8 @@ model HeaderButtons {
 
 model StaticPages {
   id        Int      @id @default(autoincrement())
-  title     String
-  href      String
+  title     String   @unique
+  href      String   @unique
   /// [Content]
   content   Json
   createdAt DateTime @default(now())

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LoadingEditorOutput } from "@/components/editor/editor-output-loading";
-import { ResponsiveImage } from "@/components/responsive-image";
+import { ResponsiveImage } from "@/components/image/responsive-image";
 
 const Output = dynamic(
   async () => (await import("editorjs-react-renderer")).default,

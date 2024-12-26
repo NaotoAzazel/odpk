@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { StaticPages } from "@prisma/client";
 
 import { redirects } from "@/config/constants";
+import { getPagesRequest } from "@/lib/api/actions/pages";
 import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
@@ -15,18 +16,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Icons } from "@/components/icons";
-
-async function fetchData(endpoint: string) {
-  const response = await fetch(endpoint, {
-    method: "GET",
-  });
-
-  if (!response?.ok) {
-    return [];
-  }
-
-  return await response.json();
-}
 
 export function CommandMenu() {
   const router = useRouter();
@@ -43,8 +32,10 @@ export function CommandMenu() {
   useEffect(() => {
     const fetchPages = async () => {
       setIsLoading(true);
-      const pagesJson = await fetchData("/api/pages");
-      setPages(pagesJson);
+
+      // TODO: super bad place (if here error do something)
+      const result = await getPagesRequest();
+      setPages(result.data);
       setIsLoading(false);
     };
 

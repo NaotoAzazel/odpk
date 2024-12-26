@@ -29,8 +29,8 @@ type HeaderBlock = BaseBlock & {
 type ListBlock = BaseBlock & {
   data: {
     items: string[];
+    style: "ordered" | "unordered";
   };
-  style: "ordered" | "unordered";
   type: "list";
 };
 
@@ -43,3 +43,9 @@ type Paragraph = BaseBlock & {
 };
 
 export type Blocks = ImageBlock | HeaderBlock | ListBlock | Paragraph;
+
+export interface Content {
+  version: string;
+  time: number;
+  blocks: Blocks[];
+}

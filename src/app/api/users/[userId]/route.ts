@@ -1,9 +1,9 @@
-import { getServerSession } from "next-auth";
 import { z } from "zod";
 
-import { deleteUserById } from "@/lib/actions/users";
+import { deleteUserById, getUserByEmail } from "@/lib/actions/users";
+import { ApiError } from "@/lib/api/exceptions";
+import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
 import { authOptions } from "@/lib/auth";
-import { revalidatePath } from 'next/cache'
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -16,27 +16,23 @@ export async function DELETE(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
+    const user = await validateUser(authOptions);
+
     const { params } = routeContextSchema.parse(context);
 
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-      return Response.json({ message: "Not authorized" }, { status: 403 });
+    if (user.id === params.userId) {
+      throw new ApiError("YOU_CANT_DELETE_YOUR_ACCOUNT", 409);
     }
 
-    if (session.user.id === params.userId) {
-      return Response.json(
-        { message: "You cant delete your account" },
-        { status: 409 },
-      );
+    const isUserExists = await getUserByEmail(user.email);
+    if (!isUserExists) {
+      throw new ApiError("USER_WITH_THIS_ID_NOT_FOUND", 409);
     }
 
     await deleteUserById({ userId: params.userId });
-    return new Response(null, { status: 200 });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
 
-    return new Response(null, { status: 500 });
+    return successResponse(200, { message: "USER_DELETED_SUCCESSFULLY" });
+  } catch (error) {
+    return handleApiError(error);
   }
 }

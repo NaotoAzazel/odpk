@@ -1,17 +1,17 @@
 import { Suspense } from "react";
 
-import { getHeaderButtonsByParams } from "@/lib/actions/header-buttons";
-import DashboardShell from "@/components/dashboard-shell";
+import { getHeaderButtons } from "@/lib/actions/header-buttons";
 import ErrorBoundary from "@/components/error-boundary";
 import { ErrorContainer } from "@/components/error-container";
 import { Header } from "@/components/header";
 
+import DashboardShell from "../_components/dashboard-shell";
 import { ButtonItemSkeleton } from "./_components/button-item-skeleton";
 import { ButtonsCreateButton } from "./_components/buttons-create-dialog";
 import { ButtonsHolder } from "./_components/buttons-holder";
 
 export default async function HeaderButtonsPage() {
-  const buttonsPromise = getHeaderButtonsByParams();
+  const buttonsPromise = getHeaderButtons();
 
   return (
     <DashboardShell>

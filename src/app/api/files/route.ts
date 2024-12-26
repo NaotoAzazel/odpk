@@ -1,8 +1,9 @@
 import { Files as PrismaFile } from "@prisma/client";
-import { getServerSession } from "next-auth";
-import { z } from "zod";
+import { ZodError } from "zod";
 
 import { absoluteUploadsDirection } from "@/config/file-upload";
+import { ApiError } from "@/lib/api/exceptions";
+import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
 import { authOptions } from "@/lib/auth";
 import { uploadFileToDatabase } from "@/lib/files/actions";
 import {
@@ -14,16 +15,11 @@ import { uploadFilesSchema } from "@/lib/validation/file-upload";
 
 export async function POST(req: Request) {
   try {
-    const isAuth = await getServerSession(authOptions);
-    if (!isAuth) {
-      return new Response("Not authorized", { status: 403 });
-    }
+    await validateUser(authOptions);
 
     const contentType = req.headers.get("content-type") || "";
     if (!contentType.includes("multipart/form-data")) {
-      return new Response("Invalid content type", {
-        status: 400,
-      });
+      throw new ApiError("INVALID_CONTENT_TYPE", 400);
     }
 
     const formData = await req.formData();
@@ -31,10 +27,7 @@ export async function POST(req: Request) {
 
     const validation = uploadFilesSchema.safeParse({ files });
     if (!validation.success) {
-      return new Response(
-        validation.error.issues.map((issue) => issue.message).join(", "),
-        { status: 422 },
-      );
+      throw new ZodError(validation.error.issues);
     }
 
     let createdFiles: PrismaFile[] = [];
@@ -50,10 +43,7 @@ export async function POST(req: Request) {
         });
 
       if (!isUploadToDatabaseSuccess) {
-        return new Response(
-          `Cant save to database file with name: ${file.name}`,
-          { status: 422 },
-        );
+        throw new ApiError("CANT_SAVE_FILE_TO_DATABASE", 422);
       }
 
       const { success: isUploadToLocalDirectorySuccess } =
@@ -64,27 +54,17 @@ export async function POST(req: Request) {
         });
 
       if (!isUploadToLocalDirectorySuccess) {
-        return new Response(
-          `Cant save to local directory file with name: ${file.name}`,
-          { status: 422 },
-        );
+        throw new ApiError("CANT_SAVE_FILE_TO_LOCAL_DIRECTORY", 422);
       }
 
       createdFiles.push(addedFile as PrismaFile);
     }
 
-    return new Response(JSON.stringify(createdFiles), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
+    return successResponse(200, {
+      message: "FILES_SUCCESSFULLY_UPLOADED",
+      data: createdFiles,
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(
-        error.issues.map((issue) => issue.message).join(", "),
-        { status: 422 },
-      );
-    }
-
-    return new Response(JSON.stringify(error), { status: 500 });
+    return handleApiError(error);
   }
 }

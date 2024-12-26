@@ -4,6 +4,7 @@ import Dropzone, {
   type FileRejection,
 } from "react-dropzone";
 
+import { ERROR_MESSAGES } from "@/config/messages/error";
 import { showError } from "@/lib/notification";
 import { cn, formatBytes } from "@/lib/utils";
 import { useControllableState } from "@/hooks/use-controllable-state";
@@ -11,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Icons } from "@/components/icons";
-import { ResponsiveImage } from "@/components/responsive-image";
+import { ResponsiveImage } from "@/components/image/responsive-image";
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   value?: File[];
@@ -74,12 +75,14 @@ export function FileUploader(props: FileUploaderProps) {
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (!multiple && maxFiles === 1 && acceptedFiles.length > 1) {
-        showError("Неможливо завантажити більше 1 файлу");
+        showError(ERROR_MESSAGES["CANNOT_UPLOAD_MORE_THAN_1_FILE"]);
         return;
       }
 
       if ((files?.length ?? 0) + acceptedFiles.length > maxFiles) {
-        showError(`Неможливо завантажити більше ${maxFiles} файлів`);
+        showError(
+          `${ERROR_MESSAGES["CANNOT_UPLOAD_MORE_THAN_N_FILES"]} (${maxFiles})`,
+        );
         return;
       }
 
@@ -94,9 +97,11 @@ export function FileUploader(props: FileUploaderProps) {
       setFiles(updatedFiles);
 
       if (rejectedFiles.length > 0) {
-        rejectedFiles.forEach(({ file }) => {
-          showError(`Файл ${file.name} відхилено`);
-        });
+        const rejectedFilesName = rejectedFiles
+          .map(({ file }) => file.name)
+          .join(", ");
+
+        showError(`${ERROR_MESSAGES["FILES_CANCELED"]}: ${rejectedFilesName}`);
       }
     },
     [files, maxFiles, multiple, setFiles],

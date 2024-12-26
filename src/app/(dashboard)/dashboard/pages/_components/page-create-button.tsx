@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { StaticPages } from "@prisma/client";
 
+import { redirects } from "@/config/constants";
+import { createPageRequest } from "@/lib/api/actions/pages";
+import { showError } from "@/lib/notification";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import { redirects } from '@/config/constants'
-import { showError } from '@/lib/notification'
 
 interface PageCreateButtonProps extends ButtonProps {}
 
@@ -26,32 +26,20 @@ export function PageCreateButton({
 
       const now = new Date().getTime();
 
-      const response = await fetch("/api/pages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const { data } = await createPageRequest({
+        title: `Generated title ${now}`,
+        href: now.toString(),
+        content: {
+          blocks: [],
+          time: now,
+          version: "2.29.1",
         },
-        body: JSON.stringify({
-          title: "Untitled page",
-          href: now.toString(),
-          content: {
-            blocks: [],
-            time: now,
-            version: "2.29.1",
-          },
-        }),
       });
 
-      if (!response?.ok) {
-        throw new Error("Виникла помилка під час створення, спробуйте пізніше");
-      }
-
-      const createdPage: StaticPages = await response.json();
-
       router.refresh();
-      router.push(`${redirects.toPageEditor}/${createdPage.id}`);
+      router.push(`${redirects.toPageEditor}/${data.id}`);
     } catch (error) {
-      showError(error)
+      showError(error);
     } finally {
       setIsLoading(false);
     }

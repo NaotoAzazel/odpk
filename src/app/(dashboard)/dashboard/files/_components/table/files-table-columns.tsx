@@ -8,7 +8,7 @@ import { formatDate } from "@/lib/utils";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Icons } from "@/components/icons";
-import { ResponsiveImage } from "@/components/responsive-image";
+import { ResponsiveImage } from "@/components/image/responsive-image";
 
 import {
   DeleteButton,
@@ -16,6 +16,7 @@ import {
 } from "../../../_components/action-cell/action-buttons";
 import { ActionMenu } from "../../../_components/action-cell/action-menu";
 import { DeleteDialog } from "../../../_components/delete-dialog";
+import { SUCCESS_MESSAGES } from '@/config/messages/success'
 
 const fileTypeMap: Record<FileTypes, string> = {
   [FileTypes.DOCUMENT]: "Файл",
@@ -72,7 +73,7 @@ export function getColumns(): CustomColumnDef<Files>[] {
         async function copyFilePreviewUrl(name: string) {
           try {
             await copy(`${redirects.toFilePreview}/${name}`);
-            showSuccess("Посилання на файл скопійовано");
+            showSuccess(SUCCESS_MESSAGES["LINK_TO_FILE_COPIED"]);
           } catch (error) {
             showError(error);
           }
@@ -150,7 +151,7 @@ export function getColumns(): CustomColumnDef<Files>[] {
 
             <ActionMenu
               buttons={[
-                { type: "link", href: toFilePreview  },
+                { type: "link", href: toFilePreview },
                 { type: "delete", onClick: () => setIsShowDeleteDialog(true) },
               ]}
               className="flex md:hidden"

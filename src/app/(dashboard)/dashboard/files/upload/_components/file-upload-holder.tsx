@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { SUCCESS_MESSAGES } from "@/config/messages/success";
 import { showError, showSuccess } from "@/lib/notification";
 import {
   UploadFilesSchema,
@@ -33,7 +34,7 @@ export function FileUploadHolder() {
       await uploadFiles(getValues("files") as File[]);
       reset();
       router.refresh();
-      showSuccess("Завантажено");
+      showSuccess(SUCCESS_MESSAGES["FILES_UPLOADED"]);
     } catch (error) {
       showError(error);
     }

@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/lib/db";
 
 export async function getUsers() {
@@ -5,31 +7,31 @@ export async function getUsers() {
   return users;
 }
 
-export function getUserByEmail(email: string) {
-  const user = db.users.findFirst({
+export async function getUserByEmail(email: string) {
+  const user = await db.users.findFirst({
     where: { email },
   });
 
   return user;
 }
 
-interface CreateUserParams {
+interface CreateUser {
   email: string;
   hashedPassword: string;
 }
 
-export async function createUser({ email, hashedPassword }: CreateUserParams) {
+export async function createUser({ email, hashedPassword }: CreateUser) {
   const createdUser = await db.users.create({
     data: { email, password: hashedPassword },
   });
   return createdUser;
 }
 
-interface DeleteUserByIdParams {
+interface DeleteUserById {
   userId: string;
 }
 
-export async function deleteUserById({ userId }: DeleteUserByIdParams) {
+export async function deleteUserById({ userId }: DeleteUserById) {
   const deletedUser = await db.users.delete({ where: { id: userId } });
   return deletedUser;
 }

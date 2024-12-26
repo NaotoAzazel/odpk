@@ -1,84 +1,49 @@
-import { Prisma } from "@prisma/client";
+"use server";
 
-import {
-  deleteCacheValue,
-  invalidateCache,
-  withCache,
-} from "@/lib/actions/cache";
+import { StaticPages } from "@prisma/client";
+
+import { CACHE_OPTIONS } from "@/config/cache";
+import { deleteAndInvalidateCache, withCache } from "@/lib/actions/cache";
 import { db } from "@/lib/db";
-import { createCacheKey } from "@/lib/utils";
 
-interface GetPageDataByParamsParams {
-  params?: Prisma.StaticPagesFindManyArgs;
-}
-
-export async function getPagesByParams({
-  params,
-}: GetPageDataByParamsParams = {}) {
-  const key = `pages:${JSON.stringify(params)}`;
-
+export async function getPages() {
   return withCache({
-    key,
-    action: async () => {
-      const pages = await db.staticPages.findMany(params);
-      return pages;
-    },
-    options: { skipCacheOnNull: true },
+    key: "pages:all",
+    action: async () => await db.staticPages.findMany(),
+    options: CACHE_OPTIONS,
   });
 }
 
-interface GetPageByParamsParams {
-  params?: Prisma.StaticPagesFindFirstArgs;
-}
-
-export async function getPageById(pageId: number) {
+export async function getPageById(id: number) {
   return withCache({
-    key: `page:${pageId}`,
-    action: async () => {
-      const page = await db.staticPages.findUnique({ where: { id: pageId } });
-      return page;
-    },
-    options: { skipCacheOnNull: true },
+    key: `page:${id}`,
+    action: async () => await db.staticPages.findUnique({ where: { id } }),
+    options: CACHE_OPTIONS,
   });
 }
 
-export async function getPageByParams({ params }: GetPageByParamsParams = {}) {
+export async function getPageByHref(href: string) {
   return withCache({
-    key: `page:${JSON.stringify(params)}`,
-    action: async () => {
-      const page = await db.staticPages.findFirst(params);
-      return page;
-    },
-    options: { skipCacheOnNull: true },
+    key: `page:${href}`,
+    action: async () => await db.staticPages.findUnique({ where: { href } }),
+    options: CACHE_OPTIONS,
   });
 }
 
-interface UpdatePageByParamsParams {
-  params: Prisma.StaticPagesUpdateArgs;
+export async function getPageByTitle(title: string) {
+  return withCache({
+    key: `page:${title}`,
+    action: async () => await db.staticPages.findUnique({ where: { title } }),
+    options: CACHE_OPTIONS,
+  });
 }
 
-export async function updatePageByParams({ params }: UpdatePageByParamsParams) {
-  const updatedPage = await db.staticPages.update(params);
-
-  if (updatedPage) {
-    const cacheKey = createCacheKey(`page:${updatedPage.content.time}`);
-
-    await deleteCacheValue(cacheKey);
-    await invalidateCache("pages:*");
-  }
-
-  return updatedPage;
+export async function updatePageById(id: number, data: Partial<StaticPages>) {
+  await db.staticPages.update({ where: { id }, data });
+  await deleteAndInvalidateCache(`page:${id}`, "pages:*");
 }
 
-export async function deletePageByParams(params: Prisma.StaticPagesDeleteArgs) {
-  const deletedPage = await db.staticPages.delete(params);
-
-  if (deletedPage) {
-    const cacheKey = createCacheKey(`page:${deletedPage.content.time}`);
-
-    await deleteCacheValue(cacheKey);
-    await invalidateCache("pages:*");
-  }
-
-  return deletedPage;
+export async function deletePageById(id: number) {
+  await db.staticPages.delete({ where: { id } });
+  await deleteAndInvalidateCache(`page:${id}`, "pages:*");
 }

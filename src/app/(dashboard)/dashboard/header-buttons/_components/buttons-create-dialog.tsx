@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { createButtonRequest } from "@/lib/api/actions/buttons";
+import { API_SUCCESS } from "@/lib/api/responses/success-messages";
+import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import {
   HeaderButtonCreationRequest,
@@ -23,7 +26,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/icons";
-import { showError } from '@/lib/notification'
 
 export function ButtonsCreateButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -46,24 +48,13 @@ export function ButtonsCreateButton() {
     try {
       setIsLoading(true);
 
-      const response = await fetch("/api/buttons", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: data.title,
-        }),
-      });
-
-      if (!response?.ok) {
-        throw new Error("Виникла помилка під час створення, спробуйте пізніше");
-      }
+      const result = await createButtonRequest(data);
 
       setIsDialogOpen(false);
       router.refresh();
+      showSuccess(API_SUCCESS[result.message]);
     } catch (error) {
-      showError(error)
+      showError(error);
     } finally {
       setIsLoading(false);
     }

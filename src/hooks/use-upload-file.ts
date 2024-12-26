@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Files } from "@prisma/client";
-import axios from "axios";
 
-import { showError } from "@/lib/notification";
+import { uploadFilesRequest } from "@/lib/api/actions/files";
 
 interface UseUploadFileProps {
   defaultUploadedFiles?: Files[];
@@ -20,29 +19,14 @@ export function useUploadFile(
   async function upload(files: File[]) {
     setIsUploading(true);
 
-    const formData = new FormData();
-    files.forEach((file) => formData.append("files", file));
-
     try {
-      const response = await axios.post(endpoint, formData, {
-        onUploadProgress: (progressEvent) => {
-          const progress = progressEvent.total
-            ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            : 0;
-
-          setProgresses((prev) => {
-            const updatedProgress = { ...prev };
-            files.forEach((file) => {
-              updatedProgress[file.name] = progress;
-            });
-
-            return updatedProgress;
-          });
-        },
+      const result = await uploadFilesRequest({
+        endpoint,
+        files,
+        setProgresses,
       });
 
-      const responseData: Files[] = response.data;
-      setUploadedFiles((prev) => [...prev, ...responseData]);
+      setUploadedFiles((prev) => [...prev, ...result.data]);
     } catch (error) {
       throw error;
     } finally {
