@@ -1,10 +1,12 @@
-import { getServerSession } from "next-auth";
 import { z } from "zod";
 
 import {
   deleteHeaderButtonById,
+  getHeaderButtonById,
   updateButtonById,
 } from "@/lib/actions/header-buttons";
+import { ApiError } from "@/lib/api/exceptions";
+import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
 import { authOptions } from "@/lib/auth";
 import { HeaderButtonUpdateValidator } from "@/lib/validation/header-buttons";
 
@@ -19,22 +21,20 @@ export async function DELETE(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
+    await validateUser(authOptions);
+
     const { params } = routeContextSchema.parse(context);
 
-    const isAuth = await getServerSession(authOptions);
-    if (!isAuth) {
-      return Response.json({ message: "Not authorized" }, { status: 403 });
+    const isButtonExists = await getHeaderButtonById(Number(params.buttonId));
+    if (!isButtonExists) {
+      throw new ApiError("BUTTONS_WITH_THIS_ID_NOT_FOUND", 409);
     }
 
     await deleteHeaderButtonById(Number(params.buttonId));
 
-    return new Response(null, { status: 200 });
+    return successResponse(200, { message: "BUTTON_DELETED_SUCCESSFULLY" });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
-
-    return new Response(null, { status: 500 });
+    return handleApiError(error);
   }
 }
 
@@ -43,28 +43,22 @@ export async function PATCH(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
+    await validateUser(authOptions);
+
     const { params } = routeContextSchema.parse(context);
 
     const json = await req.json();
     const data = HeaderButtonUpdateValidator.parse(json);
 
-    const isAuth = await getServerSession(authOptions);
-    if (!isAuth) {
-      return Response.json({ message: "Not authorized" }, { status: 403 });
+    const isButtonExists = await getHeaderButtonById(Number(params.buttonId));
+    if (!isButtonExists) {
+      throw new ApiError("BUTTONS_WITH_THIS_ID_NOT_FOUND", 409);
     }
 
     await updateButtonById(Number(params.buttonId), data);
 
-    return new Response(null, { status: 200 });
+    return successResponse(200, { message: "BUTTON_UPDATED_SUCCESSFULLY" });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
-
-    if (error instanceof Error) {
-      return new Response(JSON.stringify({ message: error.message }), {
-        status: 500,
-      });
-    }
+    return handleApiError(error);
   }
 }

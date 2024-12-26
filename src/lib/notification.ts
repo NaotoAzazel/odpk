@@ -1,27 +1,41 @@
 import { toast } from "sonner";
-import { z } from "zod";
 
-import { unknownError } from "@/config/constants";
+import { ERROR_MESSAGES } from "@/config/messages/error";
+import { ApiErrorResponse } from "@/lib/api/exceptions";
+import { API_ERRORS } from "@/lib/api/responses/error-messages";
 
 function getErrorMessage(error: unknown) {
-  if (error instanceof z.ZodError) {
-    return error.errors[0]?.message ?? unknownError;
-  } else if (error instanceof Error) {
-    return error.message;
-  } else {
-    return unknownError;
+  if (error instanceof ApiErrorResponse) {
+    return {
+      message: API_ERRORS[error.message] ?? API_ERRORS["UNKNOWN_ERROR"],
+      errors: error.errors,
+    };
   }
+
+  if (error instanceof Error) {
+    return { message: error.message, errors: error };
+  }
+
+  if (typeof error === "string") {
+    return {
+      message: error,
+      errors: null,
+    };
+  }
+
+  return { message: ERROR_MESSAGES["UNKNOWN_ERROR"], errors: error };
 }
 
-function showError(error: unknown) {
-  const errorMessage = getErrorMessage(error);
-  console.log({ errorMessage });
+export function showError(error: unknown) {
+  const { message, errors } = getErrorMessage(error);
+  console.log("Error message:", message);
+  if (!!errors) {
+    console.log("Error stack:", { errors });
+  }
 
-  return toast.error(errorMessage);
+  return toast.error(message);
 }
 
-function showSuccess(message: string) {
+export function showSuccess(message: string) {
   return toast.success(message);
 }
-
-export { showError, showSuccess };

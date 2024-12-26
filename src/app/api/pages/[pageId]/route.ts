@@ -1,12 +1,14 @@
-import { getServerSession } from "next-auth";
 import { z } from "zod";
 
 import {
   deletePageById,
   getPageByHref,
+  getPageById,
   getPageByTitle,
   updatePageById,
 } from "@/lib/actions/pages";
+import { ApiError } from "@/lib/api/exceptions";
+import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
 import { authOptions } from "@/lib/auth";
 import { PageUpdateValidator } from "@/lib/validation/page";
 
@@ -21,23 +23,20 @@ export async function DELETE(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
+    await validateUser(authOptions);
+
     const { params } = routeContextSchema.parse(context);
 
-    const isAuth = await getServerSession(authOptions);
-    if (!isAuth) {
-      return Response.json({ message: "Not authorized" }, { status: 403 });
+    const isPageExists = await getPageById(Number(params.pageId));
+    if (!isPageExists) {
+      throw new ApiError("PAGES_WITH_THIS_ID_NOT_FOUND", 409);
     }
 
-    // TODO: first check if a page with that id exists, then delete it
     await deletePageById(Number(params.pageId));
 
-    return new Response(null, { status: 200 });
+    return successResponse(200, { message: "PAGE_DELETED_SUCCESSFULLY" });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
-
-    return new Response(null, { status: 500 });
+    return handleApiError(error);
   }
 }
 
@@ -46,52 +45,42 @@ export async function PATCH(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
+    await validateUser(authOptions);
+
     const { params } = routeContextSchema.parse(context);
 
     const json = await req.json();
     const data = PageUpdateValidator.parse(json);
 
-    const isAuth = await getServerSession(authOptions);
-    if (!isAuth) {
-      return Response.json({ message: "Not authorized" }, { status: 403 });
-    }
-
     const pageId = Number(params.pageId);
 
     if (!data.href) {
-      return new Response(JSON.stringify({ message: "EMPTY_HREF" }), {
-        status: 400,
-      });
+      throw new ApiError("EMPTY_HREF", 400);
     }
 
     if (!data.title) {
-      return new Response(JSON.stringify({ message: "EMPTY_TITLE" }), {
-        status: 400,
-      });
+      throw new ApiError("EMPTY_TITLE", 400);
     }
 
     const pageWithSameHref = await getPageByHref(data.href);
     if (pageWithSameHref && pageWithSameHref.id !== pageId) {
-      throw new Error("Сторінка з таким посиланням вже існує");
+      throw new ApiError("PAGE_WITH_THIS_HREF_EXISTS", 409);
     }
 
     const pageWithSameTitle = await getPageByTitle(data.title);
     if (pageWithSameTitle && pageWithSameTitle.id !== pageId) {
-      throw new Error("Сторінка з такою назвою вже існує");
+      throw new ApiError("PAGE_WITH_THIS_TITLE_EXISTS", 409);
+    }
+
+    const isPageExists = await getPageById(pageId);
+    if (!isPageExists) {
+      throw new ApiError("PAGES_WITH_THIS_ID_NOT_FOUND", 409);
     }
 
     await updatePageById(pageId, data);
 
-    return new Response(null, { status: 200 });
+    return successResponse(200, { message: "PAGE_UPDATED_SUCCESSFULLY" });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
-
-    if (error instanceof Error) {
-      return new Response(JSON.stringify({ message: error.message }), {
-        status: 500,
-      });
-    }
+    return handleApiError(error);
   }
 }

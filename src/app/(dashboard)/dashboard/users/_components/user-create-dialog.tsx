@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { createUserRequest } from "@/lib/api/actions/users";
+import { API_SUCCESS } from "@/lib/api/responses/success-messages";
 import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import { UserAuthSchema, userAuthSchema } from "@/lib/validation/auth";
@@ -21,15 +23,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/icons";
 
-function handleStatusCode(code: number) {
-  switch (code) {
-    case 409:
-      return "Користувач з такою поштою вже існує";
-    default:
-      return "Виникла помилка під час створення, спробуйте пізніше";
-  }
-}
-
 export function UserCreateDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
@@ -45,27 +38,15 @@ export function UserCreateDialog() {
     resolver: zodResolver(userAuthSchema),
   });
 
-  const onSubmit = async (data: UserAuthSchema) => {
+  const onSubmit = async (user: UserAuthSchema) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response?.ok) {
-        const errorStatusCode = response.status;
-        const errorMessage = handleStatusCode(errorStatusCode);
-        throw new Error(errorMessage);
-      }
+      const { message } = await createUserRequest(user);
 
       reset();
       setIsOpenDialog(false);
-      showSuccess("Користувач успішно створений");
+      showSuccess(API_SUCCESS[message]);
       router.refresh();
     } catch (error) {
       showError(error);

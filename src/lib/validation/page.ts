@@ -12,4 +12,6 @@ export const PageValidator = z.object({
 export type PageCreationRequest = z.infer<typeof PageValidator>;
 
 export const PageUpdateValidator = PageValidator.partial();
+export type PageUpdateRequest = z.infer<typeof PageUpdateValidator>;
+
 export const pageCreateSchema = PageValidator;

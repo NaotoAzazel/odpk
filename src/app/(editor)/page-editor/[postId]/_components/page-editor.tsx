@@ -8,6 +8,10 @@ import { StaticPages } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 
+import { Content } from "@/types/news";
+import { ERROR_MESSAGES } from "@/config/messages/error";
+import { updatePageByIdRequest } from "@/lib/api/actions/pages";
+import { API_SUCCESS } from "@/lib/api/responses/success-messages";
 import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import { PageCreationRequest, PageValidator } from "@/lib/validation/page";
@@ -54,32 +58,16 @@ export function PageEditor({ page }: PageEditorProps) {
 
       const blocks = await editorRef.current?.save();
       if (!blocks) {
-        throw new Error("Виникла помилка під час збереження даних");
+        throw new Error(ERROR_MESSAGES["CANT_SAVE_EDITOR_DATA"]);
       }
 
-      const response = await fetch(`/api/pages/${page.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: data.title,
-          href: data.href,
-          content: blocks,
-        }),
+      const { message } = await updatePageByIdRequest(page.id, {
+        ...data,
+        content: blocks as Content,
       });
 
-      if (!response?.ok) {
-        const errorData = await response.json();
-
-        throw new Error(
-          errorData?.message ||
-            "Виникла помилка під час збереження. Спробуйте ще раз",
-        );
-      }
-
       router.refresh();
-      showSuccess("Сторінку було успішно збережено");
+      showSuccess(API_SUCCESS[message]);
     } catch (error) {
       showError(error);
     } finally {

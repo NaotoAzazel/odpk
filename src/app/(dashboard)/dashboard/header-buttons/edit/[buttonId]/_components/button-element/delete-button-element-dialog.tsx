@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { HeaderButtonItem } from "@/types";
 import { HeaderButtons } from "@prisma/client";
 
+import { SUCCESS_MESSAGES } from "@/config/messages/success";
+import { updateButtonByIdRequest } from "@/lib/api/actions/buttons";
 import { showError, showSuccess } from "@/lib/notification";
 import {
   AlertDialog,
@@ -43,18 +45,12 @@ export function DeleteButtonElementDialog({
         (_) => _.id !== elementToDelete.id,
       );
 
-      const response = await fetch(`/api/buttons/${rootButton.id}`, {
-        method: "PATCH",
-        body: JSON.stringify({ items: buttonItemsWithoutCurrent }),
+      await updateButtonByIdRequest(rootButton.id, {
+        items: buttonItemsWithoutCurrent,
       });
 
-      if (!response?.ok) {
-        throw new Error("Виникла помилка під час видалення елемента");
-      }
-
       router.refresh();
-
-      showSuccess("Видалення пройшло успішно");
+      showSuccess(SUCCESS_MESSAGES["BUTTON_ITEM_DELETED"]);
     } catch (error) {
       showError(error);
     } finally {

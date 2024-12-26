@@ -16,6 +16,7 @@ import {
 } from "../../../_components/action-cell/action-buttons";
 import { ActionMenu } from "../../../_components/action-cell/action-menu";
 import { DeleteDialog } from "../../../_components/delete-dialog";
+import { SUCCESS_MESSAGES } from '@/config/messages/success'
 
 const fileTypeMap: Record<FileTypes, string> = {
   [FileTypes.DOCUMENT]: "Файл",
@@ -72,7 +73,7 @@ export function getColumns(): CustomColumnDef<Files>[] {
         async function copyFilePreviewUrl(name: string) {
           try {
             await copy(`${redirects.toFilePreview}/${name}`);
-            showSuccess("Посилання на файл скопійовано");
+            showSuccess(SUCCESS_MESSAGES["LINK_TO_FILE_COPIED"]);
           } catch (error) {
             showError(error);
           }

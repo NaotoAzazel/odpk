@@ -1,0 +1,25 @@
+export type ApiSuccessKey =
+  | "SUCCESS"
+  | "USER_CREATED_SUCCESSFULLY"
+  | "USER_DELETED_SUCCESSFULLY"
+  | "PAGE_CREATED_SUCCESSFULLY"
+  | "PAGE_DELETED_SUCCESSFULLY"
+  | "PAGE_UPDATED_SUCCESSFULLY"
+  | "NEWS_ITEM_CREATED_SUCCESSFULLY"
+  | "NEWS_ITEM_DELETED_SUCCESSFULLY"
+  | "NEWS_ITEM_UPDATED_SUCCESSFULLY"
+  | "FILES_SUCCESSFULLY_UPLOADED"
+  | "FILE_SUCCESSFULLY_DELETED"
+  | "BUTTON_CREATED_SUCCESSFULLY"
+  | "BUTTON_DELETED_SUCCESSFULLY"
+  | "BUTTON_UPDATED_SUCCESSFULLY";
+
+export type ApiSuccessValue = string;
+
+export interface ApiSuccessResponse {
+  message: ApiSuccessKey;
+}
+
+export interface ApiSuccessResponseWithData<T> extends ApiSuccessResponse {
+  data: T;
+}

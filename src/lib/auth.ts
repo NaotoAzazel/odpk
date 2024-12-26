@@ -5,6 +5,7 @@ import CredentialProvider from "next-auth/providers/credentials";
 
 import { authConfig } from "@/config/constants";
 import { getUserByEmail } from "@/lib/actions/users";
+import { ApiError } from "@/lib/api/exceptions";
 import { comparePasswords } from "@/lib/bcrypt";
 import { db } from "@/lib/db";
 
@@ -27,20 +28,23 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials) {
-          return null;
+          throw new ApiError("INVALID_CREDENTIALS", 401);
         }
 
         const user = await getUserByEmail(credentials.email);
         if (!user) {
-          return null;
+          throw new ApiError("INCORRECT_PASSWORD_OR_EMAIL", 401);
         }
 
         const isPasswordsMatch = comparePasswords(
           credentials.password,
           user.password,
         );
+        if (!isPasswordsMatch) {
+          throw new ApiError("INCORRECT_PASSWORD_OR_EMAIL", 401);
+        }
 
-        return isPasswordsMatch ? user : null;
+        return user;
       },
     }),
   ],

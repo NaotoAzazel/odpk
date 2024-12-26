@@ -1,17 +1,12 @@
-import { getServerSession } from "next-auth";
-import { z } from "zod";
-
 import { getPages } from "@/lib/actions/pages";
+import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { pageCreateSchema } from "@/lib/validation/page";
 
 export async function POST(req: Request) {
   try {
-    const isAuth = await getServerSession(authOptions);
-    if (!isAuth) {
-      return Response.json({ message: "Not authorized" }, { status: 403 });
-    }
+    await validateUser(authOptions);
 
     const json = await req.json();
     const body = pageCreateSchema.parse(json);
@@ -27,21 +22,20 @@ export async function POST(req: Request) {
       },
     });
 
-    return new Response(JSON.stringify(post), { status: 200 });
+    return successResponse(200, {
+      message: "PAGE_CREATED_SUCCESSFULLY",
+      data: post,
+    });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
-
-    return new Response(null, { status: 500 });
+    return handleApiError(error);
   }
 }
 
 export async function GET() {
   try {
     const pages = await getPages();
-    return new Response(JSON.stringify(pages), { status: 200 });
+    return successResponse(200, { message: "SUCCESS", data: pages });
   } catch (error) {
-    return new Response(null, { status: 500 });
+    return handleApiError(error);
   }
 }

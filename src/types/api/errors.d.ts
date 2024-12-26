@@ -1,0 +1,31 @@
+export type ApiErrorKey =
+  | "NOT_AUTHORIZED"
+  | "VALIDATION_ERROR"
+  | "UNKNOWN_ERROR"
+  | "USER_WITH_THIS_EMAIL_EXISTS"
+  | "YOU_CANT_DELETE_YOUR_ACCOUNT"
+  | "USER_WITH_THIS_ID_NOT_FOUND"
+  | "PAGE_WITH_THIS_HREF_EXISTS"
+  | "PAGE_WITH_THIS_TITLE_EXISTS"
+  | "PAGES_WITH_THIS_ID_NOT_FOUND"
+  | "EMPTY_HREF"
+  | "EMPTY_TITLE"
+  | "NEWS_WITH_THIS_ID_NOT_FOUND"
+  | "INVALID_CONTENT_TYPE"
+  | "CANT_SAVE_FILE_TO_DATABASE"
+  | "CANT_SAVE_FILE_TO_LOCAL_DIRECTORY"
+  | "CANT_DELETE_FILE_FROM_DATABASE"
+  | "CANT_DELETE_FILE_FROM_LOCAL_DIRECTORY"
+  | "BUTTONS_WITH_THIS_ID_NOT_FOUND"
+  | "INVALID_CREDENTIALS"
+  | "INCORRECT_PASSWORD_OR_EMAIL";
+
+export type ApiErrorValue = string;
+
+export interface ApiErrorResponse {
+  message: ApiErrorKey;
+}
+
+export interface ApiErrorResponseWithDetails extends ApiErrorResponse {
+  errors: unknown;
+}

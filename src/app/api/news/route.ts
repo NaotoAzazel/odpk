@@ -1,16 +1,11 @@
-import { getServerSession } from "next-auth";
-import { z } from "zod";
-
+import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { newsItemCreateSchema } from "@/lib/validation/post";
 
 export async function POST(req: Request) {
   try {
-    const isAuth = await getServerSession(authOptions);
-    if (!isAuth) {
-      return Response.json({ message: "Not authorized" }, { status: 403 });
-    }
+    await validateUser(authOptions);
 
     const json = await req.json();
     const body = newsItemCreateSchema.parse(json);
@@ -26,12 +21,11 @@ export async function POST(req: Request) {
       },
     });
 
-    return new Response(JSON.stringify(post), { status: 200 });
+    return successResponse(200, {
+      message: "NEWS_ITEM_CREATED_SUCCESSFULLY",
+      data: post,
+    });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
-
-    return new Response(null, { status: 500 });
+    return handleApiError(error);
   }
 }

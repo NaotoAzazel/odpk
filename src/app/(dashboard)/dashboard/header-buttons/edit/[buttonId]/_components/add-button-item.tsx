@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { HeaderButtons } from "@prisma/client";
 import { useForm } from "react-hook-form";
 
+import { SUCCESS_MESSAGES } from "@/config/messages/success";
+import { updateButtonByIdRequest } from "@/lib/api/actions/buttons";
 import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import {
@@ -48,24 +50,14 @@ export function AddButtonItem({ button }: AddButtonItemProps) {
 
       const buttonItemsWithCurrentData = { items: [...button.items, data] };
 
-      const response = await fetch(`/api/buttons/${button.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(buttonItemsWithCurrentData),
+      await updateButtonByIdRequest(button.id, {
+        ...buttonItemsWithCurrentData,
       });
-
-      if (!response?.ok) {
-        throw new Error("Виникла помилка під час створення елемента");
-      }
-
-      setIsAdding(false);
 
       reset();
       router.refresh();
-
-      showSuccess("Елемент було створено");
+      setIsAdding(false);
+      showSuccess(SUCCESS_MESSAGES["BUTTON_ITEM_ADDED"]);
     } catch (error) {
       showError(error);
     } finally {

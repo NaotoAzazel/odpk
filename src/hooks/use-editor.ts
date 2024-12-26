@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import EditorJS, { OutputData } from "@editorjs/editorjs";
-import { Files } from "@prisma/client";
-import axios from "axios";
 
 import { redirects } from "@/config/constants";
+import { uploadFilesRequest } from "@/lib/api/actions/files";
 import { showError } from "@/lib/notification";
 
 export function useEditor<T extends OutputData | undefined>(data?: T) {
@@ -35,17 +34,16 @@ export function useEditor<T extends OutputData | undefined>(data?: T) {
                   // I know that there is a "use-upload-files" hook but
                   // it does not work here
 
-                  const formData = new FormData();
-                  formData.append("files", file);
-
                   try {
-                    const response = await axios.post("/api/files", formData);
-                    const responseData: Files[] = response.data;
+                    const { data } = await uploadFilesRequest({
+                      endpoint: "/api/files",
+                      files: [file],
+                    });
 
                     return {
                       success: true,
                       file: {
-                        url: `${redirects.toFilePreview}/${responseData[0].name}`,
+                        url: `${redirects.toFilePreview}/${data[0].name}`,
                       },
                     };
                   } catch (error) {

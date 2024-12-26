@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { deleteRequest } from "@/lib/api/actions";
+import { API_SUCCESS } from "@/lib/api/responses/success-messages";
 import { showError, showSuccess } from "@/lib/notification";
 import {
   AlertDialog,
@@ -15,16 +17,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Icons } from "@/components/icons";
-
-async function deleteEntity(endpoint: string) {
-  const response = await fetch(endpoint, {
-    method: "DELETE",
-  });
-
-  if (!response?.ok) {
-    throw new Error("Виникла помилка під час спроби видалення");
-  }
-}
 
 interface DeleteDialogProps {
   title?: string;
@@ -48,11 +40,10 @@ export function DeleteDialog({
     try {
       setIsLoading(true);
 
-      await deleteEntity(endpoint);
+      const { message } = await deleteRequest(endpoint);
 
       router.refresh();
-
-      showSuccess("Видалення пройшло успішно");
+      showSuccess(API_SUCCESS[message]);
     } catch (error) {
       showError(error);
     } finally {

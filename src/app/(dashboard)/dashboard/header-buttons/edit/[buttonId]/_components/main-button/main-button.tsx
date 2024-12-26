@@ -5,6 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { HeaderButtons } from "@prisma/client";
 import { useForm } from "react-hook-form";
 
+import { updateButtonByIdRequest } from "@/lib/api/actions/buttons";
+import { API_SUCCESS } from "@/lib/api/responses/success-messages";
 import { showError, showSuccess } from "@/lib/notification";
 import { cn } from "@/lib/utils";
 import {
@@ -38,25 +40,13 @@ export function MainButton({ button, onUpdate }: MainButtonProps) {
     try {
       setIsSaving(true);
 
-      const response = await fetch(`/api/buttons/${button.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response?.ok) {
-        throw new Error(
-          "Виникла помилка під час оновлення даних, спробуйте пізніше",
-        );
-      }
+      const { message } = await updateButtonByIdRequest(button.id, data);
 
       onUpdate(data);
       setIsEditing(false);
       reset();
 
-      showSuccess("Назву кнопки було змінено");
+      showSuccess(API_SUCCESS[message]);
     } catch (error) {
       showError(error);
     } finally {

@@ -1,7 +1,8 @@
-import { getServerSession } from "next-auth";
 import { z } from "zod";
 
 import { absoluteUploadsDirection } from "@/config/file-upload";
+import { ApiError } from "@/lib/api/exceptions";
+import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
 import { authOptions } from "@/lib/auth";
 import { deleteFileByNameFromDatabase } from "@/lib/files/actions";
 import { deleteFileFromLocalDirectory } from "@/lib/files/utils";
@@ -17,21 +18,15 @@ export async function DELETE(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
-    const { params } = routeContextSchema.parse(context);
+    await validateUser(authOptions);
 
-    const isAuth = await getServerSession(authOptions);
-    if (!isAuth) {
-      return new Response("Not authorized", { status: 403 });
-    }
+    const { params } = routeContextSchema.parse(context);
 
     const { success: isDeletedFromDatabase } =
       await deleteFileByNameFromDatabase(params.filename);
 
     if (!isDeletedFromDatabase) {
-      return new Response(
-        `Cant delete file from db with name: ${params.filename}`,
-        { status: 422 },
-      );
+      throw new ApiError("CANT_DELETE_FILE_FROM_DATABASE", 422);
     }
 
     await deleteFileFromLocalDirectory(
@@ -39,12 +34,8 @@ export async function DELETE(
       params.filename,
     );
 
-    return new Response(null, { status: 200 });
+    return successResponse(200, { message: "FILE_SUCCESSFULLY_DELETED" });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
-
-    return new Response(null, { status: 500 });
+    return handleApiError(error);
   }
 }

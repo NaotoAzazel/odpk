@@ -7,6 +7,7 @@ import { HeaderButtons } from "@prisma/client";
 
 import { navConfig } from "@/config/nav";
 import { siteConfig } from "@/config/site";
+import { getButtonsRequest } from "@/lib/api/actions/buttons";
 import { cn } from "@/lib/utils";
 import {
   Accordion,
@@ -20,14 +21,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Icons } from "@/components/icons";
 import { DashboardNav } from "@/components/layouts/navbar/dashboard-nav";
 import { NavError } from "@/components/layouts/navbar/nav-error";
-
-async function fetchButtonsData() {
-  const response = await fetch("/api/buttons");
-  if (!response.ok) {
-    throw new Error("Failed to fetch buttons");
-  }
-  return response.json();
-}
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -44,8 +37,8 @@ export default function MobileNav() {
     const fetchButtons = async () => {
       setIsLoading(true);
       try {
-        const buttonsData = await fetchButtonsData();
-        setButtons(buttonsData);
+        const { data } = await getButtonsRequest();
+        setButtons(data);
       } catch (error) {
         setIsLoadingError(true);
       } finally {

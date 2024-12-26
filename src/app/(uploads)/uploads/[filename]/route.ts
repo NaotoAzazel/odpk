@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { absoluteUploadsDirection } from "@/config/file-upload";
+import { ERROR_MESSAGES } from "@/config/messages/error";
 import { getFileFromLocalDirectory } from "@/lib/files/utils";
 
 const routeContextSchema = z.object({
@@ -41,7 +42,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    return new NextResponse("File not found", {
+    return new NextResponse(ERROR_MESSAGES["FILE_NOT_FOUND"], {
       status: 404,
     });
   }
