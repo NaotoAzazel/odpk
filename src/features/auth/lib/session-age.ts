@@ -1,0 +1,2 @@
+const ONE_DAY_IN_MINUTES = 86_400;
+export const SESSION_MAX_AGE = ONE_DAY_IN_MINUTES * 30;

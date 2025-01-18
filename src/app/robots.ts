@@ -1,5 +1,6 @@
-import { absoluteUrl } from "@/lib/utils";
 import { MetadataRoute } from "next";
+
+import { toAbsoluteUrl } from "@/shared/lib";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: absoluteUrl("/sitemap.xml"),
+    sitemap: toAbsoluteUrl("/sitemap.xml"),
   };
 }

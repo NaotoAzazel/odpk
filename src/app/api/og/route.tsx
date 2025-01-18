@@ -1,15 +1,16 @@
-import { siteConfig } from "@/config/site";
-import { ogImageSchema } from "@/lib/validation/og";
 import { ImageResponse } from "next/og";
+
+import { SITE_CONFIG } from "@/shared/constants";
+import { ogImageSchema } from "@/shared/model";
 
 export const runtime = "edge";
 
 const interRegular = fetch(
-  new URL("../../../assets/fonts/Inter-Regular.ttf", import.meta.url),
+  new URL("../../../shared/assets/fonts/Inter-Regular.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 
 const interBold = fetch(
-  new URL("../../../assets/fonts/Manrope-Bold.ttf", import.meta.url),
+  new URL("../../../shared/assets/fonts/Manrope-Bold.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 
 export async function GET(request: Request) {
@@ -29,25 +30,25 @@ export async function GET(request: Request) {
     return new ImageResponse(
       (
         <div
-          tw="flex relative flex-col p-12 w-full h-full items-start bg-white"
+          tw="relative flex h-full w-full flex-col items-start bg-white p-12"
           style={{ color: "#fff", background: "white" }}
         >
-          <div tw="flex flex-col flex-1 py-10 text-gray-800">
+          <div tw="flex flex-1 flex-col py-10 text-gray-800">
             <div
               tw="flex text-center text-4xl font-bold tracking-tight"
               style={{ fontFamily: "Manrope", fontWeight: "bold" }}
             >
-              {siteConfig.fullName}
+              {SITE_CONFIG.fullName}
             </div>
 
             <div
-              tw="flex text-xl uppercase font-bold tracking-tight"
+              tw="flex text-xl font-bold uppercase tracking-tight"
               style={{ fontFamily: "Inter", fontWeight: "normal" }}
             >
               {values.type}
             </div>
             <div
-              tw="flex tracking-tight leading-[1.1] text-[80px] font-bold"
+              tw="flex text-[80px] font-bold leading-[1.1] tracking-tight"
               style={{
                 fontFamily: "Manrope",
                 fontWeight: "bold",
@@ -58,7 +59,7 @@ export async function GET(request: Request) {
               {heading}
             </div>
           </div>
-          <div tw="flex items-center w-full">{siteConfig.url}</div>
+          <div tw="flex w-full items-center">{SITE_CONFIG.url}</div>
         </div>
       ),
       {

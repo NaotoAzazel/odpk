@@ -1,12 +1,13 @@
-import { getHeaderButtons } from "@/lib/actions/header-buttons";
-import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
-import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { HeaderButtonValidator } from "@/lib/validation/header-buttons";
+import { authOptions, validateSession } from "@/features/auth";
+import {
+  getHeaderButtons,
+  HeaderButtonValidator,
+} from "@/entities/header-button";
+import { db, handleApiError, successResponse } from "@/shared/lib";
 
 export async function POST(req: Request) {
   try {
-    await validateUser(authOptions);
+    await validateSession(authOptions);
 
     const json = await req.json();
     const body = HeaderButtonValidator.parse(json);

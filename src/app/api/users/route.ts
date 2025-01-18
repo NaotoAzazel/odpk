@@ -1,13 +1,11 @@
-import { createUser, getUserByEmail } from "@/lib/actions/users";
-import { ApiError } from "@/lib/api/exceptions";
-import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
-import { authOptions } from "@/lib/auth";
-import { hashPassword } from "@/lib/bcrypt";
-import { userAuthSchema } from "@/lib/validation/auth";
+import { authOptions, validateSession } from "@/features/auth";
+import { createUser, getUserByEmail, userAuthSchema } from "@/entities/user";
+import { ApiError } from "@/shared/exceptions";
+import { handleApiError, hashPassword, successResponse } from "@/shared/lib";
 
 export async function POST(req: Request) {
   try {
-    await validateUser(authOptions);
+    await validateSession(authOptions);
 
     const json = await req.json();
     const body = userAuthSchema.parse(json);

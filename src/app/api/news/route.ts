@@ -1,11 +1,10 @@
-import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
-import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { newsItemCreateSchema } from "@/lib/validation/post";
+import { authOptions, validateSession } from "@/features/auth";
+import { newsItemCreateSchema } from "@/entities/news";
+import { db, handleApiError, successResponse } from "@/shared/lib";
 
 export async function POST(req: Request) {
   try {
-    await validateUser(authOptions);
+    await validateSession(authOptions);
 
     const json = await req.json();
     const body = newsItemCreateSchema.parse(json);

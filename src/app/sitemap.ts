@@ -1,24 +1,24 @@
 import { MetadataRoute } from "next";
 
-import { redirects } from "@/config/constants";
-import { getNews } from "@/lib/actions/news";
-import { getPages } from "@/lib/actions/pages";
-import { absoluteUrl } from "@/lib/utils";
+import { getNews } from "@/entities/news";
+import { getPages } from "@/entities/page";
+import { REDIRECTS } from "@/shared/constants";
+import { toAbsoluteUrl } from "@/shared/lib";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const newsRoutes = (await getNews()).map((news) => ({
-    url: absoluteUrl(`${redirects.toNewsItem}/${news.id}`),
+    url: toAbsoluteUrl(`${REDIRECTS.toNewsItem}/${news.id}`),
     lastModified: new Date().toISOString(),
   }));
 
   const pagesRoutes = (await getPages()).map((page) => ({
-    url: absoluteUrl(`${redirects.toPageItem}/${page.href}`),
+    url: toAbsoluteUrl(`${REDIRECTS.toPageItem}/${page.href}`),
     lastModified: new Date().toISOString(),
   }));
 
   const routes = ["", "/dashboard/news", "/editor", "/news", "/content"].map(
     (route) => ({
-      url: absoluteUrl(route),
+      url: toAbsoluteUrl(route),
       lastModified: new Date().toISOString(),
     }),
   );

@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-import { deleteUserById, getUserByEmail } from "@/lib/actions/users";
-import { ApiError } from "@/lib/api/exceptions";
-import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
-import { authOptions } from "@/lib/auth";
+import { authOptions, validateSession } from "@/features/auth";
+import { deleteUserById, getUserByEmail } from "@/entities/user";
+import { ApiError } from "@/shared/exceptions";
+import { handleApiError, successResponse } from "@/shared/lib";
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -16,7 +16,7 @@ export async function DELETE(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
-    const user = await validateUser(authOptions);
+    const user = await validateSession(authOptions);
 
     const { params } = routeContextSchema.parse(context);
 

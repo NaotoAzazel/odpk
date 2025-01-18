@@ -1,11 +1,13 @@
 import { z } from "zod";
 
-import { absoluteUploadsDirection } from "@/config/file-upload";
-import { ApiError } from "@/lib/api/exceptions";
-import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
-import { authOptions } from "@/lib/auth";
-import { deleteFileByNameFromDatabase } from "@/lib/files/actions";
-import { deleteFileFromLocalDirectory } from "@/lib/files/utils";
+import { absoluteUploadsDirection } from "@/widgets/file-uploader";
+import { authOptions, validateSession } from "@/features/auth";
+import {
+  deleteFileByNameFromDatabase,
+  deleteFileFromLocalDirectory,
+} from "@/entities/file";
+import { ApiError } from "@/shared/exceptions";
+import { handleApiError, successResponse } from "@/shared/lib";
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -18,7 +20,7 @@ export async function DELETE(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
-    await validateUser(authOptions);
+    await validateSession(authOptions);
 
     const { params } = routeContextSchema.parse(context);
 

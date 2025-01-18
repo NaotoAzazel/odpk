@@ -1,0 +1,1 @@
+export { contentSchema } from "./schemas";

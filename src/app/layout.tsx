@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
 
-import "../styles/globals.css";
+import "@/shared/globals.css";
 
 import { env } from "@/env";
 
-import { siteConfig } from "@/config/site";
-import { fontHeading, fontSans } from "@/lib/fonts";
-import { absoluteUrl, cn } from "@/lib/utils";
-import { Toaster } from "@/components/ui/sonner";
-import Footer from "@/components/layouts/footer/footer";
-import Navbar from "@/components/layouts/navbar/navbar";
-import { Providers } from "@/components/providers";
+import { Footer } from "@/widgets/footer";
+import { Navbar } from "@/widgets/navbar";
+import { SITE_CONFIG } from "@/shared/constants";
+import { cn, fontHeading, fontSans, toAbsoluteUrl } from "@/shared/lib";
+import { Toaster } from "@/shared/ui";
+
+import { Providers } from "./_providers";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
-  title: { default: siteConfig.name, template: `%s - ${siteConfig.name}` },
-  description: siteConfig.description,
+  title: { default: SITE_CONFIG.name, template: `%s - ${SITE_CONFIG.name}` },
+  description: SITE_CONFIG.description,
   keywords: [
     "ОДПК",
     "ODPK",
@@ -27,26 +27,26 @@ export const metadata: Metadata = {
   },
   authors: [
     {
-      name: siteConfig.name,
-      url: siteConfig.url,
+      name: SITE_CONFIG.name,
+      url: SITE_CONFIG.url,
     },
   ],
   openGraph: {
     type: "website",
     locale: "uk-UA",
-    url: siteConfig.url,
-    title: siteConfig.name,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
+    url: SITE_CONFIG.url,
+    title: SITE_CONFIG.name,
+    description: SITE_CONFIG.description,
+    siteName: SITE_CONFIG.name,
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
-    images: [`${siteConfig.url}/og.jpg`],
-    creator: siteConfig.name,
+    title: SITE_CONFIG.name,
+    description: SITE_CONFIG.description,
+    images: [`${SITE_CONFIG.url}/og.jpg`],
+    creator: SITE_CONFIG.name,
   },
-  manifest: absoluteUrl("/site.webmanifest"),
+  manifest: toAbsoluteUrl("/site.webmanifest"),
 };
 
 export default function RootLayout({
