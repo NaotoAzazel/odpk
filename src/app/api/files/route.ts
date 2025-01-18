@@ -1,21 +1,23 @@
 import { Files as PrismaFile } from "@prisma/client";
 import { ZodError } from "zod";
 
-import { absoluteUploadsDirection } from "@/config/file-upload";
-import { ApiError } from "@/lib/api/exceptions";
-import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
-import { authOptions } from "@/lib/auth";
-import { uploadFileToDatabase } from "@/lib/files/actions";
+import {
+  absoluteUploadsDirection,
+  uploadFilesSchema,
+} from "@/widgets/file-uploader";
+import { authOptions, validateSession } from "@/features/auth";
 import {
   generateUniqueFilename,
   getFileType,
+  uploadFileToDatabase,
   uploadFileToLocalDirectory,
-} from "@/lib/files/utils";
-import { uploadFilesSchema } from "@/lib/validation/file-upload";
+} from "@/entities/file";
+import { ApiError } from "@/shared/exceptions";
+import { handleApiError, successResponse } from "@/shared/lib";
 
 export async function POST(req: Request) {
   try {
-    await validateUser(authOptions);
+    await validateSession(authOptions);
 
     const contentType = req.headers.get("content-type") || "";
     if (!contentType.includes("multipart/form-data")) {

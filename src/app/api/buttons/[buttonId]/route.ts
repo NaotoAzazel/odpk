@@ -1,14 +1,14 @@
 import { z } from "zod";
 
+import { authOptions, validateSession } from "@/features/auth";
 import {
   deleteHeaderButtonById,
   getHeaderButtonById,
+  HeaderButtonUpdateValidator,
   updateButtonById,
-} from "@/lib/actions/header-buttons";
-import { ApiError } from "@/lib/api/exceptions";
-import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
-import { authOptions } from "@/lib/auth";
-import { HeaderButtonUpdateValidator } from "@/lib/validation/header-buttons";
+} from "@/entities/header-button";
+import { ApiError } from "@/shared/exceptions";
+import { handleApiError, successResponse } from "@/shared/lib";
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -21,7 +21,7 @@ export async function DELETE(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
-    await validateUser(authOptions);
+    await validateSession(authOptions);
 
     const { params } = routeContextSchema.parse(context);
 
@@ -43,7 +43,7 @@ export async function PATCH(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
-    await validateUser(authOptions);
+    await validateSession(authOptions);
 
     const { params } = routeContextSchema.parse(context);
 

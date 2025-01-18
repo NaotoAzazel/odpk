@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { NextRequest, NextResponse } from "next/server";
 
-import { absoluteUploadsDirection } from "@/config/file-upload";
-import { ERROR_MESSAGES } from "@/config/messages/error";
-import { getFileFromLocalDirectory } from "@/lib/files/utils";
+import { absoluteUploadsDirection } from "@/widgets/file-uploader";
+import { getFileFromLocalDirectory } from "@/entities/file";
+import { ERROR_MESSAGES } from "@/shared/notices";
 
 const routeContextSchema = z.object({
   params: z.object({

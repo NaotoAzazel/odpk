@@ -1,55 +1,11 @@
-import { notFound } from "next/navigation";
+import { DashboardEditButtonByIdPage } from "@/views/dashboard/header-buttons-edit-by-id";
 
-import { getHeaderButtonById } from "@/lib/actions/header-buttons";
-import { Header } from "@/components/header";
-import { NoItemsPlaceholder } from "@/components/no-items-plaiceholder";
-
-import DashboardShell from "../../../_components/dashboard-shell";
-import { AddButtonItem } from "./_components/add-button-item";
-import { ButtonElement } from "./_components/button-element/button-element";
-import { MainButtonHolder } from "./_components/main-button/main-button-holder";
-
-interface EditButtonPageProps {
+interface PageProps {
   params: {
     buttonId: string;
   };
 }
 
-export default async function EditButtonPage({ params }: EditButtonPageProps) {
-  const button = await getHeaderButtonById(Number(params.buttonId));
-
-  if (!button) {
-    return notFound();
-  }
-
-  return (
-    <DashboardShell>
-      <Header heading="Редагування кнопки" />
-      <div className="space-y-4">
-        <MainButtonHolder buttonData={button} />
-        <div className="space-y-2">
-          <p className="text-muted-foreground">Елементи кнопки</p>
-          <AddButtonItem button={button} />
-          <div className="divide-y divide-border rounded-md border">
-            {button.items.length > 0 ? (
-              <>
-                {button.items.map((buttonItem, i) => (
-                  <ButtonElement
-                    rootButton={button}
-                    buttonElement={buttonItem}
-                    key={i}
-                  />
-                ))}
-              </>
-            ) : (
-              <NoItemsPlaceholder
-                title="Не вдалося знайти елементи кнопки"
-                description="Найімовірніше елементів не існує"
-              />
-            )}
-          </div>
-        </div>
-      </div>
-    </DashboardShell>
-  );
+export default async function Page({ params }: PageProps) {
+  return <DashboardEditButtonByIdPage params={params} />;
 }

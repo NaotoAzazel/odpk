@@ -1,12 +1,10 @@
-import { getPages } from "@/lib/actions/pages";
-import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
-import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { pageCreateSchema } from "@/lib/validation/page";
+import { authOptions, validateSession } from "@/features/auth";
+import { getPages, pageCreateSchema } from "@/entities/page";
+import { db, handleApiError, successResponse } from "@/shared/lib";
 
 export async function POST(req: Request) {
   try {
-    await validateUser(authOptions);
+    await validateSession(authOptions);
 
     const json = await req.json();
     const body = pageCreateSchema.parse(json);

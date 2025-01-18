@@ -1,16 +1,16 @@
 import { z } from "zod";
 
+import { authOptions, validateSession } from "@/features/auth";
 import {
   deletePageById,
   getPageByHref,
   getPageById,
   getPageByTitle,
+  PageUpdateValidator,
   updatePageById,
-} from "@/lib/actions/pages";
-import { ApiError } from "@/lib/api/exceptions";
-import { handleApiError, successResponse, validateUser } from "@/lib/api/lib";
-import { authOptions } from "@/lib/auth";
-import { PageUpdateValidator } from "@/lib/validation/page";
+} from "@/entities/page";
+import { ApiError } from "@/shared/exceptions";
+import { handleApiError, successResponse } from "@/shared/lib";
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -23,7 +23,7 @@ export async function DELETE(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
-    await validateUser(authOptions);
+    await validateSession(authOptions);
 
     const { params } = routeContextSchema.parse(context);
 
@@ -45,7 +45,7 @@ export async function PATCH(
   context: z.infer<typeof routeContextSchema>,
 ) {
   try {
-    await validateUser(authOptions);
+    await validateSession(authOptions);
 
     const { params } = routeContextSchema.parse(context);
 

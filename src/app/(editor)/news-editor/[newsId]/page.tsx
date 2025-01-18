@@ -1,9 +1,4 @@
-import { Suspense } from "react";
-
-import { getNewsItemById } from "@/lib/actions/news";
-
-import { EditorContentSkeleton } from "../../_components/editor-content-skeleton";
-import { NewsEditorContent } from "./_components/news-editor-content";
+import { NewsEditorPage } from "@/views/news-editor";
 
 interface NewsEditorPageProps {
   params: {
@@ -15,12 +10,6 @@ export const metadata = {
   title: "Редактор",
 };
 
-export default function NewsEditorPage({ params }: NewsEditorPageProps) {
-  const newsPromise = getNewsItemById(Number(params.newsId));
-
-  return (
-    <Suspense fallback={<EditorContentSkeleton />}>
-      <NewsEditorContent newsPromise={newsPromise} />
-    </Suspense>
-  );
+export default function Page({ params }: NewsEditorPageProps) {
+  return <NewsEditorPage params={params} />;
 }

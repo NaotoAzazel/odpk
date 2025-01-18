@@ -1,21 +1,21 @@
-import { DashboardNav } from "@/components/layouts/navbar/dashboard-nav";
-import MaxWidthWrapper from "@/components/max-width-wrapper";
+import { DashboardNav, NAV_CONFIG } from "@/widgets/navbar";
+import { MaxWidthWrapper } from "@/shared/ui";
 
-import { navConfig } from "@/config/nav";
-
-export default function DashboardLayout({ children }: { children?: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col">
       <MaxWidthWrapper>
-        <div className="grid flex-1 gap-12 lg:grid-cols-[200px_1fr] my-7">
-          <aside className="hidden w-170px flex-col lg:flex">
-            <DashboardNav items={navConfig.dashboardNav} />
+        <div className="my-7 grid flex-1 gap-12 lg:grid-cols-[200px_1fr]">
+          <aside className="w-170px hidden flex-col lg:flex">
+            <DashboardNav items={NAV_CONFIG.dashboardNav} />
           </aside>
-          <main className="flex w-full flex-1 flex-col">
-            {children}
-          </main>
+          <main className="flex w-full flex-1 flex-col">{children}</main>
         </div>
       </MaxWidthWrapper>
     </div>
-  )
+  );
 }

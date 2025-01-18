@@ -1,0 +1,20 @@
+export type SuccessKey =
+  | "BUTTON_ITEM_ADDED"
+  | "BUTTON_ITEM_DELETED"
+  | "NEWS_ITEM_PUBLISHED"
+  | "SUCCESSFULLY_LOGIN"
+  | "LINK_TO_FILE_COPIED"
+  | "FILES_UPLOADED"
+  | "YOUR_REVIEW_SUBMITTED";
+
+export type SuccessValue = string;
+
+export type ErrorKey =
+  | "CANT_SAVE_EDITOR_DATA"
+  | "FILE_NOT_FOUND"
+  | "CANNOT_UPLOAD_MORE_THAN_1_FILE"
+  | "CANNOT_UPLOAD_MORE_THAN_N_FILES"
+  | "FILES_CANCELED"
+  | "YOUR_REVIEW_NOT_SUBMITTED"
+  | "UNKNOWN_ERROR";
+export type ErrorValue = string;

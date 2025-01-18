@@ -1,9 +1,4 @@
-import { Suspense } from "react";
-
-import { getPageById } from "@/lib/actions/pages";
-
-import { EditorContentSkeleton } from "../../_components/editor-content-skeleton";
-import { PageEditorContent } from "./_components/page-editor-content";
+import { EditorPage } from "@/views/page-editor";
 
 interface EditorPageProps {
   params: {
@@ -15,12 +10,6 @@ export const metadata = {
   title: "Редактор",
 };
 
-export default function EditorPage({ params }: EditorPageProps) {
-  const pagePromise = getPageById(Number(params.postId));
-
-  return (
-    <Suspense fallback={<EditorContentSkeleton />}>
-      <PageEditorContent pagePromise={pagePromise} />
-    </Suspense>
-  );
+export default function Page({ params }: EditorPageProps) {
+  return <EditorPage params={params} />;
 }
