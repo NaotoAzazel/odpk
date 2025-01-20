@@ -5,11 +5,10 @@ import { CustomColumnDef, DataTableColumnHeader } from "@/widgets/data-table";
 import { REDIRECTS } from "@/shared/constants";
 import { formatDate } from "@/shared/lib";
 import {
-  ActionMenu,
+  ActionsDropdownMenu,
   DeleteButton,
   DeleteDialog,
-  EditButton,
-  LinkToButton,
+  NavigateToPageButton,
 } from "@/shared/ui";
 
 export function getColumns(): CustomColumnDef<StaticPages>[] {
@@ -94,11 +93,26 @@ export function getColumns(): CustomColumnDef<StaticPages>[] {
 
         return (
           <>
-            <div className="hidden flex-row gap-2 md:flex">
-              <LinkToButton href={linkToPage} />
-              <EditButton href={editLink} />
-              <DeleteButton onClick={() => setIsShowDeleteDialog(true)} />
-            </div>
+            <ActionsDropdownMenu
+              actionSlot={
+                <>
+                  <NavigateToPageButton
+                    href={linkToPage}
+                    text="Відкрити"
+                    icon="openLink"
+                  />
+                  <NavigateToPageButton
+                    href={editLink}
+                    text="Редагувати"
+                    icon="pencil"
+                  />
+                  <DeleteButton
+                    text="Видалити"
+                    onClick={() => setIsShowDeleteDialog(true)}
+                  />
+                </>
+              }
+            />
 
             <DeleteDialog
               title="Ви впевнені що хочете видалити цю сторінку?"
@@ -106,15 +120,6 @@ export function getColumns(): CustomColumnDef<StaticPages>[] {
               endpoint={`/api/pages/${id}`}
               isOpen={isShowDeleteDialog}
               onOpenChange={(isOpen) => setIsShowDeleteDialog(isOpen)}
-            />
-
-            <ActionMenu
-              buttons={[
-                { type: "link", href: linkToPage },
-                { type: "edit", href: editLink },
-                { type: "delete", onClick: () => setIsShowDeleteDialog(true) },
-              ]}
-              className="flex md:hidden"
             />
           </>
         );

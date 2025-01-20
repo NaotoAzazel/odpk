@@ -7,11 +7,11 @@ import { REDIRECTS } from "@/shared/constants";
 import { formatDate, showError, showSuccess } from "@/shared/lib";
 import { SUCCESS_MESSAGES } from "@/shared/notices";
 import {
-  ActionMenu,
+  ActionsDropdownMenu,
   DeleteButton,
   DeleteDialog,
   Icons,
-  LinkToButton,
+  NavigateToPageButton,
   ResponsiveImage,
 } from "@/shared/ui";
 
@@ -133,10 +133,21 @@ export function getColumns(): CustomColumnDef<Files>[] {
 
         return (
           <>
-            <div className="hidden flex-row gap-2 md:flex">
-              <LinkToButton href={toFilePreview} />
-              <DeleteButton onClick={() => setIsShowDeleteDialog(true)} />
-            </div>
+            <ActionsDropdownMenu
+              actionSlot={
+                <>
+                  <NavigateToPageButton
+                    href={toFilePreview}
+                    text="Відкрити"
+                    icon="openLink"
+                  />
+                  <DeleteButton
+                    text="Видалити"
+                    onClick={() => setIsShowDeleteDialog(true)}
+                  />
+                </>
+              }
+            />
 
             <DeleteDialog
               title="Ви впевнені що хочете видалити файл?"
@@ -144,14 +155,6 @@ export function getColumns(): CustomColumnDef<Files>[] {
               endpoint={`/api/files/${row.original.name}`}
               isOpen={isShowDeleteDialog}
               onOpenChange={(isOpen) => setIsShowDeleteDialog(isOpen)}
-            />
-
-            <ActionMenu
-              buttons={[
-                { type: "link", href: toFilePreview },
-                { type: "delete", onClick: () => setIsShowDeleteDialog(true) },
-              ]}
-              className="flex md:hidden"
             />
           </>
         );

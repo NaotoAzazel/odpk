@@ -34,15 +34,7 @@ export { useMediaQuery } from "./use-media-query";
 export { DashboardShell } from "./dashboard-shell";
 
 export {
-  ActionButton,
-  ActionMenu,
+  ActionsDropdownMenu,
   DeleteButton,
-  EditButton,
-  LinkToButton,
-} from "./table-action-cell";
-export type {
-  ActionButtonWithOnClick,
-  ActionButtonWithHref,
-  BaseActionButton,
-  DisplayMode,
-} from "./table-action-cell";
+  NavigateToPageButton,
+} from "./action-dropdown-menu";
