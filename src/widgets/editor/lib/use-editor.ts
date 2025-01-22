@@ -1,13 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import EditorJS, { OutputData } from "@editorjs/editorjs";
+import EditorJS, { EditorConfig, OutputData } from "@editorjs/editorjs";
 
 import { uploadFilesRequest } from "@/entities/file";
 import { REDIRECTS } from "@/shared/constants";
 import { showError } from "@/shared/lib";
 
-export function useEditor<T extends OutputData | undefined>(data?: T) {
+export function useEditor<T extends OutputData | undefined>(
+  data?: T,
+  config?: EditorConfig,
+) {
   const editorRef = useRef<EditorJS>();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -129,10 +132,11 @@ export function useEditor<T extends OutputData | undefined>(data?: T) {
         },
         onReady() {
           editorRef.current = editor;
+          config?.onReady?.();
         },
       });
     }
-  }, [data]);
+  }, [data, config]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
