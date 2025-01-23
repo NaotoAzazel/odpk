@@ -19,3 +19,4 @@ export * from "./skeleton";
 export * from "./sonner";
 export * from "./table";
 export * from "./textarea";
+export * from "./popover"
