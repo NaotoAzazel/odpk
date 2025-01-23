@@ -4,9 +4,12 @@ import { useState } from "react";
 import { HeaderButtons } from "@prisma/client";
 
 import { REDIRECTS } from "@/shared/constants";
-import { ActionMenu, DeleteDialog, DisplayMode } from "@/shared/ui";
-
-const WHEN_CHANGE_DISPLAY_MODE: DisplayMode = "";
+import {
+  ActionsDropdownMenu,
+  DeleteButton,
+  DeleteDialog,
+  NavigateToPageButton,
+} from "@/shared/ui";
 
 interface OperationsProps {
   data: HeaderButtons;
@@ -25,20 +28,20 @@ export function Operations({ data }: OperationsProps) {
         onOpenChange={(isOpen) => setIsShowDeleteDialog(isOpen)}
       />
 
-      <ActionMenu
-        buttons={[
-          {
-            type: "edit",
-            href: `${REDIRECTS.toHeaderButtonEdit}/${data.id}`,
-            whenChangeDisplayMode: WHEN_CHANGE_DISPLAY_MODE,
-          },
-          {
-            type: "delete",
-            onClick: () => setIsShowDeleteDialog(true),
-            whenChangeDisplayMode: WHEN_CHANGE_DISPLAY_MODE,
-          },
-        ]}
-        className="flex"
+      <ActionsDropdownMenu
+        actionSlot={
+          <>
+            <NavigateToPageButton
+              href={`${REDIRECTS.toHeaderButtonEdit}/${data.id}`}
+              text="Відкрити"
+              icon="openLink"
+            />
+            <DeleteButton
+              text="Видалити"
+              onClick={() => setIsShowDeleteDialog(true)}
+            />
+          </>
+        }
       />
     </>
   );

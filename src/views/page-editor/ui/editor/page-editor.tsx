@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { StaticPages } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { Content, useEditor } from "@/widgets/editor";
@@ -14,11 +13,11 @@ import {
   PageValidator,
   updatePageByIdRequest,
 } from "@/entities/page";
-import { cn, showError, showSuccess } from "@/shared/lib";
+import { formatDate, showError, showSuccess } from "@/shared/lib";
 import { API_SUCCESS, ERROR_MESSAGES } from "@/shared/notices";
-import { Button, Icons, Input, Label } from "@/shared/ui";
+import { Button, Icons } from "@/shared/ui";
 
-import { HrefInfoDialog } from "../href-info-dialog";
+import { ChangePageHrefPopover } from "../change-page-href-popover";
 
 interface PageEditorProps {
   page: StaticPages;
@@ -35,6 +34,8 @@ export function PageEditor({ page }: PageEditorProps) {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<PageCreationRequest>({
     resolver: zodResolver(PageValidator),
     defaultValues: page,
@@ -72,63 +73,39 @@ export function PageEditor({ page }: PageEditorProps) {
     }
   };
 
+  const formattedUpdatedAt = formatDate(page.updatedAt);
+
   const { ref: titleRef, ...rest } = register("title");
 
   return (
     <div className="my-10 flex flex-col gap-4">
-      <div className="flex flex-col">
-        <div className="flex w-full items-center justify-between space-x-2">
-          <div className="flex items-center gap-2">
-            <Link href="/dashboard/pages">
-              <Button
-                disabled={isSaving}
-                variant="outline"
-                onClick={() => {
-                  router.refresh();
-                }}
-              >
-                Назад
-              </Button>
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              disabled={isSaving}
-              onClick={handleSubmit(onSubmit)}
-              type="submit"
-              className="w-full"
-              form="post-form"
-            >
-              {isSaving && (
-                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              <span>Зберегти</span>
-            </Button>
-          </div>
-        </div>
-
-        <div className="mt-4 flex justify-end">
-          <div className="flex items-center gap-2">
-            <Label htmlFor="text">Посилання</Label>
-            <Input
-              disabled={isSaving}
-              type="text"
-              {...register("href")}
-              className={cn("max-w-fit", {
-                "focus-visible:ring-red-500": errors.href,
-              })}
-              placeholder="href/to/page"
-            />
-            <HrefInfoDialog />
-          </div>
+      <div className="flex flex-col justify-between gap-2 md:flex-row md:items-center">
+        <span className="text-muted-foreground">
+          Останнє редагування: {formattedUpdatedAt}
+        </span>
+        <div className="flex flex-row justify-between gap-2">
+          <ChangePageHrefPopover
+            isDisable={isSaving}
+            isError={!!errors.href}
+            value={watch("href")}
+            onChange={(e) => setValue("href", e.target.value)}
+          />
+          <Button
+            disabled={isSaving}
+            onClick={handleSubmit(onSubmit)}
+            type="submit"
+            className="w-full"
+          >
+            {isSaving && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            <span>Зберегти</span>
+          </Button>
         </div>
       </div>
-
-      <div className="w-full rounded border border-zinc-200 bg-zinc-50 p-4">
+      <div className="w-full rounded-md border border-zinc-200 bg-zinc-50 p-4">
         <form
-          id="post-form"
-          className="w-fit"
+          className="flex w-full flex-col gap-1"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="prose prose-stone dark:prose-invert">
@@ -140,10 +117,14 @@ export function PageEditor({ page }: PageEditorProps) {
                 _titleRef.current = e;
               }}
               {...rest}
+              disabled={isSaving}
               placeholder="Заголовок"
               className="w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none"
             />
-            <div id="editor" className="min-h-[500px]" />
+            <div
+              id="editor"
+              className="flex min-h-[600px] max-w-fit items-start justify-start overflow-hidden"
+            />
           </div>
         </form>
       </div>

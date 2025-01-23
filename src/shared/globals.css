@@ -61,4 +61,8 @@
   #news-container a {
     @apply underline
   }
+
+  #page-container a {
+    @apply underline
+  }
 }

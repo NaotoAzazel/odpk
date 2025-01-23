@@ -21,12 +21,12 @@ export async function PagesContentPage({ params }: PagesContentPageProps) {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* <section className="flex h-full w-full">
+      <section className="flex h-full w-full">
         <MaxWidthWrapper className="relative my-6 bg-white p-5 xl:rounded-lg">
           <Title heading={page.title} />
           <PageContent pageContent={page.content} />
         </MaxWidthWrapper>
-      </section> */}
+      </section>
     </div>
   );
 }
