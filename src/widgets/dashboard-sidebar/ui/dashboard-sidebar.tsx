@@ -6,19 +6,20 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/shared/lib";
 import { Icons } from "@/shared/ui";
 
-import { DashboardNavItem } from "../model";
+import { DashboardSidebarButton } from "../model";
 
-interface DashboardNavProps {
-  items: DashboardNavItem[];
+interface DashboardSidebarProps {
+  buttons: DashboardSidebarButton[];
 }
 
-export function DashboardNav({ items }: DashboardNavProps) {
+export function DashboardSidebar({ buttons }: DashboardSidebarProps) {
   const path = usePathname();
 
   return (
     <nav className="grid items-start gap-2">
-      {items.map((item, index) => {
+      {buttons.map((item, index) => {
         const Icon = Icons[item.icon || "logo"];
+
         return (
           item.href && (
             <Link key={index} href={item.disabled ? "/" : item.href}>
@@ -29,7 +30,7 @@ export function DashboardNav({ items }: DashboardNavProps) {
                   item.disabled && "cursor-not-allowed opacity-80",
                 )}
               >
-                <Icon className="mr-2 h-4 w-4" />
+                <Icon className="mr-2 size-4" />
                 <span>{item.title}</span>
               </span>
             </Link>

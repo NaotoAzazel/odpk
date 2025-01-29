@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { HeaderButtons } from "@prisma/client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
-import { getButtonsRequest } from "@/entities/header-button";
 import { SITE_CONFIG } from "@/shared/constants";
 import { cn } from "@/shared/lib";
 import {
@@ -21,37 +19,12 @@ import {
   SheetTrigger,
 } from "@/shared/ui";
 
-import { NAV_CONFIG } from "../constants";
-import { DashboardNav, NavError } from "./";
+import { useHeaderButtons } from "../../lib";
+import { ButtonsError } from "../buttons";
 
-export function MobileNav() {
+export function CompactNavbar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [buttons, setButtons] = useState<HeaderButtons[]>([]);
-  const [isLoadingError, setIsLoadingError] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const path = usePathname();
-  const isDashboardPath = !!path?.startsWith("/dashboard");
-
-  useEffect(() => {
-    if (isDashboardPath || buttons.length > 0) return;
-
-    const fetchButtons = async () => {
-      setIsLoading(true);
-      try {
-        const { data } = await getButtonsRequest();
-        setButtons(data);
-      } catch (error) {
-        setIsLoadingError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (isOpen) {
-      fetchButtons();
-    }
-  }, [isOpen, buttons.length, isDashboardPath]);
+  const { data, isLoading, isError } = useHeaderButtons({ enabled: isOpen });
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -77,21 +50,17 @@ export function MobileNav() {
             <Icons.spinner className="mr-2 size-4 animate-spin" />
             <span>Завантаження...</span>
           </div>
-        ) : isLoadingError ? (
+        ) : isError ? (
           <div className="flex h-full items-center">
-            <NavError />
+            <ButtonsError />
           </div>
         ) : (
           <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10">
             <Accordion type="multiple" className="w-full">
-              {isDashboardPath ? (
-                <DashboardNav items={NAV_CONFIG.dashboardNav} />
-              ) : (
-                <MobileNavItems
-                  items={buttons}
-                  onClick={(isOpen) => setIsOpen(isOpen)}
-                />
-              )}
+              <MobileNavItems
+                items={data ?? []}
+                onClick={(isOpen) => setIsOpen(isOpen)}
+              />
             </Accordion>
           </ScrollArea>
         )}
@@ -123,7 +92,6 @@ function MobileNavItems({ items, onClick }: MobileNavItemsProps) {
                         onClick={() => onClick(false)}
                         key={i}
                         href={subItem.href}
-                        className="m-1"
                       >
                         {subItem.title}
                       </MobileLink>
@@ -133,7 +101,7 @@ function MobileNavItems({ items, onClick }: MobileNavItemsProps) {
                         className="text-foreground/70 transition-colors"
                         onClick={() => onClick(false)}
                       >
-                        {item.title}
+                        {subItem.title}
                       </div>
                     ),
                   )}
