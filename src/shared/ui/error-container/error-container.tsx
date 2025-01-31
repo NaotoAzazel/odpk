@@ -10,11 +10,9 @@ export function ErrorContainer({ title, description }: ErrorContainerProps) {
     <EmptyPlaceholder>
       <EmptyPlaceholder.Icon name="error" />
       <EmptyPlaceholder.Title>{title}</EmptyPlaceholder.Title>
-      {description && (
-        <EmptyPlaceholder.Description>
-          Ми вже працює над виправленням цієї помилки
-        </EmptyPlaceholder.Description>
-      )}
+      <EmptyPlaceholder.Description>
+        {description ?? "Ми вже працює над виправленням цієї помилки"}
+      </EmptyPlaceholder.Description>
     </EmptyPlaceholder>
   );
 }
