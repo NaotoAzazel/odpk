@@ -30,6 +30,7 @@ export function NewsInfinityList() {
       getNewsForPagination({
         page: meta.pageParam,
         itemsPerPage: NEWS_PER_PAGE,
+        published: true,
       }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
