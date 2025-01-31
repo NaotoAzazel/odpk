@@ -8,6 +8,7 @@ import {
   NEWS_PER_PAGE,
   NEWS_QUERY_BASE_KEY,
 } from "@/entities/news";
+import { useIntersection } from "@/shared/lib";
 import {
   CardsHolder,
   ErrorContainer,
@@ -15,8 +16,6 @@ import {
   NewsLoadingContainer,
   NoItemsPlaceholder,
 } from "@/shared/ui";
-
-import { useIntersection } from "../lib";
 
 export function NewsInfinityList() {
   const {

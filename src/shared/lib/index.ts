@@ -33,3 +33,5 @@ export { cn } from "./tailwind-merge";
 export { useCallbackRef } from "./use-callback-ref";
 
 export { useControllableState } from "./use-controllable-state";
+
+export { useIntersection } from "./use-intesection";
