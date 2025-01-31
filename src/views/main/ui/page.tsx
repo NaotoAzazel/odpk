@@ -91,25 +91,7 @@ export function MainPage() {
 
       <section className="py-20 lg:py-32">
         <MaxWidthWrapper className="space-y-5 overflow-hidden">
-          <ErrorBoundary
-            fallback={
-              <ErrorContainer
-                title="Виникла помилка з отримання новин"
-                description="Ми вже працює над виправленням цієї помилки"
-              />
-            }
-          >
-            <Suspense
-              fallback={
-                <NewsLoadingContainer
-                  className="grid-cols-1 md:grid-cols-3"
-                  cardsCount={3}
-                />
-              }
-            >
-              <NewsCardsSection />
-            </Suspense>
-          </ErrorBoundary>
+          <NewsCardsSection />
 
           <div className="flex justify-center">
             <Link href="/news" className={buttonVariants()}>

@@ -1,6 +1,6 @@
 import { Skeleton } from "@/shared/ui";
 
-export async function EditorOutputSkeleton() {
+export function EditorOutputSkeleton() {
   return (
     <div className="space-y-1 py-5">
       <Skeleton className="h-6 w-4/5" />

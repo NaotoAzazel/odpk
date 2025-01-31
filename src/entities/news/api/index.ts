@@ -10,4 +10,8 @@ export {
   type Metadata,
 } from "./news.service";
 
-export { createNewsItemRequest, updateNewsItemByIdRequest } from "./requests";
+export {
+  createNewsItemRequest,
+  updateNewsItemByIdRequest,
+  deleteNewsItemByIdRequest,
+} from "./requests";

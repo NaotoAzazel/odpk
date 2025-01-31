@@ -4,12 +4,12 @@ import { useState } from "react";
 import { Post } from "@prisma/client";
 
 import { CustomColumnDef, DataTableColumnHeader } from "@/widgets/data-table";
+import { NewsDeleteDialog } from "@/entities/news";
 import { REDIRECTS } from "@/shared/constants";
 import { cn, formatDate } from "@/shared/lib";
 import {
   ActionsDropdownMenu,
   DeleteButton,
-  DeleteDialog,
   NavigateToPageButton,
 } from "@/shared/ui";
 
@@ -138,10 +138,8 @@ export function getColumns(): CustomColumnDef<Post>[] {
               }
             />
 
-            <DeleteDialog
-              title="Ви впевнені що хочете видалити цю новину?"
-              description="Цю дію не можна буде скасувати."
-              endpoint={`/api/news/${id}`}
+            <NewsDeleteDialog
+              id={id}
               isOpen={isShowDeleteDialog}
               onOpenChange={(isOpen) => setIsShowDeleteDialog(isOpen)}
             />

@@ -1,1 +1,1 @@
-export const ANOTHER_NEWS_AMOUNT = 3
+export const ANOTHER_NEWS_AMOUNT = 3;

@@ -8,6 +8,7 @@ export {
   updateNewsById,
   createNewsItemRequest,
   updateNewsItemByIdRequest,
+  deleteNewsItemByIdRequest,
   type GetNewsForPaginationResult,
   type Metadata,
 } from "./api";
@@ -20,6 +21,6 @@ export {
   type NewsItemUpdateRequest,
 } from "./model";
 
-export { NewsCreateButton } from "./ui";
+export { NewsCreateButton, NewsDeleteDialog } from "./ui";
 
-export { NEWS_PER_PAGE } from "./lib/pagination";
+export { NEWS_PER_PAGE, NEWS_QUERY_BASE_KEY, useUpdateNews } from "./lib";
