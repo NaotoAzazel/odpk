@@ -15,7 +15,6 @@ export function TanstackProvider({ children }: TanstackProviderProps) {
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools
         initialIsOpen={process.env.NODE_ENV === "development"}
-        position="right"
       />
       {children}
     </QueryClientProvider>
