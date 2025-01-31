@@ -1,4 +1,7 @@
-import { DashboardNav, NAV_CONFIG } from "@/widgets/navbar";
+import {
+  DASHBOARD_SIDEBAR_BUTTONS,
+  DashboardSidebar,
+} from "@/widgets/dashboard-sidebar";
 import { MaxWidthWrapper } from "@/shared/ui";
 
 export default function DashboardLayout({
@@ -11,7 +14,7 @@ export default function DashboardLayout({
       <MaxWidthWrapper>
         <div className="my-7 grid flex-1 gap-12 lg:grid-cols-[200px_1fr]">
           <aside className="w-170px hidden flex-col lg:flex">
-            <DashboardNav items={NAV_CONFIG.dashboardNav} />
+            <DashboardSidebar buttons={DASHBOARD_SIDEBAR_BUTTONS} />
           </aside>
           <main className="flex w-full flex-1 flex-col">{children}</main>
         </div>

@@ -11,7 +11,9 @@ export const NewsItemValidator = z.object({
 });
 export type NewsItemCreateRequest = z.infer<typeof NewsItemValidator>;
 
-export const newsItemUpdateSchema = NewsItemValidator.partial();
+export const newsItemUpdateSchema = NewsItemValidator.partial().extend({
+  id: z.number(),
+});
 export type NewsItemUpdateRequest = z.infer<typeof newsItemUpdateSchema>;
 
 export const newsItemCreateSchema = NewsItemValidator;

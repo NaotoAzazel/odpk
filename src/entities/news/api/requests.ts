@@ -24,18 +24,31 @@ export async function createNewsItemRequest(item: NewsItemCreateRequest) {
   return response.data;
 }
 
-export async function updateNewsItemByIdRequest(
-  id: number,
-  item: NewsItemUpdateRequest,
-) {
+export async function updateNewsItemByIdRequest(item: NewsItemUpdateRequest) {
+  console.log(item)
   const response = await axios
-    .patch<ApiSuccessResponse>(`/api/news/${id}`, item, {
+    .patch<ApiSuccessResponse>(`/api/news/${item.id}`, item, {
       headers: {
         "Content-Type": "application/json",
       },
     })
     .catch((error) => {
       const errorResponse: ApiErrorResponseWithDetails = error.response.data;
+      throw new ApiErrorResponse(errorResponse.message, errorResponse.errors);
+    });
+
+  return response.data;
+}
+
+export async function deleteNewsItemByIdRequest(id: number) {
+  const response = await axios
+    .delete<ApiSuccessResponse>(`/api/news/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .catch((error) => {
+      const errorResponse: ApiErrorResponse = error.response.data;
       throw new ApiErrorResponse(errorResponse.message, errorResponse.errors);
     });
 
