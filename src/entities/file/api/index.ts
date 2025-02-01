@@ -4,4 +4,4 @@ export {
   uploadFileToDatabase,
 } from "./file.service";
 
-export { uploadFilesRequest } from "./requests";
+export { uploadFilesRequest, deleteFileRequest } from "./requests";

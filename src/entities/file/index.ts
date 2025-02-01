@@ -3,7 +3,8 @@ export {
   getFiles,
   uploadFileToDatabase,
   uploadFilesRequest,
-} from "./api/";
+  deleteFileRequest,
+} from "./api";
 
 export {
   deleteFileFromLocalDirectory,
@@ -11,4 +12,8 @@ export {
   getFileFromLocalDirectory,
   getFileType,
   uploadFileToLocalDirectory,
+  useDeleteFile,
+  FILES_QUERY_BASE_KEY,
 } from "./lib";
+
+export { FileDeleteDialog } from "./ui";

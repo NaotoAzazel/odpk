@@ -1,5 +1,6 @@
+"use server";
+
 import { FileTypes } from "@prisma/client";
-import { revalidateTag } from "next/cache";
 
 import { unknownError } from "@/shared/constants";
 import { db } from "@/shared/lib";
@@ -37,8 +38,6 @@ export async function deleteFileByNameFromDatabase(filename: string) {
     const deletedFile = await db.files.delete({
       where: { name: filename },
     });
-
-    revalidateTag("files");
 
     return { success: true, deletedFile };
   } catch (error) {

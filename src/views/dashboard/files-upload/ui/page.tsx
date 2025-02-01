@@ -1,8 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 import {
   FileUploader,
@@ -18,7 +18,6 @@ import { MAX_FILES } from "../constants";
 
 export function DashboardUploadFilePage() {
   const { progresses, uploadFiles, isUploading } = useUploadFile("/api/files");
-  const router = useRouter();
 
   const { watch, setValue, getValues, reset, control } =
     useForm<UploadFilesSchema>({
@@ -32,7 +31,6 @@ export function DashboardUploadFilePage() {
     try {
       await uploadFiles(getValues("files") as File[]);
       reset();
-      router.refresh();
       showSuccess(SUCCESS_MESSAGES["FILES_UPLOADED"]);
     } catch (error) {
       showError(error);
