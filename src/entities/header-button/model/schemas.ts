@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const HeaderButtonItemValidator = z.object({
+export const headerSubButtonSchema = z.object({
   id: z.number(),
   title: z
     .string()
@@ -11,34 +11,30 @@ export const HeaderButtonItemValidator = z.object({
   href: z.string().optional().default(""),
 });
 
-export const HeaderButtonValidator = z.object({
+export const headerButtonSchema = z.object({
   title: z
     .string()
     .min(1, { message: "Це поле має містити в собі хоча б один символ" }),
   href: z.string().optional(),
-  items: z.array(HeaderButtonItemValidator).default([]),
+  items: z.array(headerSubButtonSchema).default([]),
 });
 
-export type HeaderButtonCreationRequest = z.infer<typeof HeaderButtonValidator>;
-export type HeaderButtonItemsCreationRequest = z.infer<
-  typeof HeaderButtonItemValidator
->;
+export const headerButtonCreateSchema = headerButtonSchema;
+export const headerButtonUpdateSchema = headerButtonSchema.partial().extend({
+  id: z.number(),
+});
 
-export const HeaderButtonUpdateValidator = HeaderButtonValidator.partial();
+export const headerSubButtonCreateSchema = headerSubButtonSchema;
+export const headerSubButtonUpdateSchema = headerSubButtonSchema.partial();
 
+export type HeaderButtonCreationRequest = z.infer<typeof headerButtonSchema>;
 export type HeaderButtonUpdateRequest = z.infer<
-  typeof HeaderButtonUpdateValidator
+  typeof headerButtonUpdateSchema
 >;
 
-export const HeaderButtonItemCreateValidator = HeaderButtonItemValidator;
-
-export type HeaderButtonItemCreateRequest = z.infer<
-  typeof HeaderButtonItemValidator
+export type HeaderSubButtonCreateRequest = z.infer<
+  typeof headerSubButtonSchema
 >;
-
-export const HeaderButtonItemUpdateValidator =
-  HeaderButtonItemValidator.partial();
-
-export type HeaderButtonItemUpdateRequest = z.infer<
-  typeof HeaderButtonItemValidator
+export type HeaderSubButtonUpdateRequest = z.infer<
+  typeof headerSubButtonUpdateSchema
 >;

@@ -1,7 +1,7 @@
 import { authOptions, validateSession } from "@/features/auth";
 import {
   getHeaderButtons,
-  HeaderButtonValidator,
+  headerButtonCreateSchema,
 } from "@/entities/header-button";
 import { db, handleApiError, successResponse } from "@/shared/lib";
 
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     await validateSession(authOptions);
 
     const json = await req.json();
-    const body = HeaderButtonValidator.parse(json);
+    const body = headerButtonCreateSchema.parse(json);
 
     await db.headerButtons.create({
       data: {

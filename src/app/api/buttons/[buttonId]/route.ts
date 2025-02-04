@@ -4,7 +4,7 @@ import { authOptions, validateSession } from "@/features/auth";
 import {
   deleteHeaderButtonById,
   getHeaderButtonById,
-  HeaderButtonUpdateValidator,
+  headerButtonUpdateSchema,
   updateButtonById,
 } from "@/entities/header-button";
 import { ApiError } from "@/shared/exceptions";
@@ -48,7 +48,7 @@ export async function PATCH(
     const { params } = routeContextSchema.parse(context);
 
     const json = await req.json();
-    const data = HeaderButtonUpdateValidator.parse(json);
+    const data = headerButtonUpdateSchema.parse(json);
 
     const isButtonExists = await getHeaderButtonById(Number(params.buttonId));
     if (!isButtonExists) {

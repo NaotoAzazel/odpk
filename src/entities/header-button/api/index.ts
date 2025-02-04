@@ -9,4 +9,5 @@ export {
   createButtonRequest,
   getButtonsRequest,
   updateButtonByIdRequest,
+  deleteButtonByIdRequest,
 } from "./requests";

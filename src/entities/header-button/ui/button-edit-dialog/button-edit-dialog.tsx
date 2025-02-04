@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { HeaderButtons } from "@prisma/client";
 import { useForm } from "react-hook-form";
 
 import { cn, showError, showSuccess } from "@/shared/lib";
@@ -20,61 +21,73 @@ import {
   Label,
 } from "@/shared/ui";
 
-import { useCreateHeaderButton } from "../../lib";
-import { HeaderButtonCreationRequest, headerButtonSchema } from "../../model";
+import { useUpdateHeaderButton } from "../../lib";
+import {
+  HeaderButtonUpdateRequest,
+  headerButtonUpdateSchema,
+} from "../../model";
 
-export function ButtonCreateDialog() {
+interface ButtonEditDialogProps {
+  button: HeaderButtons;
+}
+
+export function ButtonEditDialog({ button }: ButtonEditDialogProps) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-  const { createButton, isPending } = useCreateHeaderButton();
+  const { updateButton, isPending } = useUpdateHeaderButton();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<HeaderButtonCreationRequest>({
-    resolver: zodResolver(headerButtonSchema),
+  } = useForm<HeaderButtonUpdateRequest>({
+    resolver: zodResolver(headerButtonUpdateSchema),
     defaultValues: {
-      href: "",
+      id: button.id,
     },
   });
 
-  const onSubmit = async (data: HeaderButtonCreationRequest) => {
+  async function handleUpdateButton(newButton: HeaderButtonUpdateRequest) {
     try {
-      const message = await createButton(data);
+      const message = await updateButton(newButton);
 
+      reset();
       setIsDialogOpen(false);
       showSuccess(API_SUCCESS[message]);
     } catch (error) {
       showError(error);
     }
-  };
+  }
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          <Icons.plus className="mr-2 h-4 w-4" />
-          <span>Кнопка</span>
+        <Button variant="outline" className="h-8 p-3">
+          <Icons.pencil className="size-4" strokeWidth={2} />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle className="font-heading font-bold">
-            Додавання кнопки
-          </DialogTitle>
+          <DialogTitle>Редагування кнопки</DialogTitle>
           <DialogDescription>
-            Занесіть дані в поля щоб додати нову кнопку
+            Заповніть поля щоб змінити кнопку
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-2 py-2">
-            <Label htmlFor="text">Назва кнопки</Label>
+
+        <form
+          onSubmit={handleSubmit(handleUpdateButton)}
+          className="grid grid-cols-1 gap-2"
+        >
+          <div className="flex w-full flex-col space-y-2">
+            <Label htmlFor="title">Назва кнопки</Label>
             <Input
-              id="text"
+              {...register("title")}
+              id="title"
               type="text"
               placeholder="Документи"
-              {...register("title")}
+              defaultValue={button.title}
+              disabled={isPending}
               className={cn({
                 "focus-visible:ring-red-500": errors.title,
               })}
@@ -85,10 +98,10 @@ export function ButtonCreateDialog() {
               </p>
             )}
           </div>
-          <div className="grid gap-2 py-2">
-            <div className="flex flex-row items-center">
+          <div className="flex w-full flex-col space-y-2">
+            <div className="flex flex-row">
               <Label htmlFor="href">Посилання</Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="flex h-[14px] items-center text-sm text-muted-foreground">
                 (не обов&apos;язково)
               </p>
             </div>
@@ -96,8 +109,9 @@ export function ButtonCreateDialog() {
               id="href"
               type="text"
               placeholder="path/to/page"
+              defaultValue={button.href}
               {...register("href")}
-              className={cn({
+              className={cn("w-full", {
                 "focus-visible:ring-red-500": errors.href,
               })}
             />
@@ -107,16 +121,17 @@ export function ButtonCreateDialog() {
               </p>
             )}
           </div>
+
           <DialogFooter>
             <Button
               disabled={isPending}
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit(handleUpdateButton)}
               type="submit"
             >
               {isPending && (
-                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                <Icons.spinner className="mr-2 size-4 animate-spin" />
               )}
-              <span>Додати</span>
+              <span>Зберегти</span>
             </Button>
           </DialogFooter>
         </form>
