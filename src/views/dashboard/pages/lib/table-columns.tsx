@@ -2,12 +2,12 @@ import { useState } from "react";
 import { StaticPages } from "@prisma/client";
 
 import { CustomColumnDef, DataTableColumnHeader } from "@/widgets/data-table";
+import { PageDeleteDiloag } from "@/entities/page";
 import { REDIRECTS } from "@/shared/constants";
 import { formatDate } from "@/shared/lib";
 import {
   ActionsDropdownMenu,
   DeleteButton,
-  DeleteDialog,
   NavigateToPageButton,
 } from "@/shared/ui";
 
@@ -114,10 +114,8 @@ export function getColumns(): CustomColumnDef<StaticPages>[] {
               }
             />
 
-            <DeleteDialog
-              title="Ви впевнені що хочете видалити цю сторінку?"
-              description="Цю дію не можна буде скасувати."
-              endpoint={`/api/pages/${id}`}
+            <PageDeleteDiloag
+              id={id}
               isOpen={isShowDeleteDialog}
               onOpenChange={(isOpen) => setIsShowDeleteDialog(isOpen)}
             />

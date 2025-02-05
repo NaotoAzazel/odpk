@@ -1,81 +1,39 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StaticPages } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
-import { useRouter } from "next/navigation";
 
-import { Content, useEditor } from "@/widgets/editor";
-import {
-  PageCreationRequest,
-  PageValidator,
-  updatePageByIdRequest,
-} from "@/entities/page";
-import { formatDate, showError, showSuccess } from "@/shared/lib";
-import { API_SUCCESS, ERROR_MESSAGES } from "@/shared/notices";
+import { useEditor } from "@/widgets/editor";
+import { PageUpdateRequest, pageUpdateSchema } from "@/entities/page";
+import { formatDate } from "@/shared/lib";
 import { Button, Icons } from "@/shared/ui";
 
+import { useSavePage } from "../../lib";
 import { ChangePageHrefPopover } from "../change-page-href-popover";
 
-interface PageEditorProps {
-  page: StaticPages;
-}
-
-export function PageEditor({ page }: PageEditorProps) {
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-
+export function PageEditor(page: StaticPages) {
   const _titleRef = useRef<HTMLTextAreaElement>(null);
   const { editorRef } = useEditor(page.content);
-  const router = useRouter();
+
+  const { handleSavePage, isSaving } = useSavePage(editorRef);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
     watch,
     setValue,
-  } = useForm<PageCreationRequest>({
-    resolver: zodResolver(PageValidator),
+    formState: { errors },
+  } = useForm<PageUpdateRequest>({
+    resolver: zodResolver(pageUpdateSchema),
     defaultValues: page,
   });
 
-  useEffect(() => {
-    if (Object.keys(errors).length) {
-      for (const [_key, value] of Object.entries(errors)) {
-        showError((value as { message: string }).message);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errors]);
-
-  const onSubmit = async (data: PageCreationRequest) => {
-    try {
-      setIsSaving(true);
-
-      const blocks = await editorRef.current?.save();
-      if (!blocks) {
-        throw new Error(ERROR_MESSAGES["CANT_SAVE_EDITOR_DATA"]);
-      }
-
-      const { message } = await updatePageByIdRequest(page.id, {
-        ...data,
-        content: blocks as Content,
-      });
-
-      router.refresh();
-      showSuccess(API_SUCCESS[message]);
-    } catch (error) {
-      showError(error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
+  const { ref: titleRef, ...rest } = register("title");
 
   const formattedUpdatedAt = formatDate(page.updatedAt);
-
-  const { ref: titleRef, ...rest } = register("title");
 
   return (
     <div className="my-10 flex flex-col gap-4">
@@ -92,7 +50,7 @@ export function PageEditor({ page }: PageEditorProps) {
           />
           <Button
             disabled={isSaving}
-            onClick={handleSubmit(onSubmit)}
+            onClick={handleSubmit(handleSavePage)}
             type="submit"
             className="w-full"
           >
@@ -106,7 +64,7 @@ export function PageEditor({ page }: PageEditorProps) {
       <div className="w-full rounded-md border border-zinc-200 bg-zinc-50 p-4">
         <form
           className="flex w-full flex-col gap-1"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(handleSavePage)}
         >
           <div className="prose prose-stone dark:prose-invert">
             <TextareaAutosize
@@ -123,7 +81,7 @@ export function PageEditor({ page }: PageEditorProps) {
             />
             <div
               id="editor"
-              className="flex min-h-[600px] max-w-fit items-start justify-start overflow-hidden"
+              className="flex min-h-[600px] max-w-fit items-start justify-start"
             />
           </div>
         </form>

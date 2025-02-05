@@ -2,6 +2,7 @@ export {
   createPageRequest,
   getPagesRequest,
   updatePageByIdRequest,
+  deletePageByIdRequest,
 } from "./requests";
 
 export {

@@ -6,7 +6,7 @@ import {
   getPageByHref,
   getPageById,
   getPageByTitle,
-  PageUpdateValidator,
+  pageUpdateSchema,
   updatePageById,
 } from "@/entities/page";
 import { ApiError } from "@/shared/exceptions";
@@ -50,7 +50,7 @@ export async function PATCH(
     const { params } = routeContextSchema.parse(context);
 
     const json = await req.json();
-    const data = PageUpdateValidator.parse(json);
+    const data = pageUpdateSchema.parse(json);
 
     const pageId = Number(params.pageId);
 

@@ -1,9 +1,13 @@
-import { Suspense } from "react";
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { notFound } from "next/navigation";
 
 import { EditorContentSkeleton } from "@/widgets/editor";
-import { getPageById } from "@/entities/page";
+import { getPageById, PAGE_QUERY_BASE_KEY } from "@/entities/page";
+import { ErrorContainer } from "@/shared/ui";
 
-import { PageEditorContent } from "./editor";
+import { PageEditor } from "./editor";
 
 interface EditorPageProps {
   params: {
@@ -12,11 +16,33 @@ interface EditorPageProps {
 }
 
 export function EditorPage({ params }: EditorPageProps) {
-  const pagePromise = getPageById(Number(params.postId));
+  const {
+    data: page,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: [PAGE_QUERY_BASE_KEY, params.postId],
+    queryFn: () => getPageById(Number(params.postId)),
+  });
 
-  return (
-    <Suspense fallback={<EditorContentSkeleton />}>
-      <PageEditorContent pagePromise={pagePromise} />
-    </Suspense>
-  );
+  if (isLoading) {
+    return <EditorContentSkeleton />;
+  }
+
+  if (isError) {
+    return (
+      <div className="flex w-full justify-center py-36">
+        <ErrorContainer
+          title="Помилка завантаження редактора"
+          description="Ми вже працюємо над цією помилкою, спробуйте перзавантажити сторінку"
+        />
+      </div>
+    );
+  }
+
+  if (!page) {
+    return notFound();
+  }
+
+  return <PageEditor {...page} />;
 }
