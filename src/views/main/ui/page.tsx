@@ -1,15 +1,7 @@
-import { Suspense } from "react";
 import Link from "next/link";
 
 import LandingImage from "@/shared/assets/images/landing.jpg";
-import {
-  buttonVariants,
-  ErrorBoundary,
-  ErrorContainer,
-  MaxWidthWrapper,
-  NewsLoadingContainer,
-  ResponsiveImage,
-} from "@/shared/ui";
+import { buttonVariants, MaxWidthWrapper, ResponsiveImage } from "@/shared/ui";
 
 import { AboutCollegeCardsCarousel } from "./carousels";
 import { CollegeInfoSection, NewsCardsSection } from "./sections";
