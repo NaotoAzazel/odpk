@@ -2,7 +2,7 @@
 
 import Image, { ImageProps } from "next/image";
 
-import { PlaceholderImage } from "./placeholder-image";
+import { PlaceholderImage } from "../placeholder-image";
 
 interface ResponsiveImageProps extends ImageProps {}
 

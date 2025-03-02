@@ -10,6 +10,7 @@ import {
   File,
   GraduationCap,
   ImageIcon,
+  ImageOff,
   Info,
   Instagram,
   LayoutGrid,
@@ -56,6 +57,7 @@ export const Icons = {
   trash: Trash,
   settings: Settings2,
   error: CircleX,
+  imageError: ImageOff,
   placeholder: ImageIcon,
   chevronLeft: ChevronLeft,
   notebookText: NotebookText,
@@ -64,5 +66,5 @@ export const Icons = {
   alertTriangle: AlertTriangle,
   users: Users,
   newspaper: Newspaper,
-  upload: Upload
+  upload: Upload,
 };

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { isImageBlock } from "@/widgets/editor";
 import { REDIRECTS } from "@/shared/constants";
 import { formatDate } from "@/shared/lib";
-import { AspectRatio, ResponsiveImage } from "@/shared/ui";
+import { AspectRatio, ResponsiveImageWithBlur } from "@/shared/ui";
 
 interface NewsCardProps {
   post: Post;
@@ -18,14 +18,14 @@ export function NewsCard({ post }: NewsCardProps) {
     <Link href={`${REDIRECTS.toNewsItem}/${post.id}`}>
       <div className="group size-full overflow-hidden rounded-md border bg-slate-50">
         <div className="flex flex-col space-y-1.5 overflow-hidden">
-          <AspectRatio ratio={4 / 3}>
-            <ResponsiveImage
+          <AspectRatio ratio={4 / 3} className="border-b">
+            <ResponsiveImageWithBlur
               // @ts-ignore
               src={imageUrl}
               alt={post.title}
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
-              className="border-b object-cover"
+              className="object-cover"
             />
           </AspectRatio>
         </div>
