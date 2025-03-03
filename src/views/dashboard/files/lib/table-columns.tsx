@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Files, FileTypes } from "@prisma/client";
 
 import { CustomColumnDef, DataTableColumnHeader } from "@/widgets/data-table";
+import { FileDeleteDialog } from "@/entities/file";
 import { useCopyToClipboard } from "@/shared/actions";
 import { REDIRECTS } from "@/shared/constants";
 import { formatDate, showError, showSuccess } from "@/shared/lib";
@@ -9,7 +10,6 @@ import { SUCCESS_MESSAGES } from "@/shared/notices";
 import {
   ActionsDropdownMenu,
   DeleteButton,
-  DeleteDialog,
   Icons,
   NavigateToPageButton,
   ResponsiveImage,
@@ -31,7 +31,7 @@ function FilePreviewIcon({ fileType, name }: FilePreviewIconProps) {
   return (
     <div className="relative">
       {fileType === "IMAGE" ? (
-        <div className="flex min-h-[52px] min-w-[52px] flex-row">
+        <div className="flex min-h-[52px] min-w-[52px] flex-row overflow-hidden">
           <div className="absolute inset-0 z-0 size-[52px] rounded-md bg-accent" />
           <ResponsiveImage
             src={src}
@@ -149,10 +149,8 @@ export function getColumns(): CustomColumnDef<Files>[] {
               }
             />
 
-            <DeleteDialog
-              title="Ви впевнені що хочете видалити файл?"
-              description="Цю дію не можна буде скасувати."
-              endpoint={`/api/files/${row.original.name}`}
+            <FileDeleteDialog
+              name={row.original.name}
               isOpen={isShowDeleteDialog}
               onOpenChange={(isOpen) => setIsShowDeleteDialog(isOpen)}
             />

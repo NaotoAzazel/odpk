@@ -3,13 +3,7 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
-import {
-  createButtonRequest,
-  HeaderButtonCreationRequest,
-  HeaderButtonValidator,
-} from "@/entities/header-button";
 import { cn, showError, showSuccess } from "@/shared/lib";
 import { API_SUCCESS } from "@/shared/notices";
 import {
@@ -26,18 +20,20 @@ import {
   Label,
 } from "@/shared/ui";
 
+import { useCreateHeaderButton } from "../../lib";
+import { HeaderButtonCreationRequest, headerButtonSchema } from "../../model";
+
 export function ButtonCreateDialog() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-  const router = useRouter();
+  const { createButton, isPending } = useCreateHeaderButton();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<HeaderButtonCreationRequest>({
-    resolver: zodResolver(HeaderButtonValidator),
+    resolver: zodResolver(headerButtonSchema),
     defaultValues: {
       href: "",
     },
@@ -45,17 +41,12 @@ export function ButtonCreateDialog() {
 
   const onSubmit = async (data: HeaderButtonCreationRequest) => {
     try {
-      setIsLoading(true);
-
-      const result = await createButtonRequest(data);
+      const message = await createButton(data);
 
       setIsDialogOpen(false);
-      router.refresh();
-      showSuccess(API_SUCCESS[result.message]);
+      showSuccess(API_SUCCESS[message]);
     } catch (error) {
       showError(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -118,11 +109,11 @@ export function ButtonCreateDialog() {
           </div>
           <DialogFooter>
             <Button
-              disabled={isLoading}
+              disabled={isPending}
               onClick={handleSubmit(onSubmit)}
               type="submit"
             >
-              {isLoading && (
+              {isPending && (
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
               )}
               <span>Додати</span>

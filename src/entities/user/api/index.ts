@@ -5,4 +5,4 @@ export {
   getUsers,
 } from "./user.service";
 
-export { createUserRequest } from "./requests";
+export { createUserRequest, deleteUserByIdRequest } from "./requests";

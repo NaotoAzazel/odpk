@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Users } from "@prisma/client";
 
 import { CustomColumnDef, DataTableColumnHeader } from "@/widgets/data-table";
-import { DeleteButton, DeleteDialog } from "@/shared/ui";
+import { UserDeleteDialog } from "@/entities/user";
+import { DeleteButton } from "@/shared/ui";
 
 export function getColumns(): CustomColumnDef<Users>[] {
   return [
@@ -39,10 +40,8 @@ export function getColumns(): CustomColumnDef<Users>[] {
 
         return (
           <>
-            <DeleteDialog
-              title="Ви впевнені що хочете видалити користувача?"
-              description="Цю дію не можна буде скасувати."
-              endpoint={`/api/users/${row.original.id}`}
+            <UserDeleteDialog
+              id={row.original.id}
               isOpen={isShowDeleteDialog}
               onOpenChange={(isOpen) => setIsShowDeleteDialog(isOpen)}
             />

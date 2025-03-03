@@ -4,6 +4,7 @@ import axios from "axios";
 import { ApiErrorResponse } from "@/shared/exceptions";
 import {
   ApiErrorResponseWithDetails,
+  ApiSuccessResponse,
   ApiSuccessResponseWithData,
 } from "@/shared/model";
 
@@ -44,6 +45,21 @@ export async function uploadFilesRequest({
         },
       },
     )
+    .catch((error) => {
+      const errorResponse: ApiErrorResponseWithDetails = error.response.data;
+      throw new ApiErrorResponse(errorResponse.message, errorResponse.errors);
+    });
+
+  return response.data;
+}
+
+export async function deleteFileRequest(name: string) {
+  const response = await axios
+    .delete<ApiSuccessResponse>(`/api/files/${name}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
     .catch((error) => {
       const errorResponse: ApiErrorResponseWithDetails = error.response.data;
       throw new ApiErrorResponse(errorResponse.message, errorResponse.errors);

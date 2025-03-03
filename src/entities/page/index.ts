@@ -1,5 +1,6 @@
-export { PageUpdateValidator, PageValidator, pageCreateSchema } from "./model";
-export type { PageCreationRequest, PageUpdateRequest } from "./model";
+export { pageCreateSchema, pageSchema, pageUpdateSchema } from "./model";
+export type { PageCreateRequest, PageUpdateRequest } from "./model";
+
 export {
   createPageRequest,
   getPagesRequest,
@@ -11,4 +12,12 @@ export {
   getPages,
   updatePageById,
 } from "./api";
-export { PageCreateButton } from "./ui";
+
+export { PageCreateButton, PageDeleteDiloag } from "./ui";
+
+export {
+  PAGE_QUERY_BASE_KEY,
+  useUpdatePage,
+  useCreatePage,
+  useDeletePage,
+} from "./lib";

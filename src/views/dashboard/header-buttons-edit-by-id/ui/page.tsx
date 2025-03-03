@@ -1,12 +1,17 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 
 import {
-  AddButtonItem,
-  ButtonElement,
   getHeaderButtonById,
-  MainButtonHolder,
+  HEADER_BUTTONS_QUERY_BASE_KEY,
 } from "@/entities/header-button";
-import { DashboardShell, NoItemsPlaceholder, Title } from "@/shared/ui";
+import { DashboardShell, Title } from "@/shared/ui";
+
+import { ButtonContainer } from "./button-container";
+import { DashboardEditButtonByIdLoading } from "./loading";
+import { SubButtonsContainer } from "./sub-buttons-container";
 
 interface DashboardEditButtonByIdPageProps {
   params: {
@@ -14,10 +19,25 @@ interface DashboardEditButtonByIdPageProps {
   };
 }
 
-export async function DashboardEditButtonByIdPage({
+export function DashboardEditButtonByIdPage({
   params,
 }: DashboardEditButtonByIdPageProps) {
-  const button = await getHeaderButtonById(Number(params.buttonId));
+  const {
+    data: button,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: [HEADER_BUTTONS_QUERY_BASE_KEY, params.buttonId],
+    queryFn: () => getHeaderButtonById(Number(params.buttonId)),
+  });
+
+  if (isLoading) {
+    return <DashboardEditButtonByIdLoading />;
+  }
+
+  if (isError) {
+    return <p>error</p>;
+  }
 
   if (!button) {
     return notFound();
@@ -26,31 +46,8 @@ export async function DashboardEditButtonByIdPage({
   return (
     <DashboardShell>
       <Title heading="Редагування кнопки" />
-      <div className="space-y-4">
-        <MainButtonHolder buttonData={button} />
-        <div className="space-y-2">
-          <p className="text-muted-foreground">Елементи кнопки</p>
-          <AddButtonItem button={button} />
-          <div className="divide-y divide-border rounded-md border">
-            {button.items.length > 0 ? (
-              <>
-                {button.items.map((buttonItem, i) => (
-                  <ButtonElement
-                    rootButton={button}
-                    buttonElement={buttonItem}
-                    key={i}
-                  />
-                ))}
-              </>
-            ) : (
-              <NoItemsPlaceholder
-                title="Не вдалося знайти елементи кнопки"
-                description="Найімовірніше елементів не існує"
-              />
-            )}
-          </div>
-        </div>
-      </div>
+      <ButtonContainer button={button} />
+      <SubButtonsContainer button={button} />
     </DashboardShell>
   );
 }

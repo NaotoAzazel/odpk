@@ -29,17 +29,27 @@ export async function createButtonRequest(button: HeaderButtonCreationRequest) {
 }
 
 export async function updateButtonByIdRequest(
-  id: number,
   button: HeaderButtonUpdateRequest,
 ) {
   const response = await axios
-    .patch<ApiSuccessResponse>(`/api/buttons/${id}`, button, {
+    .patch<ApiSuccessResponse>(`/api/buttons/${button.id}`, button, {
       headers: {
         "Content-Type": "application/json",
       },
     })
     .catch((error) => {
       const errorResponse: ApiErrorResponseWithDetails = error.response.data;
+      throw new ApiErrorResponse(errorResponse.message, errorResponse.errors);
+    });
+
+  return response.data;
+}
+
+export async function deleteButtonByIdRequest(id: number) {
+  const response = await axios
+    .delete<ApiSuccessResponse>(`/api/buttons/${id}`)
+    .catch((error) => {
+      const errorResponse: ApiErrorResponse = error.response.data;
       throw new ApiErrorResponse(errorResponse.message, errorResponse.errors);
     });
 

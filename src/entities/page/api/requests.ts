@@ -8,9 +8,9 @@ import {
   ApiSuccessResponseWithData,
 } from "@/shared/model";
 
-import { PageCreationRequest, PageUpdateRequest } from "../model";
+import { PageCreateRequest, PageUpdateRequest } from "../model";
 
-export async function createPageRequest(page: PageCreationRequest) {
+export async function createPageRequest(page: PageCreateRequest) {
   const response = await axios
     .post<ApiSuccessResponseWithData<{ id: number }>>("/api/pages", page, {
       headers: {
@@ -25,16 +25,24 @@ export async function createPageRequest(page: PageCreationRequest) {
   return response.data;
 }
 
-export async function updatePageByIdRequest(
-  id: number,
-  page: PageUpdateRequest,
-) {
+export async function updatePageByIdRequest(page: PageUpdateRequest) {
   const response = await axios
-    .patch<ApiSuccessResponse>(`/api/pages/${id}`, page, {
+    .patch<ApiSuccessResponse>(`/api/pages/${page.id}`, page, {
       headers: {
         "Content-Type": "application/json",
       },
     })
+    .catch((error) => {
+      const errorResponse: ApiErrorResponseWithDetails = error.response.data;
+      throw new ApiErrorResponse(errorResponse.message, errorResponse.errors);
+    });
+
+  return response.data;
+}
+
+export async function deletePageByIdRequest(id: number) {
+  const response = await axios
+    .delete<ApiSuccessResponse>(`/api/pages/${id}`)
     .catch((error) => {
       const errorResponse: ApiErrorResponseWithDetails = error.response.data;
       throw new ApiErrorResponse(errorResponse.message, errorResponse.errors);

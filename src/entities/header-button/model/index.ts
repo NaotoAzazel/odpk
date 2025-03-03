@@ -1,16 +1,16 @@
 export {
-  HeaderButtonItemCreateValidator,
-  HeaderButtonItemValidator,
-  HeaderButtonItemUpdateValidator,
-  HeaderButtonUpdateValidator,
-  HeaderButtonValidator,
+  headerButtonSchema,
+  headerButtonCreateSchema,
+  headerButtonUpdateSchema,
+  headerSubButtonCreateSchema,
+  headerSubButtonUpdateSchema,
+  headerSubButtonSchema,
 } from "./schemas";
 export type {
   HeaderButtonCreationRequest,
-  HeaderButtonItemCreateRequest,
-  HeaderButtonItemUpdateRequest,
-  HeaderButtonItemsCreationRequest,
   HeaderButtonUpdateRequest,
+  HeaderSubButtonCreateRequest,
+  HeaderSubButtonUpdateRequest,
 } from "./schemas";
 
 export type { HeaderButtonItem } from "./types";

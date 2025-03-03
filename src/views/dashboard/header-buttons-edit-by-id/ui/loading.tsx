@@ -1,5 +1,6 @@
-import { ButtonItemSkeleton } from "@/entities/header-button";
 import { DashboardShell, Skeleton, Title } from "@/shared/ui";
+
+import { ButtonViewSkeleton } from "./button-view";
 
 export function DashboardEditButtonByIdLoading() {
   return (
@@ -13,10 +14,10 @@ export function DashboardEditButtonByIdLoading() {
         <div className="space-y-2">
           <p className="text-muted-foreground">Елементи кнопки</p>
           <div className="divide-y divide-border rounded-md border">
-            <ButtonItemSkeleton />
-            <ButtonItemSkeleton />
-            <ButtonItemSkeleton />
-            <ButtonItemSkeleton />
+            <ButtonViewSkeleton />
+            <ButtonViewSkeleton />
+            <ButtonViewSkeleton />
+            <ButtonViewSkeleton />
           </div>
         </div>
       </div>

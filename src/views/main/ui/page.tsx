@@ -1,15 +1,7 @@
-import { Suspense } from "react";
 import Link from "next/link";
 
 import LandingImage from "@/shared/assets/images/landing.jpg";
-import {
-  buttonVariants,
-  ErrorBoundary,
-  ErrorContainer,
-  MaxWidthWrapper,
-  NewsLoadingContainer,
-  ResponsiveImage,
-} from "@/shared/ui";
+import { buttonVariants, MaxWidthWrapper, ResponsiveImage } from "@/shared/ui";
 
 import { AboutCollegeCardsCarousel } from "./carousels";
 import { CollegeInfoSection, NewsCardsSection } from "./sections";
@@ -23,7 +15,7 @@ export function MainPage() {
           src={LandingImage}
           className="absolute left-0 top-0 h-screen w-full object-cover"
           alt="Landing-image"
-          loading="lazy"
+          placeholder="blur"
           width={1000}
           height={1000}
         />

@@ -17,7 +17,11 @@ export { ErrorContainer } from "./error-container";
 
 export { type Icon, Icons } from "./icons";
 
-export { PlaceholderImage, ResponsiveImage } from "./image";
+export {
+  PlaceholderImage,
+  ResponsiveImage,
+  ResponsiveImageWithBlur,
+} from "./image";
 
 export { MaxWidthWrapper } from "./max-width-wrapper";
 

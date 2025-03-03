@@ -126,7 +126,7 @@ export async function getPublishedNews({ itemsPerPage = 6 }: GetPublishedNews) {
           published: true,
         },
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         },
         take: itemsPerPage,
       });

@@ -4,7 +4,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 
 import { cn } from "@/shared/lib";
-import { AspectRatio, ResponsiveImage, Skeleton } from "@/shared/ui";
+import { AspectRatio, ResponsiveImageWithBlur } from "@/shared/ui";
 
 import { ImageBlock } from "../model";
 import { EditorOutputSkeleton } from "./editor-output-skeleton";
@@ -52,15 +52,14 @@ function CustomImageRenderer({ data }: ImageBlock) {
   };
 
   return (
-    <div className="mb-2 flex flex-col overflow-hidden">
+    <div className="mb-2 flex flex-col items-center overflow-hidden">
       <AspectRatio ratio={aspectRatio}>
-        <Skeleton className="-z-0 h-full w-full" />
-        <ResponsiveImage
+        <ResponsiveImageWithBlur
           src={src}
-          alt="image"
+          alt={src}
           fill
-          loading="lazy"
           className="rounded-md"
+          loading="lazy"
           sizes="(max-width: 425px) 50vw, 75vw"
           onLoad={({ target }) => {
             const { naturalWidth, naturalHeight } = target as HTMLImageElement;

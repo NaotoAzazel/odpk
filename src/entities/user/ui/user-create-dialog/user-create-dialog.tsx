@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 import { cn, showError, showSuccess } from "@/shared/lib";
 import { API_SUCCESS } from "@/shared/notices";
@@ -11,6 +10,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -20,14 +20,13 @@ import {
   Label,
 } from "@/shared/ui";
 
-import { createUserRequest } from "../../api";
+import { useCreateUser } from "../../lib";
 import { UserAuthSchema, userAuthSchema } from "../../model";
 
 export function UserCreateDialog() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
 
-  const router = useRouter();
+  const { createUser, isPending } = useCreateUser();
 
   const {
     register,
@@ -38,20 +37,15 @@ export function UserCreateDialog() {
     resolver: zodResolver(userAuthSchema),
   });
 
-  const onSubmit = async (user: UserAuthSchema) => {
-    setIsLoading(true);
-
+  const handleCreateUser = async (user: UserAuthSchema) => {
     try {
-      const { message } = await createUserRequest(user);
+      const message = await createUser(user);
 
-      reset();
       setIsOpenDialog(false);
       showSuccess(API_SUCCESS[message]);
-      router.refresh();
+      reset();
     } catch (error) {
       showError(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -64,14 +58,17 @@ export function UserCreateDialog() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Створення акаунта</DialogTitle>
+          <DialogDescription>
+            Занесіть дані в поля щоб додати нового користувача
+          </DialogDescription>
         </DialogHeader>
 
         <form
           className="grid grid-cols-1 gap-1"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(handleCreateUser)}
         >
           <div className="grid gap-2 py-2">
             <Label htmlFor="email" className="text-gray-800">
@@ -79,7 +76,7 @@ export function UserCreateDialog() {
             </Label>
             <Input
               {...register("email")}
-              disabled={isLoading}
+              disabled={isPending}
               className={cn({ "focus-visible:ring-red-500": errors.email })}
               type="email"
               autoComplete="email"
@@ -95,7 +92,7 @@ export function UserCreateDialog() {
             </Label>
             <Input
               {...register("password")}
-              disabled={isLoading}
+              disabled={isPending}
               className={cn({ "focus-visible:ring-red-500": errors.password })}
               type="password"
               placeholder="password"
@@ -107,11 +104,11 @@ export function UserCreateDialog() {
 
           <DialogFooter className="sm:justify-start">
             <Button
-              disabled={isLoading}
+              disabled={isPending}
               type="submit"
-              onClick={() => handleSubmit(onSubmit)}
+              onClick={() => handleSubmit(handleCreateUser)}
             >
-              {isLoading && (
+              {isPending && (
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
               )}
               Додати

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { Files } from "@prisma/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { uploadFilesRequest } from "@/entities/file";
+import { FILES_QUERY_BASE_KEY, uploadFilesRequest } from "@/entities/file";
 
 interface UseUploadFileProps {
   defaultUploadedFiles?: Files[];
@@ -16,24 +17,26 @@ export function useUploadFile(
   const [uploadedFiles, setUploadedFiles] =
     useState<Files[]>(defaultUploadedFiles);
   const [progresses, setProgresses] = useState<Record<string, number>>({});
-  const [isUploading, setIsUploading] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: uploadFilesRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [FILES_QUERY_BASE_KEY],
+      });
+    },
+  });
 
   async function upload(files: File[]) {
-    setIsUploading(true);
-
     try {
-      const result = await uploadFilesRequest({
-        endpoint,
-        files,
-        setProgresses,
-      });
-
+      const result = await mutateAsync({ endpoint, files, setProgresses });
       setUploadedFiles((prev) => [...prev, ...result.data]);
     } catch (error) {
       throw error;
     } finally {
       setProgresses({});
-      setIsUploading(false);
     }
   }
 
@@ -41,6 +44,6 @@ export function useUploadFile(
     uploadedFiles,
     progresses,
     uploadFiles: upload,
-    isUploading,
+    isUploading: isPending,
   };
 }
