@@ -22,3 +22,18 @@ export async function createUserRequest(user: UserAuthSchema) {
 
   return response.data;
 }
+
+export async function deleteUserByIdRequest(id: string) {
+  const response = await axios
+    .delete<ApiSuccessResponse>(`/api/users/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .catch((error) => {
+      const errorResponse: ApiErrorResponse = error.response.data;
+      throw new ApiErrorResponse(errorResponse.message);
+    });
+
+  return response.data;
+}
