@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   description: "Керуйте сторінками",
 };
 
-export default function Page() {
-  return <DashboardPagesPage />;
+interface PagesDashboardPageParams {
+  searchParams: { page: number };
+}
+
+export default function Page({ searchParams }: PagesDashboardPageParams) {
+  return <DashboardPagesPage params={searchParams} />;
 }

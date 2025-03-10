@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   description: "Керуйте кнопками заголовка",
 };
 
-export default async function Page() {
-  return <HeaderButtonsPage />;
+interface HeaderButtonsDashboardPageParams {
+  searchParams: { page: number };
+}
+
+export default async function Page({
+  searchParams,
+}: HeaderButtonsDashboardPageParams) {
+  return <HeaderButtonsPage params={searchParams} />;
 }

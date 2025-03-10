@@ -16,7 +16,11 @@ import { ROWS_PER_PAGE } from "../../constants";
 import { getColumns } from "../../lib";
 import { PageTableToolbarActions } from "./pages-table-toolbar-actions";
 
-export function PagesTable() {
+interface PagesTableProps {
+  page: number;
+}
+
+export function PagesTable({ page }: PagesTableProps) {
   const {
     data: pages,
     isLoading,
@@ -32,6 +36,7 @@ export function PagesTable() {
     data: pages ?? [],
     columns,
     initialPageSize: ROWS_PER_PAGE,
+    currentPage: page,
   });
 
   if (isLoading) {

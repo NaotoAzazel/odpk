@@ -17,7 +17,11 @@ import { ROWS_PER_PAGE } from "../../constants";
 import { getColumns } from "../../lib";
 import { NewsTableToolbarActions } from "./news-table-toolbar-actions";
 
-export function NewsTable() {
+interface NewsTableProps {
+  page: number;
+}
+
+export function NewsTable({ page }: NewsTableProps) {
   const {
     data: news,
     isLoading,
@@ -33,6 +37,7 @@ export function NewsTable() {
     data: news ?? [],
     columns,
     initialPageSize: ROWS_PER_PAGE,
+    currentPage: page,
   });
 
   if (isLoading) {

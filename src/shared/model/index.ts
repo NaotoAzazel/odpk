@@ -15,3 +15,7 @@ export type {
 export type { BasicCard, HelpCard, SpecialtieCard } from "./cards";
 export { contentSchema } from "./editorjs";
 export { ogImageSchema } from "./og";
+export {
+  type DashboardSearchParamsSchema,
+  dashboardSearchParamsSchema,
+} from "./search-params";

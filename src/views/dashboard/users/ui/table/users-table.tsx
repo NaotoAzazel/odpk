@@ -17,7 +17,11 @@ import { ROWS_PER_PAGE } from "../../constants";
 import { getColumns } from "../../lib";
 import { UsersTableToolbarActions } from "./users-table-toolbar-actions";
 
-export function UsersTable() {
+interface UsersTableProps {
+  page: number;
+}
+
+export function UsersTable({ page }: UsersTableProps) {
   const {
     data: users,
     isLoading,
@@ -33,6 +37,7 @@ export function UsersTable() {
     data: users ?? [],
     columns,
     initialPageSize: ROWS_PER_PAGE,
+    currentPage: page,
   });
 
   if (isLoading) {
