@@ -5,7 +5,10 @@ import { contentSchema } from "@/shared/model";
 export const pageSchema = z.object({
   title: z
     .string()
-    .min(1, { message: "Заголовок повинен мiстити в собi мiнiмум 1 символ" }),
+    .min(1, { message: "Заголовок повинен мiстити в собi мiнiмум 1 символ" })
+    .regex(/^(?!\s*$).+/, {
+      message: "Заголовок не може складатися лише з пробілів",
+    }),
   href: z.string().min(1, { message: "Посилання має бути не менше 1 символу" }),
   content: contentSchema,
 });

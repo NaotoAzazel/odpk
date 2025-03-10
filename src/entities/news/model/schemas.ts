@@ -5,7 +5,10 @@ import { contentSchema } from "@/shared/model";
 export const NewsItemValidator = z.object({
   title: z
     .string()
-    .min(1, { message: "Заголовок повинен мiстити в собi мiнiмум 1 символ" }),
+    .min(1, { message: "Заголовок повинен мiстити в собi мiнiмум 1 символ" })
+    .regex(/^(?!\s*$).+/, {
+      message: "Заголовок не може складатися лише з пробілів",
+    }),
   content: contentSchema,
   published: z.boolean(),
 });
