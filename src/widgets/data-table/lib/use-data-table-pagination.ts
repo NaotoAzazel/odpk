@@ -11,6 +11,8 @@ export function useDataTablePagination<TData>(table: Table<TData>) {
   });
 
   useEffect(() => {
+    if (table.getFilteredRowModel().rows.length === 0) return;
+
     if (table.getRowModel().rows.length === 0) {
       setCurrentPage(table.getPageCount().toString());
     }

@@ -2,6 +2,7 @@
 
 import { type Table } from "@tanstack/react-table";
 
+import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
 
 import { useDataTablePagination } from "../lib";
@@ -15,12 +16,17 @@ export function DataTablePagination<TData>({
 }: DataTablePaginationProps<TData>) {
   const { handleNextPage, handlePrevPage } = useDataTablePagination(table);
 
+  const pageCount = table.getPageCount();
+  let customClass = pageCount > 0 ? "justify-between gap-4" : "justify-end";
+
   return (
-    <div className="flex w-full flex-col justify-between gap-4 sm:flex-row">
-      <div className="flex items-center justify-center text-sm font-medium">
-        Сторінка {table.getState().pagination.pageIndex + 1} з{" "}
-        {table.getPageCount()}
-      </div>
+    <div className={cn("flex w-full flex-col sm:flex-row", customClass)}>
+      {pageCount > 0 && (
+        <div className="flex items-center justify-center text-sm font-medium">
+          Сторінка {table.getState().pagination.pageIndex + 1} з{" "}
+          {table.getPageCount()}
+        </div>
+      )}
 
       <div className="flex flex-row justify-center gap-2 md:justify-normal">
         <Button
