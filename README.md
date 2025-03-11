@@ -1,6 +1,6 @@
-# [ODPK](https://odpk.vercel.app/)
+# ODPK
 
-Revamping college's website. This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Revamping college's website. This is a [Next.js](https://nextjs.org/) version 14 project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 # Tech stack
 
@@ -11,7 +11,6 @@ Revamping college's website. This is a [Next.js](https://nextjs.org/) project bo
 - Table package: [TanStack/react-table](https://tanstack.com/table/latest)
 - Database: [Prisma](https://www.prisma.io/)
 - Validation: [Zod](https://zod.dev)
-- Markdown: [Contentlayer](https://contentlayer.dev/)
 - Caching: [Redis](https://redis.io/)
 
 # Features
@@ -19,10 +18,12 @@ Revamping college's website. This is a [Next.js](https://nextjs.org/) project bo
 - Server-side pagination
 - Reusable data-table component
 - Authorization implementation via [next-auth](https://next-auth.js.org/)
-- Editor component for easy news editing
-- Usage of markdown(mdx)
-- Image storage in [uploadthing](https://uploadthing.com/)
-- News caching by redis
+- Editor component for easy news and pages editing
+- Local images storage
+- Caching by redis
+- Using [FSD architectural methodology](https://feature-sliced.design/)
+- Prisma [JSON types generator](https://github.com/arthurfiorette/prisma-json-types-generator)
+- Using react-query to manage the state of server data, cache requests, and optimistically update the interface.
 
 # Running locally
 
@@ -45,6 +46,15 @@ Revamping college's website. This is a [Next.js](https://nextjs.org/) project bo
    npm run start # start the website in production mode
    ```
 
+# Useful
+
+I recommend that after making architectural changes, you check that the FSD architectural methodology is correct. The command is already setup.
+
+```bash
+npm run steiger # watch once
+npm run steiger:watch # watching in real time
+```
+
 # Customizing .env
 
 > **Important**: if you add a variable in `.env`, you should also add the same variable in `src/env.js`. All client-side variables should be prefixed with: `NEXT_PUBLIC_`.
@@ -62,7 +72,7 @@ cp .env.example .env
 We will start by setting up our database. You can use any Postgres. Get the variables from your database environment and paste them into `.env`. When you've inserted all the variables associated with the database use the following command.
 
 ```bash
-npm i -g prisma
+npm i -g prisma prisma-json-types-generator
 prisma db push
 ```
 
@@ -72,10 +82,6 @@ prisma db push
 npm install -g dotenv-cli
 dotenv -e .env.[development/production] -- prisma db push
 ```
-
-### Uploadthing
-
-Now we should get the api keys for uploadthing. Go to [website](https://uploadthing.com/) and sign in. Create new application, or use an existing one. Navigate to `API Keys` in the left sidebar menu, copy `UPLOADTHING_SECRET` and `UPLOADTHING_APP_ID` and paste them into `.env`.
 
 ### Redis
 
@@ -87,71 +93,30 @@ The auth variables: `NEXTAUTH_SECRET` can take any value.
 
 > **It is desirable to make this field long and completely random, you can use this [randomkeyget](https://randomkeygen.com/)**.
 
+`NEXTAUTH_URL` insert the same as in `NEXT_PUBLIC_APP_URL`
+
 `NEXT_PUBLIC_APP_URL` in development mode paste your `localhost`, and in production paste the url to your site.
 
-# Markdown
+# Static pages
 
-> **Important**: each markdown must be starts with:
+> [!IMPORTANT]
+> The link of each page must be unique
 
-```html
----
-title: Your title here
----
-```
+After creating the page, you need to correctly specify the path to access it. Lets take a look at two ways.
 
-All markdowns are stored in the `src/content/pages`. The path for each page generated in this way: to add a page about the director, for example, the following steps should be followed:
+> [!WARNING]
+> The link to the page should be in English only
+> There can't be spaces in the link (Space is replaced by "/")
 
-1. Create a folder in the `src/content/pages` and name it `director`.
+1. Without nesting
+   See the image below, we insert `all-documents` and resulting url will look like: http://odpk.ua/content/all-documents
 
-2. Create the file `index.mdx` and fill it with the [code](#markdown-elements).
+   ![explanation-1](./public/images/explanation-1.png)
 
-The file name affects on url to the page. File with name `index.mdx` mean, that its root page in current path.
+2. With nesting
+   See the image below, we insert `document/2024/osvitnia-programa-vchiteliv` and resulting url will look like: http://opdk.ua/content/document/2024/osvitnia-programa-vchiteliv. Each `/` symbol means that we make our page more nested each time.
 
-Let explain an example of nesting a file inside a folder. If we want to visit `*/director/merits` after `*/director`, we need to create another file in the `director` folder and name it `merits.mdx`.
-
-![explanation-1](./public/images/explanation-1.png)
-
-So now explain a longer path nesting: folder -> folder -> ... -> file. Now we want to visit `*/director/merits/some-another-path`, for this we change `merits.mdx` to folder `merits`, in `merits` folder create `index.mdx`, in which trasfer code from the recently deleted `merits.mdx`, and another file called `some-another-path.mdx`.
-
-![explanation-2](./public/images/explanation-2.png)
-
-## Custom component
-
-You can use components that have already been written, such as:
-
-```md
-import { Button } from "@/components/ui/button";
-
-import { ResponsiveImage } from "@/components/responsive-image";
-import Image from "@/assets/images/landing.jpg";
-
-<Button>Some text here</Button>
-<Button variant="outline" size="sm">Button with props</Button>
-
-<ResponsiveImage 
-  src={Image} 
-  width={1000} 
-  height={1000} 
-  alt="Example-image-component"
-/>
-```
-
-## Style guide
-
-The `@tailwindcss/typography` plugin gives us the opportunity to write styles for any HTML tag using Tailwindcss. Here is how it do:
-
-```html
-import { NewsCardSkeleton } from "@/components/skeletons/news-card-skeleton";
-
-<div className="grid grid-cols-2 gap-2">
-  <NewsCardSkeleton />
-  <NewsCardSkeleton />
-</div>
-```
-
-## Markdown elements
-
-You can read about basic markdown syntax [here](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+   ![explanation-2](./public/images/explanation-2.png)
 
 # Code styling
 
