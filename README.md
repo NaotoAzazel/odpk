@@ -48,7 +48,8 @@ Revamping college's website. This is a [Next.js](https://nextjs.org/) version 14
 
 # Useful
 
-I recommend that after making architectural changes, you check that the FSD architectural methodology is correct. The command is already setup.
+> [!TIP]
+> I recommend that after making architectural changes, you check that the FSD architectural methodology is correct. The command is already setup.
 
 ```bash
 npm run steiger # watch once
@@ -57,7 +58,8 @@ npm run steiger:watch # watching in real time
 
 # Customizing .env
 
-> **Important**: if you add a variable in `.env`, you should also add the same variable in `src/env.js`. All client-side variables should be prefixed with: `NEXT_PUBLIC_`.
+> [!WARNING]
+> If you add a variable in `.env`, you should also add the same variable in `src/env.js`. All client-side variables should be prefixed with: `NEXT_PUBLIC_`.
 
 First, copy `.env.example` to `.env`.
 
@@ -76,7 +78,8 @@ npm i -g prisma prisma-json-types-generator
 prisma db push
 ```
 
-> Note: If you are using an environment file called like this: `.env.development` or `.env.production`, then use the following command.
+> [!NOTE]
+> If you are using an environment file called like this: `.env.development` or `.env.production`, then use the following command.
 
 ```bash
 npm install -g dotenv-cli
@@ -104,19 +107,17 @@ The auth variables: `NEXTAUTH_SECRET` can take any value.
 
 After creating the page, you need to correctly specify the path to access it. Lets take a look at two ways.
 
-> [!WARNING]
-> The link to the page should be in English only
+> [!CAUTION]
+> The link to the page should be in English only<br/>
 > There can't be spaces in the link (Space is replaced by "/")
 
-1. Without nesting
-   See the image below, we insert `all-documents` and resulting url will look like: http://odpk.ua/content/all-documents
+Let explain and example of nesting, see the image below, we insert `all-documents` and resulting url will look like: http://odpk.ua/content/all-documents
 
-   ![explanation-1](./public/images/explanation-1.png)
+![explanation-1](./public/images/explanation-1.png)
 
-2. With nesting
-   See the image below, we insert `document/2024/osvitnia-programa-vchiteliv` and resulting url will look like: http://opdk.ua/content/document/2024/osvitnia-programa-vchiteliv. Each `/` symbol means that we make our page more nested each time.
+So now explain a longer path nesting, see the image below, we insert `document/2024/osvitnia-programa-vchiteliv` and resulting url will look like: http://opdk.ua/content/document/2024/osvitnia-programa-vchiteliv. Each `/` symbol means that we make our page more nested each time.
 
-   ![explanation-2](./public/images/explanation-2.png)
+![explanation-2](./public/images/explanation-2.png)
 
 # Code styling
 
