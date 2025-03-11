@@ -12,7 +12,7 @@ import {
   DeleteButton,
   Icons,
   NavigateToPageButton,
-  ResponsiveImage,
+  ResponsiveImageWithBlur,
 } from "@/shared/ui";
 
 const fileTypeMap: Record<FileTypes, string> = {
@@ -31,15 +31,16 @@ function FilePreviewIcon({ fileType, name }: FilePreviewIconProps) {
   return (
     <div className="relative">
       {fileType === "IMAGE" ? (
-        <div className="flex min-h-[52px] min-w-[52px] flex-row overflow-hidden">
-          <div className="absolute inset-0 z-0 size-[52px] rounded-md bg-accent" />
-          <ResponsiveImage
+        <div className="flex h-[52px] min-h-[52px] w-[52px] min-w-[52px]">
+          <ResponsiveImageWithBlur
             src={src}
             alt={name}
             width={52}
             height={52}
             loading="lazy"
             className="z-10 aspect-square rounded-md object-cover"
+            errorPlaceholderClassname="size-[52px] text-black"
+            smallSize
           />
         </div>
       ) : (

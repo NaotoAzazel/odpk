@@ -36,6 +36,7 @@ export function PlaceholderImage({
         <Icons.placeholder
           className="size-9 text-muted-foreground"
           aria-hidden="true"
+          strokeWidth={1.5}
         />
       </Skeleton>
     </Comp>
