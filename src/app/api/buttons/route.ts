@@ -15,7 +15,6 @@ export async function POST(req: Request) {
     await db.headerButtons.create({
       data: {
         title: body.title,
-        href: body.href || "",
         items: [],
       },
     });

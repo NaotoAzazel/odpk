@@ -16,12 +16,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date().toISOString(),
   }));
 
-  const routes = ["", "/dashboard/news", "/editor", "/news", "/content"].map(
-    (route) => ({
-      url: toAbsoluteUrl(route),
-      lastModified: new Date().toISOString(),
-    }),
-  );
+  const publicRoutes = ["", "/news", "/content"].map((route) => ({
+    url: toAbsoluteUrl(route),
+    lastModified: new Date().toISOString(),
+  }));
 
-  return [...routes, ...newsRoutes, ...pagesRoutes];
+  return [...publicRoutes, ...newsRoutes, ...pagesRoutes];
 }

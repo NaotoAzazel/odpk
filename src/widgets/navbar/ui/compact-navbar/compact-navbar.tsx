@@ -109,13 +109,12 @@ function MobileNavItems({ items, onClick }: MobileNavItemsProps) {
               </AccordionContent>
             </>
           ) : (
-            <Link
-              href={item.href}
+            <button
               onClick={() => onClick(false)}
               className="flex py-4 text-sm font-medium capitalize hover:underline"
             >
               {item.title}
-            </Link>
+            </button>
           )}
         </AccordionItem>
       ))}

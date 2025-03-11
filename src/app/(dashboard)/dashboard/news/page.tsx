@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   description: "Керуйте новинами",
 };
 
-export default async function Page() {
-  return <DashboardNewsPage />;
+interface NewsDashboardPageParams {
+  searchParams: { page: number };
+}
+
+export default async function Page({ searchParams }: NewsDashboardPageParams) {
+  return <DashboardNewsPage params={searchParams} />;
 }

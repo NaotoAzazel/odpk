@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   description: "Керуйте користувачами",
 };
 
-export default async function Page() {
-  return <DashboardUsersPage />;
+interface UsersDashboardPageParams {
+  searchParams: { page: number };
+}
+
+export default async function Page({ searchParams }: UsersDashboardPageParams) {
+  return <DashboardUsersPage params={searchParams} />;
 }

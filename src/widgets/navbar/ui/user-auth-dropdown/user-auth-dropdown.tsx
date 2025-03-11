@@ -3,8 +3,10 @@
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { DASHBOARD_SIDEBAR_BUTTONS } from "@/widgets/dashboard-sidebar";
+import { cn } from "@/shared/lib";
 import {
   Button,
   DropdownMenu,
@@ -22,6 +24,8 @@ interface UserAuthDropdownProps {
 }
 
 export function UserAuthDropdown({ user }: UserAuthDropdownProps) {
+  const path = usePathname();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -38,13 +42,18 @@ export function UserAuthDropdown({ user }: UserAuthDropdownProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <DropdownMenuGroup>
+        <DropdownMenuGroup className="flex flex-col gap-1">
           {DASHBOARD_SIDEBAR_BUTTONS.map((button, index) => {
             const Icon = Icons[button.icon];
 
             return (
               <DropdownMenuItem asChild key={index}>
-                <Link href={button.href}>
+                <Link
+                  href={button.href}
+                  className={cn(
+                    path?.startsWith(button.href) ? "bg-accent" : "transparent",
+                  )}
+                >
                   <Icon className="mr-2 size-4" />
                   <span className="font-sans font-medium">{button.title}</span>
                 </Link>

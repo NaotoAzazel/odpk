@@ -18,7 +18,11 @@ import { ErrorContainer } from "@/shared/ui";
 import { getColumns, ROWS_PER_PAGE } from "../../lib";
 import { HeaderButtonsTableToolbarActions } from "./header-buttons-table-toolbar-actions";
 
-export function HeaderButtonsTable() {
+interface HeaderButtonsPageProps {
+  page: number;
+}
+
+export function HeaderButtonsTable({ page }: HeaderButtonsPageProps) {
   const { data, isError, isLoading } = useQuery({
     queryKey: [HEADER_BUTTONS_QUERY_BASE_KEY, "all"],
     queryFn: () => getHeaderButtons(),
@@ -30,6 +34,7 @@ export function HeaderButtonsTable() {
     data: data ?? [],
     columns,
     initialPageSize: ROWS_PER_PAGE,
+    currentPage: page,
   });
 
   if (isLoading) {

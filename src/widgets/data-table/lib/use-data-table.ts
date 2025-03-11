@@ -8,6 +8,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  PaginationState,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -28,17 +29,29 @@ interface UseDatatTableProps<TData, TValue> {
    */
   columns: ColumnDef<TData, TValue>[];
 
+  /**
+   * @default 1
+   * @type number
+   */
+  currentPage?: number;
+
   initialPageSize?: number;
 }
 
 export function useDataTable<TData, TValue>({
   data,
   columns,
+  currentPage = 1,
   initialPageSize = 10,
 }: UseDatatTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  const pagination: PaginationState = {
+    pageIndex: currentPage - 1,
+    pageSize: initialPageSize,
+  };
 
   const table = useReactTable({
     data,
@@ -51,6 +64,7 @@ export function useDataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     state: {
+      pagination,
       sorting,
       columnFilters,
       columnVisibility,

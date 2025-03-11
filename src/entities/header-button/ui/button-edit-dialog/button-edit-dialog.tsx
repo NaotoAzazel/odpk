@@ -98,30 +98,6 @@ export function ButtonEditDialog({ button }: ButtonEditDialogProps) {
               </p>
             )}
           </div>
-          <div className="flex w-full flex-col space-y-2">
-            <div className="flex flex-row">
-              <Label htmlFor="href">Посилання</Label>
-              <p className="flex h-[14px] items-center text-sm text-muted-foreground">
-                (не обов&apos;язково)
-              </p>
-            </div>
-            <Input
-              id="href"
-              type="text"
-              placeholder="path/to/page"
-              defaultValue={button.href}
-              {...register("href")}
-              className={cn("w-full", {
-                "focus-visible:ring-red-500": errors.href,
-              })}
-            />
-            {errors?.title && (
-              <p className="px-1 text-xs text-red-600">
-                {errors.href?.message}
-              </p>
-            )}
-          </div>
-
           <DialogFooter>
             <Button
               disabled={isPending}

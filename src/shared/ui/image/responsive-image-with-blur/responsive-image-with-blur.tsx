@@ -8,12 +8,17 @@ import { ErrorPlaceholder } from "./error-placeholder";
 import { SkeletonPlaceholder } from "./skeleton-placeholder";
 import { useBlurHash } from "./use-blur-hash";
 
-interface ResponsiveImageWithBlurProps extends ImageProps {}
+interface ResponsiveImageWithBlurProps extends ImageProps {
+  smallSize?: boolean;
+  errorPlaceholderClassname?: string;
+}
 
 export function ResponsiveImageWithBlur({
   src,
   alt,
   className,
+  errorPlaceholderClassname,
+  smallSize = false,
   ...otherProps
 }: ResponsiveImageWithBlurProps) {
   const [hasError, setHasError] = useState(false);
@@ -27,7 +32,12 @@ export function ResponsiveImageWithBlur({
   }
 
   if (isError || hasError) {
-    return <ErrorPlaceholder />;
+    return (
+      <ErrorPlaceholder
+        smallSize={smallSize}
+        className={errorPlaceholderClassname}
+      />
+    );
   }
 
   return (
