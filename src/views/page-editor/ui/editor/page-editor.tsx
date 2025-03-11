@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StaticPages } from "@prisma/client";
 import { useForm } from "react-hook-form";
@@ -8,7 +8,7 @@ import TextareaAutosize from "react-textarea-autosize";
 
 import { useEditor } from "@/widgets/editor";
 import { PageUpdateRequest, pageUpdateSchema } from "@/entities/page";
-import { formatDate } from "@/shared/lib";
+import { formatDate, showError } from "@/shared/lib";
 import { Button, Icons } from "@/shared/ui";
 
 import { useSavePage } from "../../lib";
@@ -34,6 +34,12 @@ export function PageEditor(page: StaticPages) {
   const { ref: titleRef, ...rest } = register("title");
 
   const formattedUpdatedAt = formatDate(page.updatedAt);
+
+  useEffect(() => {
+    if (errors?.href) {
+      showError(errors.href.message);
+    }
+  }, [errors]);
 
   return (
     <div className="my-10 flex flex-col gap-4">

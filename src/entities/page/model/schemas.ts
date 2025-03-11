@@ -9,7 +9,13 @@ export const pageSchema = z.object({
     .regex(/^(?!\s*$).+/, {
       message: "Заголовок не може складатися лише з пробілів",
     }),
-  href: z.string().min(1, { message: "Посилання має бути не менше 1 символу" }),
+  href: z
+    .string()
+    .min(1, { message: "Посилання має бути не менше 1 символу" })
+    .regex(/^[a-zA-Z0-9/_\-\.]+$/, {
+      message:
+        "Посилання може містити тільки латинські літери, цифри, '/', '-', '_' і '.'",
+    }),
   content: contentSchema,
 });
 
