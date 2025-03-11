@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-import { getPages } from "@/entities/page";
+import { getPages, PAGE_QUERY_BASE_KEY } from "@/entities/page";
 import { REDIRECTS } from "@/shared/constants";
 import {
   Button,
@@ -28,7 +28,7 @@ export function SearchPagesBar() {
   }, []);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["pages"],
+    queryKey: [PAGE_QUERY_BASE_KEY, "all"],
     queryFn: () => getPages(),
     enabled: isOpen,
   });
