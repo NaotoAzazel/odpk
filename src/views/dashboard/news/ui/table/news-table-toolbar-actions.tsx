@@ -1,22 +1,27 @@
 "use client";
 
-import { Post } from "@prisma/client";
-import { type Table } from "@tanstack/react-table";
-
-import { DataTableInputSearch } from "@/widgets/data-table";
 import { NewsCreateButton } from "@/entities/news";
+import { cn } from "@/shared/lib";
+import { Input } from "@/shared/ui";
 
 interface NewsTableToolbarActionsProps {
-  table: Table<Post>;
+  value: string;
+  setValue: (value: string) => void;
 }
 
 export function NewsTableToolbarActions({
-  table,
+  value,
+  setValue,
 }: NewsTableToolbarActionsProps) {
   return (
     <div className="flex w-full items-center justify-center space-x-2 overflow-auto">
       <div className="flex flex-1 items-center">
-        <DataTableInputSearch table={table} searchByColumnName="title" />
+        <Input
+          placeholder="Введіть заголовок..."
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          className={cn("max-w-sm focus-visible:ring-0")}
+        />
       </div>
       <div className="flex items-center gap-2">
         <NewsCreateButton className="ring-offset-0 focus:outline-none" />

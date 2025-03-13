@@ -8,6 +8,7 @@ import {
   deleteAndInvalidateCache,
   withCache,
 } from "@/shared/lib";
+import { PaginatedResult, PaginationParams } from "@/shared/model";
 
 export async function getNews() {
   return withCache({
@@ -25,31 +26,7 @@ export async function getNewsItemById(id: number) {
   });
 }
 
-interface GetNewsWithPagination {
-  /**
-   * @default 1
-   */
-  page?: number;
-
-  /**
-   * @default 6
-   */
-  itemsPerPage?: number;
-}
-
-export interface Metadata {
-  totalPages: number;
-  totalNewsCount: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-}
-
-export interface GetNewsForPaginationResult {
-  data: Post[];
-  metadata: Metadata;
-}
-
-interface GetNewsForPagination extends GetNewsWithPagination {
+interface GetNewsForPagination extends PaginationParams {
   title?: string;
   published?: boolean;
 
@@ -65,7 +42,7 @@ export async function getNewsForPagination({
   title,
   published,
   sortByCreatedAt = "desc",
-}: GetNewsForPagination): Promise<GetNewsForPaginationResult> {
+}: GetNewsForPagination): Promise<PaginatedResult<Post>> {
   const skip = (page - 1) * itemsPerPage;
   const key = `news:${page},${itemsPerPage},${title},${published},${sortByCreatedAt}`;
 
@@ -73,9 +50,15 @@ export async function getNewsForPagination({
     return withCache({
       key,
       action: async () => {
-        const whereClause = { published, title };
+        const whereClause = {
+          published,
+          title: {
+            startsWith: title,
+            mode: Prisma.QueryMode.insensitive,
+          },
+        };
 
-        const totalNewsCount = await db.post.count({
+        const totalItems = await db.post.count({
           where: whereClause,
         });
 
@@ -88,13 +71,13 @@ export async function getNewsForPagination({
           skip,
         });
 
-        const totalPages = Math.ceil(totalNewsCount / itemsPerPage);
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
 
         return {
           data: news,
           metadata: {
             totalPages,
-            totalNewsCount,
+            totalItems,
             hasNextPage: page < totalPages,
             hasPrevPage: page > 1,
           },
@@ -107,7 +90,7 @@ export async function getNewsForPagination({
       data: [],
       metadata: {
         totalPages: 0,
-        totalNewsCount: 0,
+        totalItems: 0,
         hasNextPage: false,
         hasPrevPage: false,
       },
@@ -115,7 +98,7 @@ export async function getNewsForPagination({
   }
 }
 
-interface GetPublishedNews extends GetNewsWithPagination {}
+interface GetPublishedNews extends PaginationParams {}
 
 export async function getPublishedNews({ itemsPerPage = 6 }: GetPublishedNews) {
   return withCache({
@@ -135,7 +118,7 @@ export async function getPublishedNews({ itemsPerPage = 6 }: GetPublishedNews) {
   });
 }
 
-interface GetAnotherNews extends GetNewsWithPagination {
+interface GetAnotherNews extends PaginationParams {
   exceptId: number;
 }
 

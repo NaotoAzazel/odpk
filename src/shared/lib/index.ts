@@ -37,3 +37,5 @@ export { useControllableState } from "./use-controllable-state";
 export { useIntersection } from "./use-intesection";
 
 export { usePagination } from "./use-pagination";
+
+export { useDebounce } from "./use-debounce";

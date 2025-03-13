@@ -11,12 +11,14 @@ export {
   getPageByTitle,
   getPages,
   updatePageById,
+  getPagesForPagination,
 } from "./api";
 
 export { PageCreateButton, PageDeleteDiloag } from "./ui";
 
 export {
   PAGE_QUERY_BASE_KEY,
+  PAGE_PAGINATION_KEY,
   useUpdatePage,
   useCreatePage,
   useDeletePage,

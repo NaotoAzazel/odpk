@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -9,7 +9,13 @@ import {
   DataTableToolbar,
   useDataTable,
 } from "@/widgets/data-table";
-import { FILES_QUERY_BASE_KEY, getFiles } from "@/entities/file";
+import {
+  FILE_PAGINATION_KEY,
+  FILES_QUERY_BASE_KEY,
+  getFiles,
+  getFilesForPagination,
+} from "@/entities/file";
+import { useDebounce } from "@/shared/lib";
 import { ErrorContainer } from "@/shared/ui";
 
 import { ROWS_PER_PAGE } from "../../constants";
@@ -21,22 +27,39 @@ interface FilesTableProps {
 }
 
 export function FilesTable({ page }: FilesTableProps) {
+  const [searchInput, setSearchInput] = useState<string>("");
+  const debouncedSearch = useDebounce(searchInput, 1_000);
+
   const {
     data: files,
     isError,
     isLoading,
   } = useQuery({
-    queryKey: [FILES_QUERY_BASE_KEY, "all"],
-    queryFn: () => getFiles(),
+    queryKey: [
+      FILES_QUERY_BASE_KEY,
+      FILE_PAGINATION_KEY,
+      page,
+      debouncedSearch,
+    ],
+    queryFn: () =>
+      getFilesForPagination({
+        page,
+        itemsPerPage: ROWS_PER_PAGE,
+        title: debouncedSearch,
+        sortByCreatedAt: "asc",
+      }),
   });
 
   const columns = useMemo(() => getColumns(), []);
 
   const { table } = useDataTable({
-    data: files ?? [],
+    data: files?.data ?? [],
     columns,
     initialPageSize: ROWS_PER_PAGE,
     currentPage: page,
+    pageCount: files?.metadata.totalPages,
+    manualFiltering: true,
+    manualPagination: true,
   });
 
   if (isLoading) {
@@ -58,7 +81,10 @@ export function FilesTable({ page }: FilesTableProps) {
   return (
     <DataTable table={table}>
       <DataTableToolbar table={table}>
-        <FilesTableToolbarActions table={table} />
+        <FilesTableToolbarActions
+          value={searchInput}
+          setValue={setSearchInput}
+        />
       </DataTableToolbar>
     </DataTable>
   );

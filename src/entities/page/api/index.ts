@@ -12,4 +12,5 @@ export {
   getPageByTitle,
   getPages,
   updatePageById,
+  getPagesForPagination,
 } from "./page.service";

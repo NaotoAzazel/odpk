@@ -1,7 +1,7 @@
 "use client";
 "use memo";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -10,7 +10,12 @@ import {
   DataTableToolbar,
   useDataTable,
 } from "@/widgets/data-table";
-import { getNews, NEWS_QUERY_BASE_KEY } from "@/entities/news";
+import {
+  getNewsForPagination,
+  NEWS_PAGINATION_KEY,
+  NEWS_QUERY_BASE_KEY,
+} from "@/entities/news";
+import { useDebounce } from "@/shared/lib";
 import { ErrorContainer } from "@/shared/ui";
 
 import { ROWS_PER_PAGE } from "../../constants";
@@ -22,22 +27,34 @@ interface NewsTableProps {
 }
 
 export function NewsTable({ page }: NewsTableProps) {
+  const [searchInput, setSearchInput] = useState<string>("");
+  const debouncedSearch = useDebounce(searchInput, 1_000);
+
   const {
     data: news,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: [NEWS_QUERY_BASE_KEY, "all"],
-    queryFn: () => getNews(),
+    queryKey: [NEWS_QUERY_BASE_KEY, NEWS_PAGINATION_KEY, page, debouncedSearch],
+    queryFn: () =>
+      getNewsForPagination({
+        page,
+        itemsPerPage: ROWS_PER_PAGE,
+        title: debouncedSearch,
+        sortByCreatedAt: "asc",
+      }),
   });
 
   const columns = useMemo(() => getColumns(), []);
 
   const { table } = useDataTable({
-    data: news ?? [],
+    data: news?.data ?? [],
     columns,
     initialPageSize: ROWS_PER_PAGE,
     currentPage: page,
+    pageCount: news?.metadata.totalPages,
+    manualFiltering: true,
+    manualPagination: true,
   });
 
   if (isLoading) {
@@ -64,7 +81,10 @@ export function NewsTable({ page }: NewsTableProps) {
   return (
     <DataTable table={table}>
       <DataTableToolbar table={table}>
-        <NewsTableToolbarActions table={table} />
+        <NewsTableToolbarActions
+          value={searchInput}
+          setValue={setSearchInput}
+        />
       </DataTableToolbar>
     </DataTable>
   );

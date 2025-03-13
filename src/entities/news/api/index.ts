@@ -6,8 +6,6 @@ export {
   getNewsItemById,
   getPublishedNews,
   updateNewsById,
-  type GetNewsForPaginationResult,
-  type Metadata,
 } from "./news.service";
 
 export {

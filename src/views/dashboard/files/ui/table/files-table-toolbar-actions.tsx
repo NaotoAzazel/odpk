@@ -1,23 +1,28 @@
 "use client";
 
-import { Files } from "@prisma/client";
-import { type Table } from "@tanstack/react-table";
 import Link from "next/link";
 
-import { DataTableInputSearch } from "@/widgets/data-table";
-import { buttonVariants, Icons } from "@/shared/ui";
+import { cn } from "@/shared/lib";
+import { buttonVariants, Icons, Input } from "@/shared/ui";
 
 interface FilesTableToolbarActionsProps {
-  table: Table<Files>;
+  value: string;
+  setValue: (value: string) => void;
 }
 
 export function FilesTableToolbarActions({
-  table,
+  value,
+  setValue,
 }: FilesTableToolbarActionsProps) {
   return (
     <div className="flex w-full items-center justify-center space-x-2 overflow-auto">
       <div className="flex flex-1 items-center">
-        <DataTableInputSearch table={table} searchByColumnName="name" />
+        <Input
+          placeholder="Введіть заголовок..."
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          className={cn("max-w-sm focus-visible:ring-0")}
+        />
       </div>
       <div className="flex items-center gap-2">
         <Link
