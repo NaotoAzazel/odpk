@@ -33,16 +33,28 @@ interface UseDatatTableProps<TData, TValue> {
    * @default 1
    * @type number
    */
+  pageCount?: number;
+
+  /**
+   * @default 1
+   * @type number
+   */
   currentPage?: number;
 
   initialPageSize?: number;
+
+  manualPagination?: boolean;
+  manualFiltering?: boolean;
 }
 
 export function useDataTable<TData, TValue>({
   data,
   columns,
+  pageCount = 1,
   currentPage = 1,
   initialPageSize = 10,
+  manualPagination = false,
+  manualFiltering = false,
 }: UseDatatTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -56,6 +68,9 @@ export function useDataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    pageCount,
+    manualPagination,
+    manualFiltering,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,

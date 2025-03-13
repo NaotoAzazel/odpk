@@ -19,3 +19,8 @@ export {
   type DashboardSearchParamsSchema,
   dashboardSearchParamsSchema,
 } from "./search-params";
+export type {
+  PaginatedResult,
+  PaginationMetadata,
+  PaginationParams,
+} from "./pagination";

@@ -16,7 +16,7 @@ import { usePublishNews, useSaveNews } from "../../lib";
 export function NewsEditor(newsItem: Post) {
   const { register, handleSubmit } = useForm<NewsItemUpdateRequest>({
     resolver: zodResolver(newsItemUpdateSchema),
-    defaultValues: newsItem,
+    values: newsItem,
   });
 
   const _titleRef = useRef<HTMLTextAreaElement>(null);

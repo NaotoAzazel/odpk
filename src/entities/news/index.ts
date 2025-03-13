@@ -9,8 +9,6 @@ export {
   createNewsItemRequest,
   updateNewsItemByIdRequest,
   deleteNewsItemByIdRequest,
-  type GetNewsForPaginationResult,
-  type Metadata,
 } from "./api";
 
 export {
@@ -23,4 +21,9 @@ export {
 
 export { NewsCreateButton, NewsDeleteDialog } from "./ui";
 
-export { NEWS_PER_PAGE, NEWS_QUERY_BASE_KEY, useUpdateNews } from "./lib";
+export {
+  NEWS_PER_PAGE,
+  NEWS_QUERY_BASE_KEY,
+  NEWS_PAGINATION_KEY,
+  useUpdateNews,
+} from "./lib";

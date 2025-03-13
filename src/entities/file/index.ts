@@ -4,6 +4,7 @@ export {
   uploadFileToDatabase,
   uploadFilesRequest,
   deleteFileRequest,
+  getFilesForPagination,
 } from "./api";
 
 export {
@@ -14,6 +15,7 @@ export {
   uploadFileToLocalDirectory,
   useDeleteFile,
   FILES_QUERY_BASE_KEY,
+  FILE_PAGINATION_KEY,
 } from "./lib";
 
 export { FileDeleteDialog } from "./ui";

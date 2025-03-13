@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -9,7 +9,12 @@ import {
   DataTableToolbar,
   useDataTable,
 } from "@/widgets/data-table";
-import { getPages, PAGE_QUERY_BASE_KEY } from "@/entities/page";
+import {
+  getPagesForPagination,
+  PAGE_PAGINATION_KEY,
+  PAGE_QUERY_BASE_KEY,
+} from "@/entities/page";
+import { useDebounce } from "@/shared/lib";
 import { ErrorContainer } from "@/shared/ui";
 
 import { ROWS_PER_PAGE } from "../../constants";
@@ -21,22 +26,34 @@ interface PagesTableProps {
 }
 
 export function PagesTable({ page }: PagesTableProps) {
+  const [searchInput, setSearchInput] = useState<string>("");
+  const debouncedSearch = useDebounce(searchInput, 1_000);
+
   const {
     data: pages,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: [PAGE_QUERY_BASE_KEY, "all"],
-    queryFn: () => getPages(),
+    queryKey: [PAGE_QUERY_BASE_KEY, PAGE_PAGINATION_KEY, page, debouncedSearch],
+    queryFn: () =>
+      getPagesForPagination({
+        page,
+        itemsPerPage: ROWS_PER_PAGE,
+        title: debouncedSearch,
+        sortByCreatedAt: "asc",
+      }),
   });
 
   const columns = useMemo(() => getColumns(), []);
 
   const { table } = useDataTable({
-    data: pages ?? [],
+    data: pages?.data ?? [],
     columns,
     initialPageSize: ROWS_PER_PAGE,
     currentPage: page,
+    pageCount: pages?.metadata.totalPages,
+    manualFiltering: true,
+    manualPagination: true,
   });
 
   if (isLoading) {
@@ -58,7 +75,10 @@ export function PagesTable({ page }: PagesTableProps) {
   return (
     <DataTable table={table}>
       <DataTableToolbar table={table}>
-        <PageTableToolbarActions table={table} />
+        <PageTableToolbarActions
+          value={searchInput}
+          setValue={setSearchInput}
+        />
       </DataTableToolbar>
     </DataTable>
   );

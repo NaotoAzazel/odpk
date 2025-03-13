@@ -11,9 +11,12 @@ export function useDataTablePagination<TData>(table: Table<TData>) {
   });
 
   useEffect(() => {
-    if (table.getFilteredRowModel().rows.length === 0) return;
+    const totalPagesCount = table.getPageCount();
+    const pageIndex = table.getState().pagination.pageIndex + 1;
 
-    if (table.getRowModel().rows.length === 0) {
+    if (totalPagesCount === 0) return;
+
+    if (pageIndex > totalPagesCount) {
       setCurrentPage(table.getPageCount().toString());
     }
   }, [table, setCurrentPage, handleNextPage, handlePrevPage]);
