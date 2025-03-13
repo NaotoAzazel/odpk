@@ -25,7 +25,6 @@ export async function createNewsItemRequest(item: NewsItemCreateRequest) {
 }
 
 export async function updateNewsItemByIdRequest(item: NewsItemUpdateRequest) {
-  console.log(item)
   const response = await axios
     .patch<ApiSuccessResponse>(`/api/news/${item.id}`, item, {
       headers: {
