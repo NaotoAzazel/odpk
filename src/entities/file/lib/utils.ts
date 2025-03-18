@@ -3,7 +3,20 @@
 import { mkdir, readFile, unlink, writeFile } from "fs/promises";
 import { join } from "path";
 
+import { absoluteUploadsDirection } from "@/widgets/file-uploader";
 import { unknownError } from "@/shared/constants";
+
+export async function getFormattedFolderPath(absoluteFolderPath: string) {
+  const year = new Date().getFullYear().toString();
+  const month = new Date().getMonth().toString();
+
+  return join(absoluteFolderPath, year, month);
+}
+
+async function createFolderIfNotExists(uploadsDirection: string) {
+  const formattedFilePath = await getFormattedFolderPath(uploadsDirection);
+  await mkdir(formattedFilePath, { recursive: true });
+}
 
 interface UploadFileToLocalDirectory {
   file: File;
@@ -17,9 +30,12 @@ export async function uploadFileToLocalDirectory({
   filename,
 }: UploadFileToLocalDirectory) {
   try {
-    await mkdir(absoluteFolderPath, { recursive: true });
+    await createFolderIfNotExists(absoluteUploadsDirection);
 
-    const filePath = join(absoluteFolderPath, filename);
+    const formattedFolderPath =
+      await getFormattedFolderPath(absoluteFolderPath);
+
+    const filePath = join(formattedFolderPath, filename);
 
     const arrayBuffer = await file.arrayBuffer();
     const fileBuffer = Buffer.from(arrayBuffer);

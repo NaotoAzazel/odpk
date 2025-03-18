@@ -14,6 +14,7 @@ export {
   getFileType,
   uploadFileToLocalDirectory,
   useDeleteFile,
+  getFormattedFolderPath,
   FILES_QUERY_BASE_KEY,
   FILE_PAGINATION_KEY,
 } from "./lib";

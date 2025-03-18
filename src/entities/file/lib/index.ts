@@ -2,6 +2,7 @@ export {
   deleteFileFromLocalDirectory,
   getFileFromLocalDirectory,
   uploadFileToLocalDirectory,
+  getFormattedFolderPath,
 } from "./utils";
 
 export { generateUniqueFilename } from "./generate-unique-filename";

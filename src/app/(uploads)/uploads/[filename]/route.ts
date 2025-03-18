@@ -2,7 +2,10 @@ import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
 
 import { absoluteUploadsDirection } from "@/widgets/file-uploader";
-import { getFileFromLocalDirectory } from "@/entities/file";
+import {
+  getFileFromLocalDirectory,
+  getFormattedFolderPath,
+} from "@/entities/file";
 import { ERROR_MESSAGES } from "@/shared/notices";
 
 const routeContextSchema = z.object({
@@ -18,8 +21,11 @@ export async function GET(
   try {
     const { params } = routeContextSchema.parse(context);
 
-    const fileBuffer = await getFileFromLocalDirectory(
+    const formattedFolderPath = await getFormattedFolderPath(
       absoluteUploadsDirection,
+    );
+    const fileBuffer = await getFileFromLocalDirectory(
+      formattedFolderPath,
       params.filename,
     );
 
